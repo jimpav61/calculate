@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { PDFReport } from "@/utils/pdfGenerator";
 import { Download } from "lucide-react";
+import React from "react";
 
 interface ReviewStepProps {
   formData: {
@@ -68,10 +69,11 @@ export const ReviewStep = ({ formData, costPerMinute }: ReviewStepProps) => {
           document={<PDFReport userData={formData} costPerMinute={costPerMinute} />}
           fileName={`voice-ai-estimate-${formData.name.toLowerCase().replace(/\s+/g, '-')}.pdf`}
         >
-          {({ loading }: { loading: boolean }) => (
+          {({ loading }) => (
             <Button
               className="bg-brand hover:bg-brand-dark transition-colors"
               disabled={loading}
+              type="button"
             >
               <Download className="w-4 h-4 mr-2" />
               {loading ? "Generating PDF..." : "Download PDF Report"}
