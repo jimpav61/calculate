@@ -29,8 +29,13 @@ export const DetailedReportDialog = ({
   formData,
   costPerMinute,
 }: DetailedReportDialogProps) => {
+  // Calculate AI cost
   const aiCost = formData.minutes * costPerMinute;
-  const humanOperatorCost = formData.minutes * 0.50;
+  
+  // Calculate human operator cost based on $16/hour
+  // Convert minutes to hours and multiply by hourly rate
+  const humanOperatorCost = (formData.minutes / 60) * 16;
+  
   const savings = humanOperatorCost - aiCost;
   const savingsPercentage = ((savings / humanOperatorCost) * 100).toFixed(1);
   const currentDate = new Date().toLocaleDateString();
