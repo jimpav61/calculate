@@ -7,6 +7,7 @@ import { PersonalInfoStep } from "./calculator/PersonalInfoStep";
 import { ContactInfoStep } from "./calculator/ContactInfoStep";
 import { CostEstimateStep } from "./calculator/CostEstimateStep";
 import { ReviewStep } from "./calculator/ReviewStep";
+import { DetailedReportDialog } from "./calculator/DetailedReportDialog";
 
 interface CalculatorFormData {
   name: string;
@@ -18,6 +19,7 @@ interface CalculatorFormData {
 
 const Calculator = () => {
   const [step, setStep] = useState(1);
+  const [showReport, setShowReport] = useState(false);
   const [formData, setFormData] = useState<CalculatorFormData>({
     name: "",
     companyName: "",
@@ -50,6 +52,7 @@ const Calculator = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setShowReport(true);
   };
 
   return (
@@ -117,6 +120,13 @@ const Calculator = () => {
           </div>
         </form>
       </Card>
+
+      <DetailedReportDialog
+        open={showReport}
+        onOpenChange={setShowReport}
+        formData={formData}
+        costPerMinute={costPerMinute}
+      />
     </div>
   );
 };
