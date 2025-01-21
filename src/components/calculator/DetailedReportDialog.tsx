@@ -37,15 +37,15 @@ export const DetailedReportDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-[#9b87f5]/10 to-white">
         <DialogHeader>
-          <DialogTitle className="text-xl md:text-2xl font-bold">
+          <DialogTitle className="text-xl md:text-2xl font-bold text-[#1A1F2C]">
             Detailed Cost Analysis Report
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 md:space-y-6 py-4">
-          <p className="text-xs md:text-sm text-gray-500">Generated on {currentDate}</p>
+          <p className="text-xs md:text-sm text-[#7E69AB]">Generated on {currentDate}</p>
           
           <CompanyInformation formData={formData} />
 
@@ -60,7 +60,7 @@ export const DetailedReportDialog = ({
           <AdditionalBenefits />
 
           <div className="flex justify-end pt-4">
-            <Button className="gap-2 w-full md:w-auto">
+            <Button className="gap-2 w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB]">
               <Download size={16} />
               Download PDF Report
             </Button>
