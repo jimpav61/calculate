@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import { StepIndicator } from "./calculator/StepIndicator";
+import { PersonalInfoStep } from "./calculator/PersonalInfoStep";
+import { ContactInfoStep } from "./calculator/ContactInfoStep";
+import { CostEstimateStep } from "./calculator/CostEstimateStep";
 
 interface CalculatorFormData {
   name: string;
@@ -24,7 +26,7 @@ const Calculator = () => {
     minutes: 0,
   });
 
-  const costPerMinute = 0.05; // This would be admin configurable
+  const costPerMinute = 0.05;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,10 +34,6 @@ const Calculator = () => {
       ...prev,
       [name]: value,
     }));
-  };
-
-  const calculateTotal = () => {
-    return (formData.minutes * costPerMinute).toFixed(2);
   };
 
   const handleNext = () => {
@@ -68,116 +66,23 @@ const Calculator = () => {
           <p className="text-gray-600">Calculate your estimated monthly costs</p>
         </div>
 
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center">
-            {[1, 2, 3].map((number) => (
-              <div key={number} className="flex items-center">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    step >= number
-                      ? "bg-brand text-white"
-                      : "bg-gray-200 text-gray-600"
-                  }`}
-                >
-                  {number}
-                </div>
-                {number < 3 && (
-                  <div
-                    className={`w-16 h-1 ${
-                      step > number ? "bg-brand" : "bg-gray-200"
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        <StepIndicator currentStep={step} totalSteps={3} />
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {step === 1 && (
-            <div className="space-y-4 animate-fade-in">
-              <div>
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="mt-1"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="companyName">Company Name</Label>
-                <Input
-                  id="companyName"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleInputChange}
-                  className="mt-1"
-                  required
-                />
-              </div>
-            </div>
+            <PersonalInfoStep formData={formData} onChange={handleInputChange} />
           )}
 
           {step === 2 && (
-            <div className="space-y-4 animate-fade-in">
-              <div>
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="mt-1"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="mt-1"
-                  required
-                />
-              </div>
-            </div>
+            <ContactInfoStep formData={formData} onChange={handleInputChange} />
           )}
 
           {step === 3 && (
-            <div className="space-y-6 animate-fade-in">
-              <div>
-                <Label htmlFor="minutes">Estimated Monthly Minutes</Label>
-                <Input
-                  id="minutes"
-                  name="minutes"
-                  type="number"
-                  min="0"
-                  value={formData.minutes}
-                  onChange={handleInputChange}
-                  className="mt-1"
-                  required
-                />
-              </div>
-
-              <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="text-center">
-                  <p className="text-gray-600 mb-2">Estimated Monthly Cost</p>
-                  <p className="text-4xl font-bold text-brand">
-                    ${calculateTotal()}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Based on ${costPerMinute} per minute
-                  </p>
-                </div>
-              </div>
-            </div>
+            <CostEstimateStep
+              formData={formData}
+              onChange={handleInputChange}
+              costPerMinute={costPerMinute}
+            />
           )}
 
           <div className="flex justify-between pt-4">
