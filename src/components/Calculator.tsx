@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { StepIndicator } from "./calculator/StepIndicator";
+import { IntroductionStep } from "./calculator/IntroductionStep";
 import { PersonalInfoStep } from "./calculator/PersonalInfoStep";
 import { ContactInfoStep } from "./calculator/ContactInfoStep";
 import { CostEstimateStep } from "./calculator/CostEstimateStep";
+import { ReviewStep } from "./calculator/ReviewStep";
 
 interface CalculatorFormData {
   name: string;
@@ -37,7 +39,7 @@ const Calculator = () => {
   };
 
   const handleNext = () => {
-    if (step < 3) {
+    if (step < 5) {
       setStep((prev) => prev + 1);
     }
   };
@@ -66,23 +68,29 @@ const Calculator = () => {
           <p className="text-gray-600">Calculate your estimated monthly costs</p>
         </div>
 
-        <StepIndicator currentStep={step} totalSteps={3} />
+        <StepIndicator currentStep={step} totalSteps={5} />
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {step === 1 && (
+          {step === 1 && <IntroductionStep />}
+
+          {step === 2 && (
             <PersonalInfoStep formData={formData} onChange={handleInputChange} />
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <ContactInfoStep formData={formData} onChange={handleInputChange} />
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <CostEstimateStep
               formData={formData}
               onChange={handleInputChange}
               costPerMinute={costPerMinute}
             />
+          )}
+
+          {step === 5 && (
+            <ReviewStep formData={formData} costPerMinute={costPerMinute} />
           )}
 
           <div className="flex justify-between pt-4">
@@ -96,7 +104,7 @@ const Calculator = () => {
                 Back
               </Button>
             )}
-            {step < 3 ? (
+            {step < 5 ? (
               <Button
                 type="button"
                 onClick={handleNext}
