@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StepIndicator } from "./calculator/StepIndicator";
 import { IntroductionStep } from "./calculator/IntroductionStep";
@@ -8,62 +6,30 @@ import { ContactInfoStep } from "./calculator/ContactInfoStep";
 import { CostEstimateStep } from "./calculator/CostEstimateStep";
 import { ReviewStep } from "./calculator/ReviewStep";
 import { DetailedReportDialog } from "./calculator/DetailedReportDialog";
-
-interface CalculatorFormData {
-  name: string;
-  companyName: string;
-  phone: string;
-  email: string;
-  minutes: number;
-}
+import { NavigationButtons } from "./calculator/NavigationButtons";
+import { CalculatorHeader } from "./calculator/CalculatorHeader";
+import { useCalculator } from "@/hooks/useCalculator";
 
 const Calculator = () => {
-  const [step, setStep] = useState(1);
-  const [showReport, setShowReport] = useState(false);
-  const [formData, setFormData] = useState<CalculatorFormData>({
-    name: "",
-    companyName: "",
-    phone: "",
-    email: "",
-    minutes: 0,
-  });
-
   const costPerMinute = 0.05;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleNext = () => {
-    if (step < 5) {
-      setStep((prev) => prev + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (step > 1) {
-      setStep((prev) => prev - 1);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowReport(true);
-  };
+  const {
+    step,
+    showReport,
+    formData,
+    handleInputChange,
+    handleNext,
+    handleBack,
+    handleSubmit,
+    setShowReport,
+  } = useCalculator(costPerMinute);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-white to-gray-50">
       <Card className="w-full max-w-2xl p-8 glass-card animate-fade-in">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Chatsites Voice AI Calculator
-          </h1>
-          <p className="text-gray-600">Calculate your estimated monthly costs</p>
-        </div>
+        <CalculatorHeader
+          title="Chatsites Voice AI Calculator"
+          subtitle="Calculate your estimated monthly costs"
+        />
 
         <StepIndicator currentStep={step} totalSteps={5} />
 
@@ -90,34 +56,12 @@ const Calculator = () => {
             <ReviewStep formData={formData} costPerMinute={costPerMinute} />
           )}
 
-          <div className="flex justify-between pt-4">
-            {step > 1 && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleBack}
-                className="transition-all hover:bg-gray-100"
-              >
-                Back
-              </Button>
-            )}
-            {step < 5 ? (
-              <Button
-                type="button"
-                onClick={handleNext}
-                className="ml-auto bg-brand hover:bg-brand-dark transition-colors"
-              >
-                Next
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                className="ml-auto bg-brand hover:bg-brand-dark transition-colors"
-              >
-                Generate Report
-              </Button>
-            )}
-          </div>
+          <NavigationButtons
+            step={step}
+            onNext={handleNext}
+            onBack={handleBack}
+            onSubmit={handleSubmit}
+          />
         </form>
       </Card>
 
