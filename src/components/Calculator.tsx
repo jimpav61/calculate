@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
 import { StepIndicator } from "./calculator/StepIndicator";
 import { IntroductionStep } from "./calculator/IntroductionStep";
 import { PersonalInfoStep } from "./calculator/PersonalInfoStep";
@@ -18,7 +17,6 @@ interface CalculatorFormData {
 }
 
 const Calculator = () => {
-  const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<CalculatorFormData>({
     name: "",
@@ -52,10 +50,6 @@ const Calculator = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Calculation Complete",
-      description: "Your custom report will be emailed to you shortly.",
-    });
   };
 
   return (
