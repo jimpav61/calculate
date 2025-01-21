@@ -69,7 +69,7 @@ export const ReviewStep = ({ formData, costPerMinute }: ReviewStepProps) => {
           document={<PDFReport userData={formData} costPerMinute={costPerMinute} />}
           fileName={`voice-ai-estimate-${formData.name.toLowerCase().replace(/\s+/g, '-')}.pdf`}
         >
-          {({ loading }) => (
+          {({ loading }): JSX.Element => (
             <Button
               className="bg-brand hover:bg-brand-dark transition-colors"
               disabled={loading}
