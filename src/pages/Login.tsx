@@ -11,49 +11,59 @@ const Login = () => {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log("Current session:", session);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        console.log("Current session:", session);
 
-      if (session?.user?.email) {
-        const { data: adminUser, error: adminError } = await supabase
-          .from('admin_users')
-          .select('email')
-          .eq('email', session.user.email)
-          .maybeSingle();
+        if (session?.user?.email) {
+          const { data: adminUser } = await supabase
+            .from('admin_users')
+            .select('email')
+            .eq('email', session.user.email)
+            .maybeSingle();
 
-        console.log("Admin check:", { adminUser, adminError });
+          console.log("Admin check:", { adminUser });
 
-        if (adminUser) {
-          console.log("Admin user found, redirecting to admin");
-          navigate('/admin');
+          if (adminUser) {
+            console.log("Admin user found, redirecting to admin");
+            navigate('/admin');
+          }
         }
+      } catch (error) {
+        console.error("Session check error:", error);
       }
     };
 
     checkSession();
   }, [navigate]);
 
-  // Add auth state change handler
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session);
 
       if (event === 'SIGNED_IN' && session?.user?.email) {
-        const { data: adminUser, error: adminError } = await supabase
-          .from('admin_users')
-          .select('email')
-          .eq('email', session.user.email)
-          .maybeSingle();
+        try {
+          const { data: adminUser } = await supabase
+            .from('admin_users')
+            .select('email')
+            .eq('email', session.user.email)
+            .maybeSingle();
 
-        console.log("Admin check after sign in:", { adminUser, adminError });
+          console.log("Admin check after sign in:", { adminUser });
 
-        if (adminUser) {
-          console.log("Admin user found after sign in, redirecting to admin");
-          navigate('/admin');
-        } else {
-          console.log("Not an admin user");
-          toast.error("Access denied. Only admin users can access this page.");
-          await supabase.auth.signOut();
+          if (adminUser) {
+            console.log("Admin user found after sign in, redirecting to admin");
+            navigate('/admin');
+          } else {
+            console.log("Not an admin user");
+            toast.error("Access denied. Only admin users can access this page.");
+            await supabase.auth.signOut();
+          }
+        } catch (error) {
+          console.error("Admin check error:", error);
+          toast.error("Error checking admin status");
         }
       }
     });
@@ -69,7 +79,7 @@ const Login = () => {
     
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        email: "jimmy.pavlatos@gmail.com", // Hardcoded for testing
+        email: "jimmy.pavlatos@gmail.com",
       });
 
       if (error) {
@@ -78,7 +88,7 @@ const Login = () => {
       } else {
         toast.success("Magic link sent! Check your email.");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Unexpected error:", error);
       toast.error("An unexpected error occurred");
     } finally {
