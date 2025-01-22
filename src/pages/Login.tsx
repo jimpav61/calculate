@@ -33,6 +33,36 @@ const Login = () => {
     checkSession();
   }, [navigate]);
 
+  // Add auth state change handler
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event, session);
+
+      if (event === 'SIGNED_IN' && session?.user?.email) {
+        const { data: adminUser, error: adminError } = await supabase
+          .from('admin_users')
+          .select('email')
+          .eq('email', session.user.email)
+          .maybeSingle();
+
+        console.log("Admin check after sign in:", { adminUser, adminError });
+
+        if (adminUser) {
+          console.log("Admin user found after sign in, redirecting to admin");
+          navigate('/admin');
+        } else {
+          console.log("Not an admin user");
+          toast.error("Access denied. Only admin users can access this page.");
+          await supabase.auth.signOut();
+        }
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
