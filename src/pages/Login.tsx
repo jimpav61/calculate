@@ -18,7 +18,7 @@ const Login = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.toLowerCase().trim(),
         options: {
-          emailRedirectTo: 'https://wlogbwxjteyycddkjvki.lovable.app'
+          emailRedirectTo: window.location.origin
         }
       });
 
