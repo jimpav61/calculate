@@ -4,13 +4,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
 import { CompanyInformation } from "./report/CompanyInformation";
 import { CostAnalysis } from "./report/CostAnalysis";
 import { AdditionalBenefits } from "./report/AdditionalBenefits";
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { ReportPDF } from "./report/ReportPDF";
+import { PDFDownloadButton } from "./report/PDFDownloadButton";
+import { useReportCalculations } from "./report/ReportCalculations";
 
 interface DetailedReportDialogProps {
   open: boolean;
@@ -31,51 +29,16 @@ export const DetailedReportDialog = ({
   formData,
   costPerMinute,
 }: DetailedReportDialogProps) => {
-  // Calculate calls per hour for human operators (12.5 average)
-  const humanCallsPerHour = 12.5;
-  const humanCallsPerDay = humanCallsPerHour * 8;
-  const humanCallsPerMonth = humanCallsPerDay * 22; // Assuming 22 working days
+  const calculations = useReportCalculations({
+    minutes: formData.minutes,
+    costPerMinute,
+  });
   
-  // AI can handle multiple calls simultaneously (let's say 50)
-  const aiSimultaneousCalls = 50;
-  const aiCallsPerHour = aiSimultaneousCalls * 60; // Potential calls per hour
-  const aiCallsPerDay = aiCallsPerHour * 24; // 24/7 operation
-  const aiCallsPerMonth = aiCallsPerDay * 30; // Full month operation
-  
-  // Standard tier calculations with dynamic pricing
-  const standardAICost = formData.minutes * costPerMinute;
-  
-  // Premium tier calculations (2x the base cost)
-  const premiumCostPerMinute = costPerMinute * 2;
-  const premiumAICost = formData.minutes * premiumCostPerMinute;
-  
-  // Calculate human operator cost based on $16/hour
-  const humanOperatorCost = (formData.minutes / 60) * 16;
-  
-  // Calculate savings for both tiers
-  const standardSavings = humanOperatorCost - standardAICost;
-  const premiumSavings = humanOperatorCost - premiumAICost;
-  
-  const standardSavingsPercentage = ((standardSavings / humanOperatorCost) * 100).toFixed(1);
-  const premiumSavingsPercentage = ((premiumSavings / humanOperatorCost) * 100).toFixed(1);
   const currentDate = new Date().toLocaleDateString();
   
   const reportData = {
     formData,
-    calculations: {
-      standardAICost,
-      premiumAICost,
-      humanOperatorCost,
-      standardSavings,
-      premiumSavings,
-      standardSavingsPercentage,
-      premiumSavingsPercentage,
-      callMetrics: {
-        humanCallsPerMonth,
-        aiCallsPerMonth,
-        aiSimultaneousCalls
-      }
-    },
+    calculations,
     date: currentDate,
   };
 
@@ -96,38 +59,24 @@ export const DetailedReportDialog = ({
 
             <CostAnalysis
               minutes={formData.minutes}
-              standardAICost={standardAICost}
-              premiumAICost={premiumAICost}
-              humanOperatorCost={humanOperatorCost}
-              standardSavings={standardSavings}
-              premiumSavings={premiumSavings}
-              standardSavingsPercentage={standardSavingsPercentage}
-              premiumSavingsPercentage={premiumSavingsPercentage}
+              standardAICost={calculations.standardAICost}
+              premiumAICost={calculations.premiumAICost}
+              humanOperatorCost={calculations.humanOperatorCost}
+              standardSavings={calculations.standardSavings}
+              premiumSavings={calculations.premiumSavings}
+              standardSavingsPercentage={calculations.standardSavingsPercentage}
+              premiumSavingsPercentage={calculations.premiumSavingsPercentage}
             />
 
             <AdditionalBenefits
-              humanCallsPerMonth={humanCallsPerMonth}
-              aiCallsPerMonth={aiCallsPerMonth}
-              aiSimultaneousCalls={aiSimultaneousCalls}
+              humanCallsPerMonth={calculations.callMetrics.humanCallsPerMonth}
+              aiCallsPerMonth={calculations.callMetrics.aiCallsPerMonth}
+              aiSimultaneousCalls={calculations.callMetrics.aiSimultaneousCalls}
             />
           </div>
 
           <div className="flex justify-end pt-4">
-            <PDFDownloadLink
-              document={<ReportPDF data={reportData} />}
-              fileName="chatsites-cost-analysis.pdf"
-              className="w-full"
-            >
-              {({ loading }) => (
-                <Button
-                  disabled={loading}
-                  className="w-full gap-2 bg-brand hover:bg-brand-dark"
-                >
-                  <Download className="w-4 h-4" />
-                  {loading ? "Generating PDF..." : "Download PDF Report"}
-                </Button>
-              )}
-            </PDFDownloadLink>
+            <PDFDownloadButton reportData={reportData} />
           </div>
         </div>
       </DialogContent>
