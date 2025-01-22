@@ -78,7 +78,7 @@ export const DetailedReportDialog = ({
     },
     date: currentDate,
   };
-  
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95%] sm:w-[90%] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-4 sm:p-6">
@@ -122,7 +122,7 @@ export const DetailedReportDialog = ({
                   disabled={loading}
                   className="w-full gap-2 bg-brand hover:bg-brand-dark"
                 >
-                  <Download size={16} />
+                  <Download className="w-4 h-4" />
                   {loading ? "Generating PDF..." : "Download PDF Report"}
                 </Button>
               )}
