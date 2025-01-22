@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -10,7 +9,6 @@ import { toast } from "sonner";
 const Login = () => {
   const [email, setEmail] = useState("jimmy.pavlatos@gmail.com");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +18,7 @@ const Login = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.toLowerCase().trim(),
         options: {
-          emailRedirectTo: 'https://preview--voicecost-companion.lovable.app/',
+          emailRedirectTo: 'https://wlogbwxjteyycddkjvki.lovable.app'
         }
       });
 
