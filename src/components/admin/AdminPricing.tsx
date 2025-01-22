@@ -10,26 +10,26 @@ export const AdminPricing = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchLatestPrice = async () => {
-      const { data, error } = await supabase
-        .from('client_pricing')
-        .select('cost_per_minute')
-        .order('created_at', { ascending: false })
-        .limit(1);
-
-      if (error) {
-        console.error('Error fetching price:', error);
-        toast.error("Failed to fetch current pricing");
-        return;
-      }
-
-      if (data && data.length > 0) {
-        setCostPerMinute(Number(data[0].cost_per_minute));
-      }
-    };
-
     fetchLatestPrice();
   }, []);
+
+  const fetchLatestPrice = async () => {
+    const { data, error } = await supabase
+      .from('client_pricing')
+      .select('cost_per_minute')
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.error('Error fetching price:', error);
+      toast.error("Failed to fetch current pricing");
+      return;
+    }
+
+    if (data && data.length > 0) {
+      setCostPerMinute(Number(data[0].cost_per_minute));
+    }
+  };
 
   const handleSave = async () => {
     try {
@@ -49,6 +49,9 @@ export const AdminPricing = () => {
         ]);
 
       if (error) throw error;
+      
+      // Verify the change was saved by fetching the latest price
+      await fetchLatestPrice();
       
       toast.success("Pricing updated successfully");
     } catch (error: any) {
