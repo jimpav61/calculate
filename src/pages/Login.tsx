@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -10,32 +9,27 @@ import { toast } from "sonner";
 const Login = () => {
   const [email, setEmail] = useState("jimmy.pavlatos@gmail.com");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const normalizedEmail = email.toLowerCase().trim();
-      
-      // Send the magic link
-      const { error: signInError } = await supabase.auth.signInWithOtp({
-        email: normalizedEmail,
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.toLowerCase().trim(),
         options: {
           emailRedirectTo: `${window.location.origin}/admin`,
         }
       });
 
-      if (signInError) {
-        toast.error("Failed to send magic link. Please try again.");
+      if (error) {
+        toast.error("Failed to send magic link");
         return;
       }
 
       toast.success("Magic link sent! Check your email.");
-
     } catch (error) {
-      toast.error("An unexpected error occurred. Please try again.");
+      toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);
     }
