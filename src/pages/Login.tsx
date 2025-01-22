@@ -20,23 +20,20 @@ const Login = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.toLowerCase().trim(),
         options: {
-          emailRedirectTo: `${window.location.origin}/admin`,
-          data: {
-            email: email.toLowerCase().trim()
-          }
+          emailRedirectTo: window.location.origin,
         }
       });
 
       if (error) {
         console.error('Login error:', error);
-        toast.error("Failed to send magic link");
+        toast.error(error.message || "Failed to send magic link");
         return;
       }
 
       toast.success("Magic link sent! Check your email.");
-    } catch (error) {
+    } catch (error: any) {
       console.error('Unexpected error:', error);
-      toast.error("An unexpected error occurred");
+      toast.error(error.message || "An unexpected error occurred");
     } finally {
       setLoading(false);
     }
