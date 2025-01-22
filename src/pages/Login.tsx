@@ -12,22 +12,34 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if we have a session
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (session) {
-        // If we have a session, verify if the user is an admin
-        const { data: adminUser } = await supabase
+        // Check if user is an admin
+        const { data: adminUser, error: adminError } = await supabase
           .from('admin_users')
           .select('email')
           .eq('email', session.user.email)
           .single();
 
+        if (adminError) {
+          console.error('Error checking admin status:', adminError);
+          toast.error("Error verifying admin status");
+          return;
+        }
+
         if (adminUser) {
           navigate('/admin');
+        } else {
+          toast.error("Access denied. Only admin users can access this page.");
+          await supabase.auth.signOut();
         }
       }
     };
+
+    // Check session on mount
+    checkSession();
 
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -35,21 +47,26 @@ const Login = () => {
       
       if (event === 'SIGNED_IN' && session) {
         // Verify if the user is an admin
-        const { data: adminUser } = await supabase
+        const { data: adminUser, error: adminError } = await supabase
           .from('admin_users')
           .select('email')
           .eq('email', session.user.email)
           .single();
 
+        if (adminError) {
+          console.error('Error checking admin status:', adminError);
+          toast.error("Error verifying admin status");
+          return;
+        }
+
         if (adminUser) {
           navigate('/admin');
         } else {
           toast.error("Access denied. Only admin users can access this page.");
+          await supabase.auth.signOut();
         }
       }
     });
-
-    checkSession();
 
     return () => {
       subscription.unsubscribe();
