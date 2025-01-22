@@ -19,24 +19,7 @@ const Login = () => {
     try {
       const normalizedEmail = email.toLowerCase().trim();
       
-      // First check if the email exists in admin_users
-      const { data: adminUser, error: adminError } = await supabase
-        .from('admin_users')
-        .select('email')
-        .eq('email', normalizedEmail)
-        .maybeSingle();
-
-      if (adminError) {
-        toast.error("Error checking admin status. Please try again.");
-        return;
-      }
-
-      if (!adminUser) {
-        toast.error("Access denied. Only admin users can access this application.");
-        return;
-      }
-
-      // If we get here, the user is an admin, so send the magic link
+      // Send the magic link
       const { error: signInError } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
