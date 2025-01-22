@@ -39,6 +39,13 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#f8f8f8',
   },
+  benefitsList: {
+    marginTop: 10,
+  },
+  benefitItem: {
+    fontSize: 11,
+    marginBottom: 4,
+  },
 });
 
 interface ReportPDFProps {
@@ -103,11 +110,20 @@ export const ReportPDF = ({ data }: ReportPDFProps) => (
 
       <View style={styles.section}>
         <Text style={styles.heading}>Additional Benefits</Text>
-        <Text style={styles.text}>• 24/7 Availability without overtime costs</Text>
-        <Text style={styles.text}>• Consistent service quality</Text>
-        <Text style={styles.text}>• Instant scalability</Text>
-        <Text style={styles.text}>• No training or turnover costs</Text>
-        <Text style={styles.text}>• Multi-language support capability</Text>
+        <View style={styles.benefitsList}>
+          <Text style={styles.benefitItem}>• 24/7 Availability without overtime costs</Text>
+          <Text style={styles.benefitItem}>• Consistent service quality across all interactions</Text>
+          <Text style={styles.benefitItem}>• Instant scalability to handle peak demand periods</Text>
+          <Text style={styles.benefitItem}>• Zero training time and no turnover costs</Text>
+          <Text style={styles.benefitItem}>• Multi-language support for global reach</Text>
+          <Text style={styles.benefitItem}>• Reduced operational overhead and management costs</Text>
+          <Text style={styles.benefitItem}>• Improved customer satisfaction through instant response times</Text>
+          <Text style={styles.benefitItem}>• Advanced analytics and insights from every conversation</Text>
+          <Text style={styles.benefitItem}>• Seamless integration with existing business systems</Text>
+          <Text style={styles.benefitItem}>• Compliance and security standards adherence</Text>
+          <Text style={styles.benefitItem}>• Reduced human error in customer interactions</Text>
+          <Text style={styles.benefitItem}>• Ability to handle multiple conversations simultaneously</Text>
+        </View>
       </View>
     </Page>
   </Document>
