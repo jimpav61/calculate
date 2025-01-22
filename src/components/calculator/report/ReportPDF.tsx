@@ -1,4 +1,13 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+
+// Register a consistent font family
+Font.register({
+  family: 'Helvetica',
+  fonts: [
+    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4TYFv.ttf', fontWeight: 'normal' },
+    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4QIFv.ttf', fontWeight: 'bold' },
+  ]
+});
 
 const styles = StyleSheet.create({
   page: {
@@ -9,24 +18,31 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 20,
     color: '#f65228',
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold',
   },
   section: {
     marginBottom: 20,
+    fontFamily: 'Helvetica',
   },
   heading: {
     fontSize: 18,
     marginBottom: 10,
     color: '#f65228',
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold',
   },
   subheading: {
     fontSize: 14,
     marginBottom: 8,
     color: '#333',
     fontWeight: 'bold',
+    fontFamily: 'Helvetica',
   },
   text: {
     fontSize: 12,
     marginBottom: 5,
+    fontFamily: 'Helvetica',
   },
   costSection: {
     marginTop: 10,
@@ -39,6 +55,7 @@ const styles = StyleSheet.create({
   },
   bullet: {
     marginLeft: 10,
+    fontFamily: 'Helvetica',
   }
 });
 
