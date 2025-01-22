@@ -67,20 +67,22 @@ export function DetailedReportDialog({
                 fileName="voice-ai-cost-report.pdf"
                 className="w-full"
               >
-                {({ loading }) => loading ? (
-                  <Button
-                    className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
-                    disabled
-                  >
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating PDF...
-                  </Button>
-                ) : (
-                  <Button
-                    className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
-                  >
-                    Download PDF Report
-                  </Button>
+                {({ loading }) => (
+                  loading ? (
+                    <Button
+                      className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
+                      disabled
+                    >
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating PDF...
+                    </Button>
+                  ) : (
+                    <Button
+                      className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
+                    >
+                      Download PDF Report
+                    </Button>
+                  )
                 )}
               </PDFDownloadLink>
             </div>
