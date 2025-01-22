@@ -24,8 +24,8 @@ const Calculator = () => {
   } = useCalculator(costPerMinute);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-white to-gray-50">
-      <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 glass-card animate-fade-in">
+    <div className="min-h-screen w-full flex items-center justify-center px-2 py-4 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-white to-gray-50">
+      <Card className="w-full max-w-[340px] sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 glass-card animate-fade-in">
         <CalculatorHeader
           title="Chatsites Voice AI Calculator"
           subtitle="Calculate your estimated monthly costs"

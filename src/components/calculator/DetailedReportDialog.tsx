@@ -119,7 +119,7 @@ export const DetailedReportDialog = ({
               fileName="chatsites-cost-analysis.pdf"
               className="w-full sm:w-auto"
             >
-              {({ loading }) => (
+              {({ loading }: { loading: boolean }): ReactElement => (
                 <Button
                   disabled={loading}
                   className="w-full sm:w-auto gap-2 bg-brand hover:bg-brand-dark"
