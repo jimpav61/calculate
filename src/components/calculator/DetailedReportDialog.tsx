@@ -118,7 +118,7 @@ export const DetailedReportDialog = ({
               document={<ReportPDF data={reportData} />}
               fileName="chatsites-cost-analysis.pdf"
             >
-              {({ loading }): ReactElement => (
+              {({ loading }) => (
                 <Button
                   disabled={loading}
                   className="w-full gap-2 bg-brand hover:bg-brand-dark"
