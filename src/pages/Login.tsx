@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Login = () => {
-  const [email, setEmail] = useState("jimmy.pavlatos@gmail.com"); // Pre-filled for testing
+  const [email, setEmail] = useState("jimmy.pavlatos@gmail.com");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -20,17 +20,15 @@ const Login = () => {
     try {
       // Step 1: Normalize email
       const normalizedEmail = email.toLowerCase().trim();
-      console.log('Normalized email:', normalizedEmail);
+      console.log('Checking admin status for:', normalizedEmail);
 
       // Step 2: Query admin_users table
-      console.log('Querying admin_users table...');
-      const { data: adminUser, error: adminError } = await supabase
+      const { data: adminUsers, error: adminError } = await supabase
         .from('admin_users')
         .select('*')
-        .eq('email', normalizedEmail)
-        .single();
+        .eq('email', normalizedEmail);
 
-      console.log('Admin query result:', { adminUser, adminError });
+      console.log('Admin query result:', { adminUsers, adminError });
 
       if (adminError) {
         console.error('Admin check failed:', adminError);
@@ -38,16 +36,16 @@ const Login = () => {
         return;
       }
 
-      if (!adminUser) {
-        console.log('Not an admin user');
+      // Check if the email exists in admin_users
+      if (!adminUsers || adminUsers.length === 0) {
+        console.log('Access denied: Not an admin user');
         toast.error("Access denied. Only admin users can access this application.");
         return;
       }
 
-      console.log('Admin user verified:', adminUser);
+      console.log('Admin access granted for:', normalizedEmail);
 
       // Step 3: Send magic link
-      console.log('Sending magic link...');
       const { error: signInError } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
