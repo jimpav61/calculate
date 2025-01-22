@@ -16,19 +16,17 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
   };
 
   const calculatePotentialSavings = () => {
-    // Assuming 20% savings compared to traditional solutions
     const traditionalCost = formData.minutes * (costPerMinute * 1.2);
     return (traditionalCost - formData.minutes * costPerMinute).toFixed(2);
   };
 
   const calculateRecommendedCharge = () => {
-    // Recommended charge includes a 15% margin for operational costs
     return (formData.minutes * costPerMinute * 1.15).toFixed(2);
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div>
+      <div className="space-y-2">
         <Label htmlFor="minutes">Estimated Monthly Minutes</Label>
         <Input
           id="minutes"
@@ -40,6 +38,11 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
           className="mt-1"
           required
         />
+        <p className="text-sm text-gray-500 italic mt-2">
+          * Example: A human operator handling 12 calls/hour for 8 hours/day, 22 days/month, 
+          with average call duration of 5 minutes = 10,560 minutes/month 
+          (12 calls × 8 hours × 22 days × 5 minutes)
+        </p>
       </div>
 
       <Card className="p-6 bg-gray-50 rounded-lg border border-gray-200">
