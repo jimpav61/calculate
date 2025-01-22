@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { AdminStats } from "@/components/admin/AdminStats";
 import { AdminPricing } from "@/components/admin/AdminPricing";
 import { AdminSubmissions } from "@/components/admin/AdminSubmissions";
+import { AdminCRM } from "@/components/admin/AdminCRM";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Admin = () => {
@@ -90,6 +91,7 @@ const Admin = () => {
             <TabsTrigger value="stats">Statistics</TabsTrigger>
             <TabsTrigger value="pricing">Pricing</TabsTrigger>
             <TabsTrigger value="submissions">Submissions</TabsTrigger>
+            <TabsTrigger value="crm">CRM</TabsTrigger>
           </TabsList>
 
           <TabsContent value="stats" className="space-y-6">
@@ -102,6 +104,10 @@ const Admin = () => {
 
           <TabsContent value="submissions" className="space-y-6">
             <AdminSubmissions />
+          </TabsContent>
+
+          <TabsContent value="crm" className="space-y-6">
+            <AdminCRM />
           </TabsContent>
         </Tabs>
       </div>
