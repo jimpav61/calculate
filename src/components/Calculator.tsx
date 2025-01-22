@@ -9,9 +9,35 @@ import { DetailedReportDialog } from "./calculator/DetailedReportDialog";
 import { NavigationButtons } from "./calculator/NavigationButtons";
 import { CalculatorHeader } from "./calculator/CalculatorHeader";
 import { useCalculator } from "@/hooks/useCalculator";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const Calculator = () => {
-  const costPerMinute = 0.05;
+  const [costPerMinute, setCostPerMinute] = useState(0.05);
+
+  useEffect(() => {
+    const fetchLatestPrice = async () => {
+      const { data, error } = await supabase
+        .from('client_pricing')
+        .select('cost_per_minute')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (error) {
+        console.error('Error fetching price:', error);
+        toast.error("Failed to fetch current pricing");
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setCostPerMinute(Number(data[0].cost_per_minute));
+      }
+    };
+
+    fetchLatestPrice();
+  }, []);
+
   const {
     step,
     showReport,

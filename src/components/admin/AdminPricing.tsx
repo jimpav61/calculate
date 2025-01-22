@@ -10,7 +10,6 @@ export const AdminPricing = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get the most recent cost per minute from client_pricing
     const fetchLatestPrice = async () => {
       const { data, error } = await supabase
         .from('client_pricing')
@@ -36,11 +35,18 @@ export const AdminPricing = () => {
     try {
       setLoading(true);
       
-      // Update all future client submissions to use this new price
+      // Insert a new pricing record
       const { error } = await supabase
         .from('client_pricing')
-        .update({ cost_per_minute: costPerMinute })
-        .gt('created_at', new Date().toISOString());
+        .insert([
+          { 
+            cost_per_minute: costPerMinute,
+            client_name: 'default',
+            company_name: 'default',
+            email: 'default@example.com',
+            minutes: 0
+          }
+        ]);
 
       if (error) throw error;
       
