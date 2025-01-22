@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -36,7 +35,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md p-6 space-y-6">
+      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Admin Login</h1>
           <p className="text-gray-600">Enter your email to receive a magic link</p>
@@ -64,7 +63,7 @@ const Login = () => {
             {loading ? "Sending magic link..." : "Send Magic Link"}
           </Button>
         </form>
-      </Card>
+      </div>
     </div>
   );
 };
