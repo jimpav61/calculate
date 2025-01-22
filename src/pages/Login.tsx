@@ -9,7 +9,6 @@ import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -31,14 +30,17 @@ const Login = () => {
         return;
       }
 
-      const { error } = await supabase.auth.signInWithPassword({
+      // Send magic link
+      const { error } = await supabase.auth.signInWithOtp({
         email,
-        password,
+        options: {
+          emailRedirectTo: window.location.origin + '/admin'
+        }
       });
 
       if (error) throw error;
 
-      navigate("/admin");
+      toast.success("Check your email for the magic link!");
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -51,7 +53,7 @@ const Login = () => {
       <Card className="w-full max-w-md p-6 space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Admin Login</h1>
-          <p className="text-gray-600">Please sign in to access the admin area</p>
+          <p className="text-gray-600">Enter your email to receive a magic link</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -66,23 +68,12 @@ const Login = () => {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
           <Button
             type="submit"
             className="w-full"
             disabled={loading}
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Sending magic link..." : "Send Magic Link"}
           </Button>
         </form>
       </Card>
