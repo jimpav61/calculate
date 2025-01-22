@@ -36,16 +36,11 @@ export const AdminPricing = () => {
     try {
       setLoading(true);
       
-      // Insert a new pricing record instead of updating
+      // Update all future client submissions to use this new price
       const { error } = await supabase
         .from('client_pricing')
-        .insert([{ 
-          cost_per_minute: costPerMinute,
-          client_name: 'default',
-          company_name: 'default',
-          email: 'default@example.com',
-          minutes: 0
-        }]);
+        .update({ cost_per_minute: costPerMinute })
+        .gt('created_at', new Date().toISOString());
 
       if (error) throw error;
       

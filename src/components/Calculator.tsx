@@ -9,10 +9,9 @@ import { DetailedReportDialog } from "./calculator/DetailedReportDialog";
 import { NavigationButtons } from "./calculator/NavigationButtons";
 import { CalculatorHeader } from "./calculator/CalculatorHeader";
 import { useCalculator } from "@/hooks/useCalculator";
-import { useLatestPricing } from "@/hooks/useLatestPricing";
 
 const Calculator = () => {
-  const { data: costPerMinute = 0.05 } = useLatestPricing();
+  const costPerMinute = 0.05;
   const {
     step,
     showReport,
