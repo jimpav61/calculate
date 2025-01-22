@@ -38,7 +38,9 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
           name="minutes"
           type="number"
           min="0"
-          value={formData.minutes}
+          step="100"
+          placeholder="Enter minutes in increments of 100"
+          value={formData.minutes || ''}
           onChange={onChange}
           className="mt-1"
           required
