@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,71 +17,57 @@ const Login = () => {
     setLoading(true);
 
     try {
+      const normalizedEmail = email.toLowerCase().trim();
+      console.log('Attempting login for email:', normalizedEmail);
+
       // First check if the email is in admin_users table
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
-        .select('*')  // Changed from just 'email' to '*' to get full row
-        .eq('email', email.toLowerCase().trim())  // Normalize email
-        .single();
+        .select('*')
+        .eq('email', normalizedEmail)
+        .maybeSingle();
 
-      console.log('Admin check result:', { adminUser, adminError });
+      console.log('Admin check query result:', { adminUser, adminError });
 
       if (adminError) {
         console.error('Admin check error:', adminError);
-        toast({
-          title: "Error",
-          description: "Failed to verify admin status. Please try again.",
-          variant: "destructive",
-        });
-        setLoading(false);
+        toast.error("Failed to verify admin status. Please try again.");
         return;
       }
 
       if (!adminUser) {
-        console.log('Access denied - Email not found in admin_users:', email);
-        toast({
-          title: "Access Denied",
-          description: "Only admin users can log in to this application.",
-          variant: "destructive",
-        });
-        setLoading(false);
+        console.log('Access denied - Email not found in admin_users:', normalizedEmail);
+        toast.error("Only admin users can log in to this application.");
         return;
       }
 
-      // If we get here, the user is an admin
-      console.log('Admin access granted for:', email);
+      console.log('Admin user found:', adminUser);
 
       // Send magic link with explicit redirect URL
-      const redirectTo = new URL('/admin', window.location.origin).toString();
-      console.log('Redirect URL:', redirectTo);
+      const redirectUrl = `${window.location.origin}/admin`;
+      console.log('Using redirect URL:', redirectUrl);
 
-      const { error: authError } = await supabase.auth.signInWithOtp({
-        email: email.toLowerCase().trim(),
+      const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
+        email: normalizedEmail,
         options: {
-          emailRedirectTo: redirectTo,
-          data: {
-            role: 'admin',
-            admin_id: adminUser.id // Include admin ID in the JWT claims
-          }
+          emailRedirectTo: redirectUrl,
         }
       });
 
+      console.log('Magic link request result:', { authData, authError });
+
       if (authError) {
         console.error('Auth error:', authError);
-        throw authError;
+        toast.error(authError.message || "Error sending magic link");
+        return;
       }
 
-      toast({
-        title: "Check your email",
-        description: "We've sent you a magic link to log in.",
-      });
+      toast.success("Check your email for the magic link!");
+      console.log('Magic link sent successfully to:', normalizedEmail);
+
     } catch (error: any) {
       console.error('Login error:', error);
-      toast({
-        title: "Error",
-        description: error.message || "An error occurred during login",
-        variant: "destructive",
-      });
+      toast.error(error.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }
