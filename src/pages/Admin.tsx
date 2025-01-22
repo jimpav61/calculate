@@ -22,13 +22,21 @@ const Admin = () => {
       }
 
       // Check if the user is an admin
-      const { data: adminUser } = await supabase
+      const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
         .select('email')
         .eq('email', session.user.email)
-        .single();
+        .maybeSingle();
+
+      if (adminError) {
+        console.error('Admin check error:', adminError);
+        toast.error("Error verifying admin status");
+        navigate("/login");
+        return;
+      }
 
       if (!adminUser) {
+        console.log('Not an admin user:', session.user.email);
         toast.error("Access denied. Only admin users can access this page.");
         navigate("/login");
         return;
@@ -36,6 +44,7 @@ const Admin = () => {
 
       setLoading(false);
     } catch (error: any) {
+      console.error('Admin check error:', error);
       toast.error("Error checking admin status");
       navigate("/login");
     }
@@ -47,7 +56,8 @@ const Admin = () => {
       if (error) throw error;
       navigate("/login");
     } catch (error: any) {
-      toast.error(error.message);
+      console.error('Sign out error:', error);
+      toast.error(error.message || "Error signing out");
     }
   };
 
