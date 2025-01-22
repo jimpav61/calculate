@@ -1,22 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const AdminPricing = () => {
   const [costPerMinute, setCostPerMinute] = useState(0.05);
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
-    // In a real app, this would save to a backend
-    toast.success("Pricing updated successfully");
+  useEffect(() => {
+    // Get the most recent cost per minute from client_pricing
+    const fetchLatestPrice = async () => {
+      const { data, error } = await supabase
+        .from('client_pricing')
+        .select('cost_per_minute')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (error) {
+        console.error('Error fetching price:', error);
+        toast.error("Failed to fetch current pricing");
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setCostPerMinute(Number(data[0].cost_per_minute));
+      }
+    };
+
+    fetchLatestPrice();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      
+      // Update all future client submissions to use this new price
+      const { error } = await supabase
+        .from('client_pricing')
+        .update({ cost_per_minute: costPerMinute })
+        .gt('created_at', new Date().toISOString());
+
+      if (error) throw error;
+      
+      toast.success("Pricing updated successfully");
+    } catch (error: any) {
+      console.error('Error updating price:', error);
+      toast.error("Failed to update pricing");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-semibold mb-4">Voice AI Pricing</h2>
-        <p className="text-gray-600 mb-4">Adjust the cost per minute for Voice AI services.</p>
+        <p className="text-gray-600 mb-4">
+          Adjust the cost per minute for Voice AI services. This will affect all future client submissions.
+        </p>
       </div>
 
       <div className="space-y-4 max-w-md">
@@ -33,7 +76,12 @@ export const AdminPricing = () => {
           />
         </div>
 
-        <Button onClick={handleSave}>Save Changes</Button>
+        <Button 
+          onClick={handleSave} 
+          disabled={loading}
+        >
+          {loading ? "Saving..." : "Save Changes"}
+        </Button>
       </div>
     </div>
   );
