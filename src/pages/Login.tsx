@@ -7,6 +7,8 @@ import { toast } from "sonner";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -53,17 +55,8 @@ const Login = () => {
       }
     };
 
-    // Handle redirect with error
-    const error = searchParams.get('error');
-    const errorDescription = searchParams.get('error_description');
-    if (error) {
-      console.error("Auth redirect error:", error, errorDescription);
-      toast.error(errorDescription || "Authentication error");
-      return;
-    }
-
     checkSession();
-  }, [navigate, searchParams]);
+  }, [navigate]);
 
   useEffect(() => {
     const {
@@ -106,18 +99,14 @@ const Login = () => {
     setLoading(true);
     
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: "jimmy.pavlatos@gmail.com",
-        options: {
-          emailRedirectTo: 'https://preview--voicecost-companion.lovable.app/login'
-        }
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
       });
 
       if (error) {
         console.error("Login error:", error);
         toast.error(error.message);
-      } else {
-        toast.success("Magic link sent! Check your email.");
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -132,23 +121,38 @@ const Login = () => {
       <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-lg">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Admin Login</h1>
-          <p className="mt-2 text-gray-600">Click below to receive a magic link</p>
+          <p className="mt-2 text-gray-600">Please enter your credentials</p>
         </div>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-6">
-          <Input
-            type="email"
-            value="jimmy.pavlatos@gmail.com"
-            disabled
-            className="mt-1"
-          />
+          <div>
+            <Input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-1"
+            />
+          </div>
+          
+          <div>
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-1"
+            />
+          </div>
 
           <Button
             type="submit"
             className="w-full"
             disabled={loading}
           >
-            {loading ? "Sending magic link..." : "Send Magic Link"}
+            {loading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
       </div>
