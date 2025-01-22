@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { useReportCalculations } from "../calculator/report/ReportCalculations";
 import { ReportPDF } from "../calculator/report/ReportPDF";
 import { pdf } from "@react-pdf/renderer";
+import { PreviewReportDialog } from "./PreviewReportDialog";
 
 interface Prospect {
   id: string;
@@ -32,6 +33,7 @@ export const AdminCRM = () => {
   const [selectedProspect, setSelectedProspect] = useState<Prospect | null>(null);
   const [newCostPerMinute, setNewCostPerMinute] = useState<number | ''>('');
   const [sending, setSending] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     fetchProspects();
@@ -55,14 +57,18 @@ export const AdminCRM = () => {
   };
 
   const handleSendReport = async (prospect: Prospect) => {
+    if (!newCostPerMinute) {
+      toast.error("Please enter a new cost per minute");
+      return;
+    }
+
     try {
       setSending(true);
-      setSelectedProspect(prospect);
 
       // Calculate updated values
       const calculations = useReportCalculations({
         minutes: prospect.minutes,
-        costPerMinute: newCostPerMinute || prospect.cost_per_minute,
+        costPerMinute: newCostPerMinute,
       });
 
       // Generate PDF
@@ -100,7 +106,17 @@ export const AdminCRM = () => {
       });
 
       if (error) throw error;
+
+      // Update the cost_per_minute in the database
+      const { error: updateError } = await supabase
+        .from('client_pricing')
+        .update({ cost_per_minute: newCostPerMinute })
+        .eq('id', prospect.id);
+
+      if (updateError) throw updateError;
+
       toast.success("Report sent successfully");
+      fetchProspects(); // Refresh the list
     } catch (error: any) {
       toast.error("Failed to send report");
       console.error("Error sending report:", error);
@@ -108,6 +124,7 @@ export const AdminCRM = () => {
       setSending(false);
       setSelectedProspect(null);
       setNewCostPerMinute('');
+      setShowPreview(false);
     }
   };
 
@@ -173,6 +190,13 @@ export const AdminCRM = () => {
                           className="w-24"
                         />
                         <Button 
+                          onClick={() => setShowPreview(true)}
+                          disabled={!newCostPerMinute}
+                          size="sm"
+                        >
+                          Preview
+                        </Button>
+                        <Button 
                           onClick={() => handleSendReport(prospect)}
                           disabled={sending || !newCostPerMinute}
                           size="sm"
@@ -184,6 +208,7 @@ export const AdminCRM = () => {
                           onClick={() => {
                             setSelectedProspect(null);
                             setNewCostPerMinute('');
+                            setShowPreview(false);
                           }}
                           size="sm"
                         >
@@ -205,6 +230,15 @@ export const AdminCRM = () => {
             </TableBody>
           </Table>
         </div>
+      )}
+
+      {selectedProspect && showPreview && (
+        <PreviewReportDialog
+          open={showPreview}
+          onOpenChange={setShowPreview}
+          prospect={selectedProspect}
+          newCostPerMinute={Number(newCostPerMinute)}
+        />
       )}
     </div>
   );
