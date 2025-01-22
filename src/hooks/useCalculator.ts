@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 
 interface CalculatorFormData {
   name: string;
@@ -29,17 +30,32 @@ export const useCalculator = (initialCostPerMinute: number) => {
 
   const validateContactInfo = () => {
     if (step === 2) {
-      return formData.name.trim() !== "" && formData.companyName.trim() !== "";
+      if (!formData.name.trim() || !formData.companyName.trim()) {
+        toast({
+          title: "Missing Information",
+          description: "Please fill in both your name and company name before proceeding.",
+          variant: "destructive",
+        });
+        return false;
+      }
+      return true;
     }
     if (step === 3) {
-      return formData.phone.trim() !== "" && formData.email.trim() !== "";
+      if (!formData.phone.trim() || !formData.email.trim()) {
+        toast({
+          title: "Missing Information",
+          description: "Please provide both your phone number and email address before proceeding.",
+          variant: "destructive",
+        });
+        return false;
+      }
+      return true;
     }
     return true;
   };
 
   const handleNext = () => {
     if (!validateContactInfo()) {
-      alert("Please fill in all required fields before proceeding.");
       return;
     }
     if (step < 5) {
