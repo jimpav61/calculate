@@ -60,7 +60,7 @@ export const DetailedReportDialog = ({
   const standardSavingsPercentage = ((standardSavings / humanOperatorCost) * 100).toFixed(1);
   const premiumSavingsPercentage = ((premiumSavings / humanOperatorCost) * 100).toFixed(1);
   const currentDate = new Date().toLocaleDateString();
-
+  
   const reportData = {
     formData,
     calculations: {
@@ -117,9 +117,8 @@ export const DetailedReportDialog = ({
             <PDFDownloadLink
               document={<ReportPDF data={reportData} />}
               fileName="chatsites-cost-analysis.pdf"
-              className="w-full"
             >
-              {({ blob, url, loading, error }) => (
+              {({ loading }) => (
                 <Button
                   disabled={loading}
                   className="w-full gap-2 bg-brand hover:bg-brand-dark"

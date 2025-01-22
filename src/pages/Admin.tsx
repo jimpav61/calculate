@@ -3,11 +3,71 @@ import { AdminPricing } from "@/components/admin/AdminPricing";
 import { AdminSubmissions } from "@/components/admin/AdminSubmissions";
 import { AdminStats } from "@/components/admin/AdminStats";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { createClient } from '@supabase/supabase-js';
+import { useToast } from "@/components/ui/use-toast";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const Admin = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Access Denied",
+          description: "Please sign in to access the admin dashboard",
+          variant: "destructive",
+        });
+        navigate("/");
+      } else {
+        // Here you might want to check if the user has admin rights
+        // For now, we'll assume any authenticated user is an admin
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error('Error checking authentication:', error);
+      navigate("/");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen p-8 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <Button onClick={handleSignOut} variant="outline">
+          Sign Out
+        </Button>
+      </div>
       
       <Tabs defaultValue="pricing" className="space-y-4">
         <TabsList>
