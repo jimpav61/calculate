@@ -1,11 +1,11 @@
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 
-// Register a consistent font family
+// Register fonts
 Font.register({
   family: 'Helvetica',
   fonts: [
-    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4TYFv.ttf', fontWeight: 'normal' },
-    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4QIFv.ttf', fontWeight: 'bold' },
+    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4QIFqPfE.woff2', fontWeight: 'normal' },
+    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4QYFqPfE.woff2', fontWeight: 'bold' }
   ]
 });
 
