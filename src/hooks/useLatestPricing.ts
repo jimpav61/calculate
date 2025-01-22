@@ -5,6 +5,7 @@ export const useLatestPricing = () => {
   return useQuery({
     queryKey: ["latestPricing"],
     queryFn: async () => {
+      console.log("Fetching latest pricing...");
       const { data, error } = await supabase
         .from('client_pricing')
         .select('cost_per_minute')
@@ -16,9 +17,12 @@ export const useLatestPricing = () => {
         return 0.05; // Fallback to default price if error
       }
 
-      return data && data.length > 0 ? Number(data[0].cost_per_minute) : 0.05;
+      const price = data && data.length > 0 ? Number(data[0].cost_per_minute) : 0.05;
+      console.log("Latest price fetched:", price);
+      return price;
     },
-    refetchInterval: 5000, // Refetch every 5 seconds
+    refetchInterval: 2000, // Refetch every 2 seconds
     staleTime: 0, // Consider data stale immediately
+    cacheTime: 0, // Don't cache the data
   });
 };
