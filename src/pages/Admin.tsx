@@ -9,15 +9,8 @@ import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
 import { useToast } from "@/components/ui/use-toast";
 
-// Create Supabase client with explicit type checking
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase URL and Anon Key are required');
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -26,10 +19,21 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    checkUser();
+    if (!supabaseUrl || !supabaseAnonKey) {
+      toast({
+        title: "Configuration Error",
+        description: "Please connect your project to Supabase to use the admin dashboard",
+        variant: "destructive",
+      });
+      navigate("/");
+      return;
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    checkUser(supabase);
   }, []);
 
-  const checkUser = async () => {
+  const checkUser = async (supabase: any) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -51,6 +55,8 @@ const Admin = () => {
   };
 
   const handleSignOut = async () => {
+    if (!supabaseUrl || !supabaseAnonKey) return;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
     await supabase.auth.signOut();
     navigate("/");
   };
