@@ -87,4 +87,4 @@ export function DetailedReportDialog({
       </DialogContent>
     </Dialog>
   );
-};
+}
