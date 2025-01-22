@@ -82,9 +82,9 @@ export const DetailedReportDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95%] max-w-[400px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-6">
+      <DialogContent className="w-[95%] sm:w-[90%] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-brand">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-brand">
             Detailed Cost Analysis Report
           </DialogTitle>
         </DialogHeader>
@@ -119,7 +119,7 @@ export const DetailedReportDialog = ({
               fileName="chatsites-cost-analysis.pdf"
               className="w-full"
             >
-              {({ loading }) => (
+              {({ loading }: { loading: boolean }) => (
                 <Button
                   disabled={loading}
                   className="w-full gap-2 bg-brand hover:bg-brand-dark"
