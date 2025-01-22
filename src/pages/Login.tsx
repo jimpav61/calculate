@@ -20,7 +20,7 @@ const Login = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.toLowerCase().trim(),
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: 'https://preview--voicecost-companion.lovable.app/',
         }
       });
 
