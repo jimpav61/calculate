@@ -27,7 +27,21 @@ export const useCalculator = (initialCostPerMinute: number) => {
     }));
   };
 
+  const validateContactInfo = () => {
+    if (step === 2) {
+      return formData.name.trim() !== "" && formData.companyName.trim() !== "";
+    }
+    if (step === 3) {
+      return formData.phone.trim() !== "" && formData.email.trim() !== "";
+    }
+    return true;
+  };
+
   const handleNext = () => {
+    if (!validateContactInfo()) {
+      alert("Please fill in all required fields before proceeding.");
+      return;
+    }
     if (step < 5) {
       setStep((prev) => prev + 1);
     }
