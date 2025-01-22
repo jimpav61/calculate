@@ -15,6 +15,11 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
     return (formData.minutes * costPerMinute).toFixed(2);
   };
 
+  const calculatePremiumCost = () => {
+    // Premium is 2x the base cost
+    return (formData.minutes * (costPerMinute * 2)).toFixed(2);
+  };
+
   const calculatePotentialSavings = () => {
     const traditionalCost = formData.minutes * (costPerMinute * 1.2);
     return (traditionalCost - formData.minutes * costPerMinute).toFixed(2);
@@ -49,13 +54,19 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
         <div className="space-y-4">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Cost Breakdown</h3>
-            <p className="text-sm text-gray-500">Based on ${costPerMinute} per minute</p>
+            <p className="text-sm text-gray-500">Based on ${costPerMinute.toFixed(2)} per minute (Essential) / ${(costPerMinute * 2).toFixed(2)} per minute (Premium)</p>
           </div>
 
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Monthly Usage Cost:</span>
-              <span className="font-semibold text-brand">${calculateMonthlyUsageCost()}</span>
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-gray-600">Essential Voice AI Cost:</span>
+                <span className="font-semibold text-brand">${calculateMonthlyUsageCost()}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Premium Voice AI Cost:</span>
+                <span className="font-semibold text-brand">${calculatePremiumCost()}</span>
+              </div>
             </div>
 
             <div className="flex justify-between items-center">

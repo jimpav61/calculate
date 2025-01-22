@@ -42,11 +42,11 @@ export const DetailedReportDialog = ({
   const aiCallsPerDay = aiCallsPerHour * 24; // 24/7 operation
   const aiCallsPerMonth = aiCallsPerDay * 30; // Full month operation
   
-  // Standard tier calculations
+  // Standard tier calculations with dynamic pricing
   const standardAICost = formData.minutes * costPerMinute;
   
-  // Premium tier calculations (10 cents per minute)
-  const premiumCostPerMinute = 0.10;
+  // Premium tier calculations (2x the base cost)
+  const premiumCostPerMinute = costPerMinute * 2;
   const premiumAICost = formData.minutes * premiumCostPerMinute;
   
   // Calculate human operator cost based on $16/hour
