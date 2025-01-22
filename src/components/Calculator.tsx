@@ -24,8 +24,8 @@ const Calculator = () => {
   } = useCalculator(costPerMinute);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-white to-gray-50">
-      <Card className="w-full max-w-[90%] sm:max-w-[520px] md:max-w-[640px] lg:max-w-[768px] mx-auto p-4 sm:p-6 md:p-8 glass-card animate-fade-in">
+    <div className="min-h-screen w-full flex items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-white to-gray-50">
+      <Card className="w-full max-w-[320px] sm:max-w-[480px] md:max-w-[600px] lg:max-w-[720px] mx-auto p-3 sm:p-4 md:p-6 lg:p-8 glass-card animate-fade-in">
         <CalculatorHeader
           title="Chatsites Voice AI Calculator"
           subtitle="Calculate your estimated monthly costs"
@@ -33,7 +33,7 @@ const Calculator = () => {
 
         <StepIndicator currentStep={step} totalSteps={5} />
 
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-5">
           {step === 1 && <IntroductionStep />}
 
           {step === 2 && (
