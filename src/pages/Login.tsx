@@ -24,7 +24,7 @@ const Login = () => {
       // Step 2: Query admin_users table
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
-        .select('id, email')
+        .select('*')
         .eq('email', normalizedEmail)
         .maybeSingle();
 
@@ -45,13 +45,10 @@ const Login = () => {
       console.log('Step 2 success: Admin user verified:', adminUser);
 
       // Step 3: Send magic link
-      const redirectUrl = `${window.location.origin}/admin`;
-      console.log('Step 3: Sending magic link with redirect URL:', redirectUrl);
-
       const { error: signInError } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
-          emailRedirectTo: redirectUrl,
+          emailRedirectTo: `${window.location.origin}/admin`,
         }
       });
 
