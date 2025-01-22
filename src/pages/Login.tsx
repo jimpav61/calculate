@@ -13,25 +13,43 @@ const Login = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        console.log("Current session:", session);
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        console.log('Checking session:', { session, sessionError });
 
-        if (session?.user?.email) {
-          const { data: adminUser } = await supabase
-            .from('admin_users')
-            .select('email')
-            .eq('email', session.user.email)
-            .maybeSingle();
-
-          console.log("Admin check:", { adminUser });
-
-          if (adminUser) {
-            console.log("Admin user found, redirecting to admin");
-            navigate('/admin');
-          }
+        if (!session) {
+          console.log('No session found, redirecting to login');
+          return;
         }
+
+        console.log('Session found for user:', session.user.email);
+
+        // Check if the user is an admin
+        const { data: adminUser, error: adminError } = await supabase
+          .from('admin_users')
+          .select('email')
+          .eq('email', session.user.email)
+          .maybeSingle();
+
+        console.log('Admin check result:', { adminUser, adminError });
+
+        if (adminError) {
+          console.error('Admin check error:', adminError);
+          toast.error("Error verifying admin status");
+          return;
+        }
+
+        if (!adminUser) {
+          console.log('Not an admin user:', session.user.email);
+          toast.error("Access denied. Only admin users can access this page.");
+          return;
+        }
+
+        console.log('Admin access granted for:', session.user.email);
+        navigate('/admin');
       } catch (error) {
-        console.error("Session check error:", error);
+        console.error('Admin check error:', error);
+        toast.error("Error checking admin status");
       }
     };
 
@@ -91,7 +109,7 @@ const Login = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email: "jimmy.pavlatos@gmail.com",
         options: {
-          emailRedirectTo: window.location.origin + '/login'
+          emailRedirectTo: 'https://preview--voicecost-companion.lovable.app/login'
         }
       });
 
