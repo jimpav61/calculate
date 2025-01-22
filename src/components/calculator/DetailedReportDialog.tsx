@@ -91,24 +91,26 @@ export const DetailedReportDialog = ({
         <div className="space-y-4 md:space-y-6 py-4">
           <p className="text-xs md:text-sm text-brand">{currentDate}</p>
           
-          <CompanyInformation formData={formData} />
+          <div className="grid gap-6">
+            <CompanyInformation formData={formData} />
 
-          <CostAnalysis
-            minutes={formData.minutes}
-            standardAICost={standardAICost}
-            premiumAICost={premiumAICost}
-            humanOperatorCost={humanOperatorCost}
-            standardSavings={standardSavings}
-            premiumSavings={premiumSavings}
-            standardSavingsPercentage={standardSavingsPercentage}
-            premiumSavingsPercentage={premiumSavingsPercentage}
-          />
+            <CostAnalysis
+              minutes={formData.minutes}
+              standardAICost={standardAICost}
+              premiumAICost={premiumAICost}
+              humanOperatorCost={humanOperatorCost}
+              standardSavings={standardSavings}
+              premiumSavings={premiumSavings}
+              standardSavingsPercentage={standardSavingsPercentage}
+              premiumSavingsPercentage={premiumSavingsPercentage}
+            />
 
-          <AdditionalBenefits
-            humanCallsPerMonth={humanCallsPerMonth}
-            aiCallsPerMonth={aiCallsPerMonth}
-            aiSimultaneousCalls={aiSimultaneousCalls}
-          />
+            <AdditionalBenefits
+              humanCallsPerMonth={humanCallsPerMonth}
+              aiCallsPerMonth={aiCallsPerMonth}
+              aiSimultaneousCalls={aiSimultaneousCalls}
+            />
+          </div>
 
           <div className="flex justify-end pt-4">
             <PDFDownloadLink
@@ -117,7 +119,10 @@ export const DetailedReportDialog = ({
               className="w-full md:w-auto"
             >
               {({ loading }) => (
-                <Button disabled={loading} className="gap-2 w-full md:w-auto bg-brand hover:bg-brand-dark">
+                <Button
+                  disabled={loading}
+                  className="w-full md:w-auto gap-2 bg-brand hover:bg-brand-dark"
+                >
                   <Download size={16} />
                   {loading ? "Generating PDF..." : "Download PDF Report"}
                 </Button>
