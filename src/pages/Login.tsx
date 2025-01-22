@@ -15,37 +15,27 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    console.log('Starting login process...');
 
     try {
-      // Step 1: Normalize email
       const normalizedEmail = email.toLowerCase().trim();
-      console.log('Checking admin status for:', normalizedEmail);
-
-      // Step 2: Query admin_users table
+      
+      // First check if the email exists in admin_users
       const { data: adminUsers, error: adminError } = await supabase
         .from('admin_users')
-        .select('*')
+        .select('email')
         .eq('email', normalizedEmail);
 
-      console.log('Admin query result:', { adminUsers, adminError });
-
       if (adminError) {
-        console.error('Admin check failed:', adminError);
-        toast.error("Error verifying admin status");
+        toast.error("Error checking admin status. Please try again.");
         return;
       }
 
-      // Check if the email exists in admin_users
-      if (!adminUsers || adminUsers.length === 0) {
-        console.log('Access denied: Not an admin user');
+      if (!adminUsers?.length) {
         toast.error("Access denied. Only admin users can access this application.");
         return;
       }
 
-      console.log('Admin access granted for:', normalizedEmail);
-
-      // Step 3: Send magic link
+      // If we get here, the user is an admin, so send the magic link
       const { error: signInError } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
@@ -54,17 +44,14 @@ const Login = () => {
       });
 
       if (signInError) {
-        console.error('Magic link error:', signInError);
-        toast.error(signInError.message);
+        toast.error("Failed to send magic link. Please try again.");
         return;
       }
 
-      console.log('Magic link sent successfully');
       toast.success("Magic link sent! Check your email.");
 
-    } catch (error: any) {
-      console.error('Login process failed:', error);
-      toast.error(error.message || "An unexpected error occurred");
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
