@@ -18,15 +18,15 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { data: adminCheck } = await supabase
+      // First check if the email is in admin_users table
+      const { data: adminUser } = await supabase
         .from('admin_users')
         .select('email')
         .eq('email', email)
         .single();
 
-      if (!adminCheck) {
+      if (!adminUser) {
         toast.error("Access denied. Only admin users can log in.");
-        setLoading(false);
         return;
       }
 
