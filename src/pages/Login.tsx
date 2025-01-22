@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -24,37 +24,55 @@ const Login = () => {
         .eq('email', email)
         .maybeSingle();
 
-      console.log('Checking admin status for:', email);
-      console.log('Admin check result:', { adminUser, adminError });
-
       if (adminError) {
         console.error('Admin check error:', adminError);
-        throw adminError;
-      }
-
-      if (!adminUser) {
-        console.log('Access denied - Email not found in admin_users:', email);
-        toast.error("Access denied. Only admin users can log in.");
+        toast({
+          title: "Error",
+          description: "Failed to verify admin status. Please try again.",
+          variant: "destructive",
+        });
         setLoading(false);
         return;
       }
 
-      console.log('Admin user found, sending magic link to:', email);
+      if (!adminUser) {
+        console.log('Access denied - Email not found in admin_users:', email);
+        toast({
+          title: "Access Denied",
+          description: "Only admin users can log in to this application.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
 
       // Send magic link
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error: authError } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: window.location.origin + '/admin'
+          emailRedirectTo: `${window.location.origin}/admin`,
+          data: {
+            role: 'admin'
+          }
         }
       });
 
-      if (error) throw error;
+      if (authError) {
+        console.error('Auth error:', authError);
+        throw authError;
+      }
 
-      toast.success("Check your email for the magic link!");
+      toast({
+        title: "Check your email",
+        description: "We've sent you a magic link to log in.",
+      });
     } catch (error: any) {
       console.error('Login error:', error);
-      toast.error(error.message || "An error occurred during login");
+      toast({
+        title: "Error",
+        description: error.message || "An error occurred during login",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -76,7 +94,9 @@ const Login = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
               required
+              className="w-full"
             />
           </div>
 
