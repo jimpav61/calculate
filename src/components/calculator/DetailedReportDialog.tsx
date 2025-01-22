@@ -29,15 +29,22 @@ export const DetailedReportDialog = ({
   formData,
   costPerMinute,
 }: DetailedReportDialogProps) => {
-  // Calculate AI cost
-  const aiCost = formData.minutes * costPerMinute;
+  // Standard tier calculations
+  const standardAICost = formData.minutes * costPerMinute;
+  
+  // Premium tier calculations (10 cents per minute)
+  const premiumCostPerMinute = 0.10;
+  const premiumAICost = formData.minutes * premiumCostPerMinute;
   
   // Calculate human operator cost based on $16/hour
-  // Convert minutes to hours and multiply by hourly rate
   const humanOperatorCost = (formData.minutes / 60) * 16;
   
-  const savings = humanOperatorCost - aiCost;
-  const savingsPercentage = ((savings / humanOperatorCost) * 100).toFixed(1);
+  // Calculate savings for both tiers
+  const standardSavings = humanOperatorCost - standardAICost;
+  const premiumSavings = humanOperatorCost - premiumAICost;
+  
+  const standardSavingsPercentage = ((standardSavings / humanOperatorCost) * 100).toFixed(1);
+  const premiumSavingsPercentage = ((premiumSavings / humanOperatorCost) * 100).toFixed(1);
   const currentDate = new Date().toLocaleDateString();
 
   return (
@@ -56,10 +63,13 @@ export const DetailedReportDialog = ({
 
           <CostAnalysis
             minutes={formData.minutes}
-            aiCost={aiCost}
+            standardAICost={standardAICost}
+            premiumAICost={premiumAICost}
             humanOperatorCost={humanOperatorCost}
-            savings={savings}
-            savingsPercentage={savingsPercentage}
+            standardSavings={standardSavings}
+            premiumSavings={premiumSavings}
+            standardSavingsPercentage={standardSavingsPercentage}
+            premiumSavingsPercentage={premiumSavingsPercentage}
           />
 
           <AdditionalBenefits />
