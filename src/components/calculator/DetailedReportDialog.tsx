@@ -79,7 +79,7 @@ export const DetailedReportDialog = ({
     },
     date: currentDate,
   };
-
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95%] sm:w-[90%] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-4 sm:p-6">
@@ -118,7 +118,7 @@ export const DetailedReportDialog = ({
               document={<ReportPDF data={reportData} />}
               fileName="chatsites-cost-analysis.pdf"
             >
-              {({ loading }) => (
+              {({ loading }): ReactElement => (
                 <Button
                   disabled={loading}
                   className="w-full gap-2 bg-brand hover:bg-brand-dark"

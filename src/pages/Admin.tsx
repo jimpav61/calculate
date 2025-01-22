@@ -9,10 +9,15 @@ import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
 import { useToast } from "@/components/ui/use-toast";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+// Create Supabase client with explicit type checking
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Supabase URL and Anon Key are required');
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -35,8 +40,6 @@ const Admin = () => {
         });
         navigate("/");
       } else {
-        // Here you might want to check if the user has admin rights
-        // For now, we'll assume any authenticated user is an admin
         setIsAuthenticated(true);
       }
     } catch (error) {
