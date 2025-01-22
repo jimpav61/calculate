@@ -79,20 +79,20 @@ export const DetailedReportDialog = ({
     },
     date: currentDate,
   };
-
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-4 md:p-6">
+      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-3 sm:p-4 md:p-6">
         <DialogHeader>
-          <DialogTitle className="text-xl md:text-2xl font-bold text-brand">
+          <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold text-brand">
             Detailed Cost Analysis Report
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 md:space-y-6 py-4">
-          <p className="text-xs md:text-sm text-brand">{currentDate}</p>
+        <div className="space-y-3 sm:space-y-4 md:space-y-6 py-4">
+          <p className="text-xs sm:text-sm text-brand">{currentDate}</p>
           
-          <div className="grid gap-4 md:gap-6">
+          <div className="grid gap-3 sm:gap-4 md:gap-6">
             <CompanyInformation formData={formData} />
 
             <CostAnalysis
@@ -117,12 +117,12 @@ export const DetailedReportDialog = ({
             <PDFDownloadLink
               document={<ReportPDF data={reportData} />}
               fileName="chatsites-cost-analysis.pdf"
-              className="w-full md:w-auto"
+              className="w-full sm:w-auto"
             >
-              {({ loading }): ReactElement => (
+              {({ loading }) => (
                 <Button
                   disabled={loading}
-                  className="w-full md:w-auto gap-2 bg-brand hover:bg-brand-dark"
+                  className="w-full sm:w-auto gap-2 bg-brand hover:bg-brand-dark"
                 >
                   <Download size={16} />
                   {loading ? "Generating PDF..." : "Download PDF Report"}

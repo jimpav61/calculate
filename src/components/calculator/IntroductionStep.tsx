@@ -2,10 +2,10 @@ import { Card } from "@/components/ui/card";
 
 export const IntroductionStep = () => {
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Card className="p-6 text-left space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-900">How Voice AI Pricing Works</h2>
-        <div className="space-y-4 text-gray-600">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      <Card className="p-3 sm:p-4 md:p-6 text-left space-y-3 sm:space-y-4">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">How Voice AI Pricing Works</h2>
+        <div className="space-y-3 sm:space-y-4 text-gray-600">
           <p>
             Our Voice AI pricing is simple and transparent. You only pay for the minutes you use:
           </p>
