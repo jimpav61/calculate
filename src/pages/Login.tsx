@@ -20,9 +20,11 @@ const Login = () => {
       // First check if the email is in admin_users table
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
-        .select('email')
-        .eq('email', email)
-        .maybeSingle();
+        .select('*')  // Changed from just 'email' to '*' to get full row
+        .eq('email', email.toLowerCase().trim())  // Normalize email
+        .single();
+
+      console.log('Admin check result:', { adminUser, adminError });
 
       if (adminError) {
         console.error('Admin check error:', adminError);
@@ -46,13 +48,20 @@ const Login = () => {
         return;
       }
 
-      // Send magic link
+      // If we get here, the user is an admin
+      console.log('Admin access granted for:', email);
+
+      // Send magic link with explicit redirect URL
+      const redirectTo = new URL('/admin', window.location.origin).toString();
+      console.log('Redirect URL:', redirectTo);
+
       const { error: authError } = await supabase.auth.signInWithOtp({
-        email,
+        email: email.toLowerCase().trim(),
         options: {
-          emailRedirectTo: `${window.location.origin}/admin`,
+          emailRedirectTo: redirectTo,
           data: {
-            role: 'admin'
+            role: 'admin',
+            admin_id: adminUser.id // Include admin ID in the JWT claims
           }
         }
       });
