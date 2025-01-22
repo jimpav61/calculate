@@ -18,5 +18,7 @@ export const useLatestPricing = () => {
 
       return data && data.length > 0 ? Number(data[0].cost_per_minute) : 0.05;
     },
+    refetchInterval: 5000, // Refetch every 5 seconds
+    staleTime: 0, // Consider data stale immediately
   });
 };
