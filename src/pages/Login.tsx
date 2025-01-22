@@ -18,56 +18,55 @@ const Login = () => {
 
     try {
       const normalizedEmail = email.toLowerCase().trim();
-      console.log('Attempting login for email:', normalizedEmail);
+      console.log('Starting login process for:', normalizedEmail);
 
       // First check if the email is in admin_users table
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
-        .select('*')
+        .select('id, email')
         .eq('email', normalizedEmail)
-        .maybeSingle();
+        .single();
 
-      console.log('Admin check query result:', { adminUser, adminError });
+      console.log('Admin check result:', { adminUser, adminError });
 
       if (adminError) {
         console.error('Admin check error:', adminError);
-        toast.error("Failed to verify admin status. Please try again.");
+        toast.error("Error verifying admin status. Please try again.");
         return;
       }
 
       if (!adminUser) {
-        console.log('Access denied - Email not found in admin_users:', normalizedEmail);
-        toast.error("Only admin users can log in to this application.");
+        console.log('Not an admin user:', normalizedEmail);
+        toast.error("Access denied. Only admin users can access this application.");
         return;
       }
 
-      console.log('Admin user found:', adminUser);
+      console.log('Admin user verified:', adminUser);
 
-      // Send magic link with explicit redirect URL
-      const redirectUrl = `${window.location.origin}/admin`;
-      console.log('Using redirect URL:', redirectUrl);
+      // Get the current origin for the redirect URL
+      const origin = window.location.origin;
+      const redirectUrl = `${origin}/admin`;
+      console.log('Redirect URL:', redirectUrl);
 
-      const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
+      const { data, error: signInError } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
           emailRedirectTo: redirectUrl,
         }
       });
 
-      console.log('Magic link request result:', { authData, authError });
-
-      if (authError) {
-        console.error('Auth error:', authError);
-        toast.error(authError.message || "Error sending magic link");
+      if (signInError) {
+        console.error('Sign in error:', signInError);
+        toast.error(signInError.message);
         return;
       }
 
+      console.log('Magic link sent successfully');
       toast.success("Check your email for the magic link!");
-      console.log('Magic link sent successfully to:', normalizedEmail);
 
     } catch (error: any) {
-      console.error('Login error:', error);
-      toast.error(error.message || "An error occurred during login");
+      console.error('Login process error:', error);
+      toast.error(error.message || "An unexpected error occurred");
     } finally {
       setLoading(false);
     }
