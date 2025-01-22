@@ -69,8 +69,9 @@ export const useProspects = () => {
         date: new Date().toLocaleDateString(),
       };
 
-      const doc = <ReportPDF data={reportData} />;
-      const asPdf = await pdf(doc).toBlob();
+      // Create PDF document
+      const pdfDoc = pdf(ReportPDF({ data: reportData }));
+      const asPdf = await pdfDoc.toBlob();
       const pdfBase64 = await blobToBase64(asPdf);
 
       const { error } = await supabase.functions.invoke('send-report', {
