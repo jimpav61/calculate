@@ -9,6 +9,8 @@ import { Download } from "lucide-react";
 import { CompanyInformation } from "./report/CompanyInformation";
 import { CostAnalysis } from "./report/CostAnalysis";
 import { AdditionalBenefits } from "./report/AdditionalBenefits";
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { ReportPDF } from "./report/ReportPDF";
 
 interface DetailedReportDialogProps {
   open: boolean;
@@ -47,17 +49,31 @@ export const DetailedReportDialog = ({
   const premiumSavingsPercentage = ((premiumSavings / humanOperatorCost) * 100).toFixed(1);
   const currentDate = new Date().toLocaleDateString();
 
+  const reportData = {
+    formData,
+    calculations: {
+      standardAICost,
+      premiumAICost,
+      humanOperatorCost,
+      standardSavings,
+      premiumSavings,
+      standardSavingsPercentage,
+      premiumSavingsPercentage,
+    },
+    date: currentDate,
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-[#9b87f5]/10 to-white">
+      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white">
         <DialogHeader>
-          <DialogTitle className="text-xl md:text-2xl font-bold text-[#1A1F2C]">
+          <DialogTitle className="text-xl md:text-2xl font-bold text-brand">
             Detailed Cost Analysis Report
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 md:space-y-6 py-4">
-          <p className="text-xs md:text-sm text-[#7E69AB]">Generated on {currentDate}</p>
+          <p className="text-xs md:text-sm text-brand">{currentDate}</p>
           
           <CompanyInformation formData={formData} />
 
@@ -75,10 +91,17 @@ export const DetailedReportDialog = ({
           <AdditionalBenefits />
 
           <div className="flex justify-end pt-4">
-            <Button className="gap-2 w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB]">
-              <Download size={16} />
-              Download PDF Report
-            </Button>
+            <PDFDownloadLink
+              document={<ReportPDF data={reportData} />}
+              fileName="chatsites-cost-analysis.pdf"
+            >
+              {({ loading }) => (
+                <Button className="gap-2 w-full md:w-auto bg-brand hover:bg-brand-dark">
+                  <Download size={16} />
+                  {loading ? "Generating PDF..." : "Download PDF Report"}
+                </Button>
+              )}
+            </PDFDownloadLink>
           </div>
         </div>
       </DialogContent>
