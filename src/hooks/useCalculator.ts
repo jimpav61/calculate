@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface CalculatorFormData {
   name: string;
@@ -24,29 +24,21 @@ export const useCalculator = (initialCostPerMinute: number) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === 'minutes' ? Number(value) : value,
     }));
   };
 
   const validateContactInfo = () => {
     if (step === 2) {
       if (!formData.name.trim() || !formData.companyName.trim()) {
-        toast({
-          title: "Missing Information",
-          description: "Please fill in both your name and company name before proceeding.",
-          variant: "destructive",
-        });
+        toast.error("Please fill in both your name and company name before proceeding.");
         return false;
       }
       return true;
     }
     if (step === 3) {
       if (!formData.phone.trim() || !formData.email.trim()) {
-        toast({
-          title: "Missing Information",
-          description: "Please provide both your phone number and email address before proceeding.",
-          variant: "destructive",
-        });
+        toast.error("Please provide both your phone number and email address before proceeding.");
         return false;
       }
       return true;

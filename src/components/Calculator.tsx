@@ -45,9 +45,41 @@ const Calculator = () => {
     handleInputChange,
     handleNext,
     handleBack,
-    handleSubmit,
+    handleSubmit: originalHandleSubmit,
     setShowReport,
   } = useCalculator(costPerMinute);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      // Save form data to client_pricing table
+      const { error } = await supabase
+        .from('client_pricing')
+        .insert([
+          {
+            client_name: formData.name,
+            company_name: formData.companyName,
+            email: formData.email,
+            phone: formData.phone,
+            minutes: formData.minutes,
+            cost_per_minute: costPerMinute
+          }
+        ]);
+
+      if (error) {
+        console.error('Error saving form data:', error);
+        toast.error("Failed to save your information");
+        return;
+      }
+
+      toast.success("Information saved successfully!");
+      originalHandleSubmit(e);
+    } catch (error) {
+      console.error('Error in form submission:', error);
+      toast.error("An error occurred while saving your information");
+    }
+  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-white to-gray-50">
