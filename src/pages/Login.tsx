@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -34,8 +35,17 @@ const Login = () => {
       }
     };
 
+    // Handle redirect with error
+    const error = searchParams.get('error');
+    const errorDescription = searchParams.get('error_description');
+    if (error) {
+      console.error("Auth redirect error:", error, errorDescription);
+      toast.error(errorDescription || "Authentication error");
+      return;
+    }
+
     checkSession();
-  }, [navigate]);
+  }, [navigate, searchParams]);
 
   useEffect(() => {
     const {
@@ -80,6 +90,9 @@ const Login = () => {
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email: "jimmy.pavlatos@gmail.com",
+        options: {
+          emailRedirectTo: window.location.origin + '/login'
+        }
       });
 
       if (error) {
