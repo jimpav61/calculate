@@ -37,24 +37,27 @@ export const IntroductionStep = () => {
         <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Sample Cost Report</h3>
         <p className="text-sm text-gray-600">Download a sample report to see how our pricing works:</p>
         
-        <div className="flex justify-start">
+        <ReportPDF formData={sampleData} costPerMinute={0.05} />
+        
+        <div className="flex justify-start mt-4">
           <PDFDownloadLink
             document={<ReportPDF formData={sampleData} costPerMinute={0.05} />}
             fileName="sample-voice-ai-cost-report.pdf"
+            className="w-full"
           >
-            {({ loading }) => (
+            {({ loading }) => loading ? (
               <Button
                 className="bg-brand hover:bg-brand-dark text-sm sm:text-base"
-                disabled={loading}
+                disabled
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating Sample PDF...
-                  </>
-                ) : (
-                  "Download Sample Report"
-                )}
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generating Sample PDF...
+              </Button>
+            ) : (
+              <Button
+                className="bg-brand hover:bg-brand-dark text-sm sm:text-base"
+              >
+                Download Sample Report
               </Button>
             )}
           </PDFDownloadLink>

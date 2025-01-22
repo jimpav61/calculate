@@ -59,25 +59,27 @@ export function DetailedReportDialog({
               </div>
             </div>
 
+            <ReportPDF formData={formData} costPerMinute={costPerMinute} />
+
             <div className="flex justify-center">
               <PDFDownloadLink
                 document={<ReportPDF formData={formData} costPerMinute={costPerMinute} />}
                 fileName="voice-ai-cost-report.pdf"
                 className="w-full"
               >
-                {({ loading }) => (
+                {({ loading }) => loading ? (
                   <Button
                     className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
-                    disabled={loading}
+                    disabled
                   >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Generating PDF...
-                      </>
-                    ) : (
-                      "Download PDF Report"
-                    )}
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Generating PDF...
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
+                  >
+                    Download PDF Report
                   </Button>
                 )}
               </PDFDownloadLink>
