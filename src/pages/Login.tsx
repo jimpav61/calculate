@@ -18,11 +18,15 @@ const Login = () => {
 
     try {
       // First check if the email is in admin_users table
-      const { data: adminUser } = await supabase
+      const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
         .select('email')
         .eq('email', email)
-        .single();
+        .maybeSingle();
+
+      if (adminError) {
+        throw adminError;
+      }
 
       if (!adminUser) {
         toast.error("Access denied. Only admin users can log in.");
@@ -42,7 +46,8 @@ const Login = () => {
 
       toast.success("Check your email for the magic link!");
     } catch (error: any) {
-      toast.error(error.message);
+      console.error('Login error:', error);
+      toast.error(error.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }
