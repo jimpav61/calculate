@@ -114,6 +114,7 @@ export const DetailedReportDialog = ({
             <PDFDownloadLink
               document={<ReportPDF data={reportData} />}
               fileName="chatsites-cost-analysis.pdf"
+              className="w-full md:w-auto"
             >
               {({ loading }) => (
                 <Button disabled={loading} className="gap-2 w-full md:w-auto bg-brand hover:bg-brand-dark">
