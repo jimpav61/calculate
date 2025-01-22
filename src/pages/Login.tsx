@@ -44,6 +44,7 @@ const Login = () => {
         if (!adminUser) {
           console.log('Not an admin user:', session.user.email);
           toast.error("Access denied. Only admin users can access this page.");
+          await supabase.auth.signOut();
           return;
         }
 
@@ -100,7 +101,7 @@ const Login = () => {
     
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password
       });
 
