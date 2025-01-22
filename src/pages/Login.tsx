@@ -106,7 +106,11 @@ const Login = () => {
 
       if (error) {
         console.error("Login error:", error);
-        toast.error(error.message);
+        if (error.message.includes('rate limit')) {
+          toast.error("Too many attempts. Please wait a few minutes before trying again. If you need immediate assistance, please contact support.");
+        } else {
+          toast.error(error.message);
+        }
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -154,6 +158,10 @@ const Login = () => {
           >
             {loading ? "Signing in..." : "Sign In"}
           </Button>
+
+          <div className="text-center text-sm text-gray-600 mt-4">
+            Having trouble? Contact support for assistance.
+          </div>
         </form>
       </div>
     </div>
