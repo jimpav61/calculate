@@ -27,6 +27,7 @@ const Login = () => {
 
       if (!adminUser) {
         toast.error("Access denied. Only admin users can log in.");
+        setLoading(false);
         return;
       }
 
