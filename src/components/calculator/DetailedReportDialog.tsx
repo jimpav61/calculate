@@ -73,7 +73,14 @@ export const DetailedReportDialog = ({
         </DialogHeader>
 
         <div className="space-y-4 md:space-y-6 py-4">
-          <p className="text-xs md:text-sm text-brand">{currentDate}</p>
+          <div className="flex justify-between items-start text-xs md:text-sm text-brand">
+            <p>{currentDate}</p>
+            <div className="text-right">
+              <p>1715 N. Channing Mesa, AZ 85298</p>
+              <p>+1 480 862 0288</p>
+              <p>info@chatsites.ai</p>
+            </div>
+          </div>
           
           <CompanyInformation formData={formData} />
 
@@ -96,7 +103,10 @@ export const DetailedReportDialog = ({
               fileName="chatsites-cost-analysis.pdf"
             >
               {({ loading }) => (
-                <Button className="gap-2 w-full md:w-auto bg-brand hover:bg-brand-dark">
+                <Button 
+                  className="gap-2 w-full md:w-auto bg-brand hover:bg-brand-dark"
+                  disabled={loading}
+                >
                   <Download size={16} />
                   {loading ? "Generating PDF..." : "Download PDF Report"}
                 </Button>

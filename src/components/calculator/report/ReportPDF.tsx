@@ -5,10 +5,22 @@ const styles = StyleSheet.create({
     padding: 30,
     fontFamily: 'Helvetica',
   },
+  header: {
+    marginBottom: 20,
+  },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 10,
     color: '#f65228',
+  },
+  contactInfo: {
+    fontSize: 10,
+    marginBottom: 5,
+    textAlign: 'right',
+  },
+  date: {
+    fontSize: 10,
+    marginBottom: 20,
   },
   section: {
     marginBottom: 20,
@@ -54,8 +66,13 @@ interface ReportPDFProps {
 export const ReportPDF = ({ data }: ReportPDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <Text style={styles.title}>Chatsites Cost Analysis Report</Text>
-      <Text style={styles.text}>Generated on {data.date}</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Chatsites Cost Analysis Report</Text>
+        <Text style={styles.contactInfo}>1715 N. Channing Mesa, AZ 85298</Text>
+        <Text style={styles.contactInfo}>+1 480 862 0288</Text>
+        <Text style={styles.contactInfo}>info@chatsites.ai</Text>
+        <Text style={styles.date}>Generated on {data.date}</Text>
+      </View>
 
       <View style={styles.section}>
         <Text style={styles.heading}>Company Information</Text>
