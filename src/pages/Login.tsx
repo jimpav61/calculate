@@ -15,20 +15,22 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    console.log('Starting login process...');
 
     try {
-      // Step 1: Normalize email and check admin status
+      // Step 1: Normalize email
       const normalizedEmail = email.toLowerCase().trim();
-      console.log('Step 1: Checking admin status for:', normalizedEmail);
+      console.log('Normalized email:', normalizedEmail);
 
       // Step 2: Query admin_users table
+      console.log('Querying admin_users table...');
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
         .select('*')
         .eq('email', normalizedEmail)
-        .maybeSingle();
+        .single();
 
-      console.log('Step 2: Admin check result:', { adminUser, adminError });
+      console.log('Admin query result:', { adminUser, adminError });
 
       if (adminError) {
         console.error('Admin check failed:', adminError);
@@ -37,14 +39,15 @@ const Login = () => {
       }
 
       if (!adminUser) {
-        console.log('Step 2 failed: Not an admin user');
+        console.log('Not an admin user');
         toast.error("Access denied. Only admin users can access this application.");
         return;
       }
 
-      console.log('Step 2 success: Admin user verified:', adminUser);
+      console.log('Admin user verified:', adminUser);
 
       // Step 3: Send magic link
+      console.log('Sending magic link...');
       const { error: signInError } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
@@ -53,12 +56,12 @@ const Login = () => {
       });
 
       if (signInError) {
-        console.error('Step 3 failed: Magic link error:', signInError);
+        console.error('Magic link error:', signInError);
         toast.error(signInError.message);
         return;
       }
 
-      console.log('Step 3 success: Magic link sent');
+      console.log('Magic link sent successfully');
       toast.success("Magic link sent! Check your email.");
 
     } catch (error: any) {
