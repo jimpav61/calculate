@@ -24,15 +24,22 @@ const Login = () => {
         .eq('email', email)
         .maybeSingle();
 
+      console.log('Checking admin status for:', email);
+      console.log('Admin check result:', { adminUser, adminError });
+
       if (adminError) {
+        console.error('Admin check error:', adminError);
         throw adminError;
       }
 
       if (!adminUser) {
+        console.log('Access denied - Email not found in admin_users:', email);
         toast.error("Access denied. Only admin users can log in.");
         setLoading(false);
         return;
       }
+
+      console.log('Admin user found, sending magic link to:', email);
 
       // Send magic link
       const { error } = await supabase.auth.signInWithOtp({

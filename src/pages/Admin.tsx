@@ -14,12 +14,17 @@ const Admin = () => {
 
   const checkAdmin = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
+      console.log('Checking session:', { session, sessionError });
+
       if (!session) {
+        console.log('No session found, redirecting to login');
         navigate("/login");
         return;
       }
+
+      console.log('Session found for user:', session.user.email);
 
       // Check if the user is an admin
       const { data: adminUser, error: adminError } = await supabase
@@ -27,6 +32,8 @@ const Admin = () => {
         .select('email')
         .eq('email', session.user.email)
         .maybeSingle();
+
+      console.log('Admin check result:', { adminUser, adminError });
 
       if (adminError) {
         console.error('Admin check error:', adminError);
@@ -42,6 +49,7 @@ const Admin = () => {
         return;
       }
 
+      console.log('Admin access granted for:', session.user.email);
       setLoading(false);
     } catch (error: any) {
       console.error('Admin check error:', error);
