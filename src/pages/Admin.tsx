@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { AdminStats } from "@/components/admin/AdminStats";
+import { AdminPricing } from "@/components/admin/AdminPricing";
+import { AdminSubmissions } from "@/components/admin/AdminSubmissions";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -74,17 +78,32 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          <Button onClick={handleSignOut}>Sign Out</Button>
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+          <Button onClick={handleSignOut} variant="outline">Sign Out</Button>
         </div>
         
-        <div className="grid gap-6">
-          {/* Add your admin features here */}
-          <p>Welcome to the admin dashboard. More features coming soon.</p>
-        </div>
+        <Tabs defaultValue="stats" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="stats">Statistics</TabsTrigger>
+            <TabsTrigger value="pricing">Pricing</TabsTrigger>
+            <TabsTrigger value="submissions">Submissions</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="stats" className="space-y-6">
+            <AdminStats />
+          </TabsContent>
+
+          <TabsContent value="pricing" className="space-y-6">
+            <AdminPricing />
+          </TabsContent>
+
+          <TabsContent value="submissions" className="space-y-6">
+            <AdminSubmissions />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
