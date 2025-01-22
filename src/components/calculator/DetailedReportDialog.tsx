@@ -1,8 +1,16 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Download } from "lucide-react";
+import { CompanyInformation } from "./report/CompanyInformation";
+import { CostAnalysis } from "./report/CostAnalysis";
+import { AdditionalBenefits } from "./report/AdditionalBenefits";
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { ReportPDF } from "./report/ReportPDF";
-import { Loader2 } from "lucide-react";
 
 interface DetailedReportDialogProps {
   open: boolean;
@@ -10,85 +18,93 @@ interface DetailedReportDialogProps {
   formData: {
     name: string;
     companyName: string;
-    email: string;
     phone: string;
+    email: string;
     minutes: number;
   };
   costPerMinute: number;
 }
 
-export function DetailedReportDialog({
+export const DetailedReportDialog = ({
   open,
   onOpenChange,
   formData,
   costPerMinute,
-}: DetailedReportDialogProps) {
+}: DetailedReportDialogProps) => {
+  // Standard tier calculations
+  const standardAICost = formData.minutes * costPerMinute;
+  
+  // Premium tier calculations (10 cents per minute)
+  const premiumCostPerMinute = 0.10;
+  const premiumAICost = formData.minutes * premiumCostPerMinute;
+  
+  // Calculate human operator cost based on $16/hour
+  const humanOperatorCost = (formData.minutes / 60) * 16;
+  
+  // Calculate savings for both tiers
+  const standardSavings = humanOperatorCost - standardAICost;
+  const premiumSavings = humanOperatorCost - premiumAICost;
+  
+  const standardSavingsPercentage = ((standardSavings / humanOperatorCost) * 100).toFixed(1);
+  const premiumSavingsPercentage = ((premiumSavings / humanOperatorCost) * 100).toFixed(1);
+  const currentDate = new Date().toLocaleDateString();
+
+  const reportData = {
+    formData,
+    calculations: {
+      standardAICost,
+      premiumAICost,
+      humanOperatorCost,
+      standardSavings,
+      premiumSavings,
+      standardSavingsPercentage,
+      premiumSavingsPercentage,
+    },
+    date: currentDate,
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] p-4 sm:p-6">
-        <div className="space-y-4 sm:space-y-6">
-          <div className="text-center">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2">Your Detailed Cost Report</h2>
-            <p className="text-sm sm:text-base text-gray-600">
-              Download your personalized Voice AI cost analysis report
-            </p>
-          </div>
+      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white">
+        <DialogHeader>
+          <DialogTitle className="text-xl md:text-2xl font-bold text-brand">
+            Detailed Cost Analysis Report
+          </DialogTitle>
+        </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="p-4 sm:p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-base sm:text-lg font-medium mb-3">Report Summary</h3>
-              <div className="space-y-2 text-sm sm:text-base">
-                <p>
-                  <span className="text-gray-600">Name:</span>{" "}
-                  <span className="font-medium">{formData.name}</span>
-                </p>
-                <p>
-                  <span className="text-gray-600">Company:</span>{" "}
-                  <span className="font-medium">{formData.companyName}</span>
-                </p>
-                <p>
-                  <span className="text-gray-600">Monthly Minutes:</span>{" "}
-                  <span className="font-medium">{formData.minutes}</span>
-                </p>
-                <p>
-                  <span className="text-gray-600">Monthly Cost:</span>{" "}
-                  <span className="font-medium">
-                    ${(formData.minutes * costPerMinute).toFixed(2)}
-                  </span>
-                </p>
-              </div>
-            </div>
+        <div className="space-y-4 md:space-y-6 py-4">
+          <p className="text-xs md:text-sm text-brand">{currentDate}</p>
+          
+          <CompanyInformation formData={formData} />
 
-            <ReportPDF formData={formData} costPerMinute={costPerMinute} />
+          <CostAnalysis
+            minutes={formData.minutes}
+            standardAICost={standardAICost}
+            premiumAICost={premiumAICost}
+            humanOperatorCost={humanOperatorCost}
+            standardSavings={standardSavings}
+            premiumSavings={premiumSavings}
+            standardSavingsPercentage={standardSavingsPercentage}
+            premiumSavingsPercentage={premiumSavingsPercentage}
+          />
 
-            <div className="flex justify-center">
-              <PDFDownloadLink
-                document={<ReportPDF formData={formData} costPerMinute={costPerMinute} />}
-                fileName="voice-ai-cost-report.pdf"
-                className="w-full"
-              >
-                {({ loading }) => (
-                  loading ? (
-                    <Button
-                      className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
-                      disabled
-                    >
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating PDF...
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full bg-brand hover:bg-brand-dark text-sm sm:text-base"
-                    >
-                      Download PDF Report
-                    </Button>
-                  )
-                )}
-              </PDFDownloadLink>
-            </div>
+          <AdditionalBenefits />
+
+          <div className="flex justify-end pt-4">
+            <PDFDownloadLink
+              document={<ReportPDF data={reportData} />}
+              fileName="chatsites-cost-analysis.pdf"
+            >
+              {({ loading }) => (
+                <Button className="gap-2 w-full md:w-auto bg-brand hover:bg-brand-dark">
+                  <Download size={16} />
+                  {loading ? "Generating PDF..." : "Download PDF Report"}
+                </Button>
+              )}
+            </PDFDownloadLink>
           </div>
         </div>
       </DialogContent>
     </Dialog>
   );
-}
+};

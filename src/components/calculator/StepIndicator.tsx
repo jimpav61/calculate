@@ -5,12 +5,12 @@ interface StepIndicatorProps {
 
 export const StepIndicator = ({ currentStep, totalSteps }: StepIndicatorProps) => {
   return (
-    <div className="flex justify-center mb-6 sm:mb-8">
+    <div className="flex justify-center mb-8">
       <div className="flex items-center">
         {[...Array(totalSteps)].map((_, index) => (
           <div key={index} className="flex items-center">
             <div
-              className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm ${
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 currentStep >= index + 1
                   ? "bg-brand text-white"
                   : "bg-gray-200 text-gray-600"
@@ -20,7 +20,7 @@ export const StepIndicator = ({ currentStep, totalSteps }: StepIndicatorProps) =
             </div>
             {index < totalSteps - 1 && (
               <div
-                className={`w-8 sm:w-16 h-1 ${
+                className={`w-16 h-1 ${
                   currentStep > index + 1 ? "bg-brand" : "bg-gray-200"
                 }`}
               />
