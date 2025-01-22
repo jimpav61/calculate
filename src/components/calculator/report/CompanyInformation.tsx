@@ -9,9 +9,9 @@ interface CompanyInformationProps {
 
 export const CompanyInformation = ({ formData }: CompanyInformationProps) => {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 md:space-y-3">
       <h3 className="text-lg md:text-xl font-semibold text-brand">Company Information</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         <div>
           <p className="text-xs md:text-sm text-brand">Contact Name</p>
           <p className="text-sm md:text-base font-medium">{formData.name}</p>

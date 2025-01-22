@@ -11,6 +11,7 @@ import { CostAnalysis } from "./report/CostAnalysis";
 import { AdditionalBenefits } from "./report/AdditionalBenefits";
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { ReportPDF } from "./report/ReportPDF";
+import { ReactElement } from "react";
 
 interface DetailedReportDialogProps {
   open: boolean;
@@ -91,7 +92,7 @@ export const DetailedReportDialog = ({
         <div className="space-y-4 md:space-y-6 py-4">
           <p className="text-xs md:text-sm text-brand">{currentDate}</p>
           
-          <div className="grid gap-6">
+          <div className="grid gap-4 md:gap-6">
             <CompanyInformation formData={formData} />
 
             <CostAnalysis
@@ -118,17 +119,15 @@ export const DetailedReportDialog = ({
               fileName="chatsites-cost-analysis.pdf"
               className="w-full md:w-auto"
             >
-              {({ loading }) => {
-                return (
-                  <Button
-                    disabled={loading}
-                    className="w-full md:w-auto gap-2 bg-brand hover:bg-brand-dark"
-                  >
-                    <Download size={16} />
-                    {loading ? "Generating PDF..." : "Download PDF Report"}
-                  </Button>
-                );
-              }}
+              {({ loading }): ReactElement => (
+                <Button
+                  disabled={loading}
+                  className="w-full md:w-auto gap-2 bg-brand hover:bg-brand-dark"
+                >
+                  <Download size={16} />
+                  {loading ? "Generating PDF..." : "Download PDF Report"}
+                </Button>
+              )}
             </PDFDownloadLink>
           </div>
         </div>
