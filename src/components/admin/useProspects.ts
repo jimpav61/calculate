@@ -74,9 +74,13 @@ export const useProspects = () => {
       const asPdf = await pdfDoc.toBlob();
       const pdfBase64 = await blobToBase64(asPdf);
 
+      // Sanitize email address by trimming whitespace
+      const sanitizedEmail = prospect.email.trim();
+      console.log("Sending report to email:", sanitizedEmail);
+
       const { error } = await supabase.functions.invoke('send-report', {
         body: {
-          to: [prospect.email],
+          to: [sanitizedEmail],
           subject: 'Updated Voice AI Cost Analysis',
           html: `
             <p>Hello ${prospect.client_name},</p>
@@ -90,7 +94,10 @@ export const useProspects = () => {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error sending report:", error);
+        throw error;
+      }
 
       const { error: updateError } = await supabase
         .from('client_pricing')
@@ -102,8 +109,8 @@ export const useProspects = () => {
       toast.success("Report sent successfully");
       fetchProspects();
     } catch (error: any) {
+      console.error("Detailed error:", error);
       toast.error("Failed to send report");
-      console.error("Error sending report:", error);
     } finally {
       setSending(false);
       setSelectedProspect(null);
