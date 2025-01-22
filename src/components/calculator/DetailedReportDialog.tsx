@@ -118,15 +118,17 @@ export const DetailedReportDialog = ({
               fileName="chatsites-cost-analysis.pdf"
               className="w-full md:w-auto"
             >
-              {({ loading }) => (
-                <Button
-                  disabled={loading}
-                  className="w-full md:w-auto gap-2 bg-brand hover:bg-brand-dark"
-                >
-                  <Download size={16} />
-                  {loading ? "Generating PDF..." : "Download PDF Report"}
-                </Button>
-              )}
+              {({ loading }) => {
+                return (
+                  <Button
+                    disabled={loading}
+                    className="w-full md:w-auto gap-2 bg-brand hover:bg-brand-dark"
+                  >
+                    <Download size={16} />
+                    {loading ? "Generating PDF..." : "Download PDF Report"}
+                  </Button>
+                );
+              }}
             </PDFDownloadLink>
           </div>
         </div>
