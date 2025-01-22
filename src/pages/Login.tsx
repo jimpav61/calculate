@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("jimmy.pavlatos@gmail.com"); // Pre-filled for testing
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -17,38 +17,38 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // Step 1: Normalize email and check admin status
       const normalizedEmail = email.toLowerCase().trim();
-      console.log('Starting login process for:', normalizedEmail);
+      console.log('Step 1: Checking admin status for:', normalizedEmail);
 
-      // First check if the email is in admin_users table
+      // Step 2: Query admin_users table
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
         .select('id, email')
         .eq('email', normalizedEmail)
-        .single();
+        .maybeSingle();
 
-      console.log('Admin check result:', { adminUser, adminError });
+      console.log('Step 2: Admin check result:', { adminUser, adminError });
 
       if (adminError) {
-        console.error('Admin check error:', adminError);
-        toast.error("Error verifying admin status. Please try again.");
+        console.error('Admin check failed:', adminError);
+        toast.error("Error verifying admin status");
         return;
       }
 
       if (!adminUser) {
-        console.log('Not an admin user:', normalizedEmail);
+        console.log('Step 2 failed: Not an admin user');
         toast.error("Access denied. Only admin users can access this application.");
         return;
       }
 
-      console.log('Admin user verified:', adminUser);
+      console.log('Step 2 success: Admin user verified:', adminUser);
 
-      // Get the current origin for the redirect URL
-      const origin = window.location.origin;
-      const redirectUrl = `${origin}/admin`;
-      console.log('Redirect URL:', redirectUrl);
+      // Step 3: Send magic link
+      const redirectUrl = `${window.location.origin}/admin`;
+      console.log('Step 3: Sending magic link with redirect URL:', redirectUrl);
 
-      const { data, error: signInError } = await supabase.auth.signInWithOtp({
+      const { error: signInError } = await supabase.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
           emailRedirectTo: redirectUrl,
@@ -56,16 +56,16 @@ const Login = () => {
       });
 
       if (signInError) {
-        console.error('Sign in error:', signInError);
+        console.error('Step 3 failed: Magic link error:', signInError);
         toast.error(signInError.message);
         return;
       }
 
-      console.log('Magic link sent successfully');
-      toast.success("Check your email for the magic link!");
+      console.log('Step 3 success: Magic link sent');
+      toast.success("Magic link sent! Check your email.");
 
     } catch (error: any) {
-      console.error('Login process error:', error);
+      console.error('Login process failed:', error);
       toast.error(error.message || "An unexpected error occurred");
     } finally {
       setLoading(false);
