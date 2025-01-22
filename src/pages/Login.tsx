@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -37,10 +37,10 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md p-6 space-y-6">
-        <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Admin Login</h1>
           <p className="text-gray-600">Enter your email to receive a magic link</p>
-        </CardHeader>
+        </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
