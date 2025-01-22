@@ -27,6 +27,42 @@ export type Database = {
         }
         Relationships: []
       }
+      client_pricing: {
+        Row: {
+          client_name: string
+          company_name: string
+          cost_per_minute: number
+          created_at: string | null
+          email: string
+          id: string
+          minutes: number
+          phone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          client_name: string
+          company_name: string
+          cost_per_minute: number
+          created_at?: string | null
+          email: string
+          id?: string
+          minutes?: number
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          client_name?: string
+          company_name?: string
+          cost_per_minute?: number
+          created_at?: string | null
+          email?: string
+          id?: string
+          minutes?: number
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
