@@ -72,7 +72,7 @@ const Calculator = () => {
     }
 
     toast.success("Information saved successfully!");
-    originalHandleSubmit(e);
+    setShowReport(true);
   };
 
   return (
