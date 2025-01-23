@@ -11,8 +11,14 @@ interface FormData {
 
 export const useFormSubmission = (costPerMinute: number) => {
   const submitForm = async (formData: FormData) => {
-    console.log("Submitting form with cost per minute:", costPerMinute);
+    console.log("Starting form submission with cost per minute:", costPerMinute);
     
+    if (!formData.name || !formData.companyName || !formData.email || !formData.phone || !formData.minutes) {
+      console.error('Form validation failed - missing required fields');
+      toast.error("Please fill in all required fields");
+      return false;
+    }
+
     const { error } = await supabase
       .from('client_pricing')
       .insert([
