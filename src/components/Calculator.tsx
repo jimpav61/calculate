@@ -57,32 +57,27 @@ const Calculator = () => {
       return;
     }
 
-    try {
-      const { error } = await supabase
-        .from('client_pricing')
-        .insert([
-          {
-            client_name: formData.name,
-            company_name: formData.companyName,
-            email: formData.email,
-            phone: formData.phone || null,
-            minutes: formData.minutes,
-            cost_per_minute: costPerMinute
-          }
-        ]);
+    const { error } = await supabase
+      .from('client_pricing')
+      .insert([
+        {
+          client_name: formData.name,
+          company_name: formData.companyName,
+          email: formData.email,
+          phone: formData.phone || null,
+          minutes: formData.minutes,
+          cost_per_minute: costPerMinute
+        }
+      ]);
 
-      if (error) {
-        console.error('Error saving form data:', error);
-        toast.error("Failed to save your information");
-        return;
-      }
-
-      toast.success("Information saved successfully!");
-      originalHandleSubmit(e);
-    } catch (error) {
-      console.error('Error in form submission:', error);
-      toast.error("An error occurred while saving your information");
+    if (error) {
+      console.error('Error saving form data:', error);
+      toast.error("Failed to save your information");
+      return;
     }
+
+    toast.success("Information saved successfully!");
+    originalHandleSubmit(e);
   };
 
   return (
