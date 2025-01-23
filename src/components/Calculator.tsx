@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import { Card } from "@/components/ui/card";
 import { StepIndicator } from "./calculator/StepIndicator";
 import { IntroductionStep } from "./calculator/IntroductionStep";
