@@ -52,8 +52,12 @@ const Calculator = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!formData.name || !formData.companyName || !formData.email || !formData.minutes) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
     try {
-      // Save form data to client_pricing table
       const { error } = await supabase
         .from('client_pricing')
         .insert([
@@ -61,7 +65,7 @@ const Calculator = () => {
             client_name: formData.name,
             company_name: formData.companyName,
             email: formData.email,
-            phone: formData.phone,
+            phone: formData.phone || null,
             minutes: formData.minutes,
             cost_per_minute: costPerMinute
           }
