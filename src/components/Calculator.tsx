@@ -9,6 +9,7 @@ import { DetailedReportDialog } from "./calculator/DetailedReportDialog";
 import { NavigationButtons } from "./calculator/NavigationButtons";
 import { CalculatorHeader } from "./calculator/CalculatorHeader";
 import { useCalculator } from "@/hooks/useCalculator";
+import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -45,34 +46,17 @@ const Calculator = () => {
     handleInputChange,
     handleNext,
     handleBack,
-    handleSubmit: originalHandleSubmit,
     setShowReport,
   } = useCalculator(costPerMinute);
 
+  const { submitForm } = useFormSubmission(costPerMinute);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const { error } = await supabase
-      .from('client_pricing')
-      .insert([
-        {
-          client_name: formData.name,
-          company_name: formData.companyName,
-          email: formData.email,
-          phone: formData.phone,
-          minutes: formData.minutes,
-          cost_per_minute: costPerMinute
-        }
-      ]);
-
-    if (error) {
-      console.error('Error saving form data:', error);
-      toast.error("Failed to save your information");
-      return;
+    const success = await submitForm(formData);
+    if (success) {
+      setShowReport(true);
     }
-
-    toast.success("Information saved successfully!");
-    setShowReport(true);
   };
 
   return (
