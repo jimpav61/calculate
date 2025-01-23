@@ -19,6 +19,7 @@ const Calculator = () => {
 
   useEffect(() => {
     const fetchLatestPrice = async () => {
+      console.log("Fetching latest price...");
       const { data, error } = await supabase
         .from('client_pricing')
         .select('cost_per_minute')
@@ -32,6 +33,7 @@ const Calculator = () => {
       }
 
       if (data && data.length > 0) {
+        console.log("Latest price fetched:", data[0].cost_per_minute);
         setCostPerMinute(Number(data[0].cost_per_minute));
       }
     };
@@ -53,7 +55,9 @@ const Calculator = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted with data:", formData);
     const success = await submitForm(formData);
+    console.log("Form submission result:", success);
     if (success) {
       setShowReport(true);
     }

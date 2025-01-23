@@ -11,6 +11,8 @@ interface FormData {
 
 export const useFormSubmission = (costPerMinute: number) => {
   const submitForm = async (formData: FormData) => {
+    console.log("Submitting form with cost per minute:", costPerMinute);
+    
     const { error } = await supabase
       .from('client_pricing')
       .insert([
@@ -30,6 +32,7 @@ export const useFormSubmission = (costPerMinute: number) => {
       return false;
     }
 
+    console.log("Form data saved successfully");
     toast.success("Information saved successfully!");
     return true;
   };
