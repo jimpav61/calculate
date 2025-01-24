@@ -36,7 +36,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Received email request for recipients:", emailRequest.to);
 
     const requestBody: any = {
-      from: "Voice AI <onboarding@resend.dev>", // Using Resend's testing domain
+      from: "Voice AI <onboarding@resend.dev>",
       to: emailRequest.to,
       subject: emailRequest.subject,
       html: emailRequest.html,
