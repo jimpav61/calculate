@@ -2,4 +2,4 @@ project_id = "wlogbwxjteyycddkjvki"
 
 [functions]
 [functions.send-report]
-verify_jwt = true
+verify_jwt = false
