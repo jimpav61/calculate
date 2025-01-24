@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 export const useGlobalPricing = () => {
   const [loading, setLoading] = useState(false);
@@ -64,7 +63,6 @@ export const useGlobalPricing = () => {
       }
 
       console.log("✅ Global price updated successfully to:", newPrice);
-      toast.success("Global pricing updated successfully");
       return true;
     } catch (error: any) {
       console.error('❌ Error in updateGlobalPrice:', error);
