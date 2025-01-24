@@ -33,19 +33,23 @@ export const AdminPricing = () => {
     if (data && data.length > 0) {
       console.log("Global price found:", data[0].cost_per_minute);
       setCostPerMinute(Number(data[0].cost_per_minute));
+    } else {
+      // If no default record exists, create one with 0.05 as default
+      console.log("No global price found, creating default...");
+      await handleSave(0.05);
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (priceToSave = costPerMinute) => {
     try {
       setLoading(true);
-      console.log("Saving new global price:", costPerMinute);
+      console.log("Saving new global price:", priceToSave);
       
       const { error } = await supabase
         .from('client_pricing')
         .insert([
           { 
-            cost_per_minute: costPerMinute,
+            cost_per_minute: priceToSave,
             client_name: 'default',
             company_name: 'default',
             email: 'default@example.com',
@@ -89,7 +93,7 @@ export const AdminPricing = () => {
         </div>
 
         <Button 
-          onClick={handleSave} 
+          onClick={() => handleSave()} 
           disabled={loading}
         >
           {loading ? "Saving..." : "Save Changes"}
