@@ -23,6 +23,7 @@ export const useProspectActions = (onSuccess: () => void) => {
         throw fetchError;
       }
 
+      // Extra safety check to prevent modifying global price
       if (prospect.client_name === 'default' && 
           prospect.company_name === 'default' && 
           prospect.email === 'default@example.com') {
@@ -35,8 +36,14 @@ export const useProspectActions = (onSuccess: () => void) => {
       
       const { error: updateError } = await supabase
         .from('client_pricing')
-        .update({ cost_per_minute: newPrice })
-        .eq('id', prospectId);
+        .update({ 
+          cost_per_minute: newPrice,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', prospectId)
+        .neq('client_name', 'default')  // Extra safety to never update global price
+        .neq('company_name', 'default')
+        .neq('email', 'default@example.com');
 
       if (updateError) {
         console.error("Error updating prospect price:", updateError);
