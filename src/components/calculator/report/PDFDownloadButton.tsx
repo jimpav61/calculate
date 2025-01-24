@@ -37,9 +37,10 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
     <PDFDownloadLink
       document={<ReportPDF data={reportData} />}
       fileName="voice-ai-analysis.pdf"
+      className="inline-block"
     >
       {({ loading }) => (
-        <Button disabled={loading}>
+        <Button disabled={loading} type="button">
           <Download className="w-4 h-4 mr-2" />
           {loading ? "Generating PDF..." : "Download PDF"}
         </Button>
