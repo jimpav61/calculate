@@ -14,11 +14,13 @@ export const AdminPricing = () => {
   }, []);
 
   const fetchLatestPrice = async () => {
+    // Only fetch the default/global pricing record
     const { data, error } = await supabase
       .from('client_pricing')
       .select('cost_per_minute')
       .eq('client_name', 'default')
       .eq('company_name', 'default')
+      .eq('email', 'default@example.com')
       .order('created_at', { ascending: false })
       .limit(1);
 

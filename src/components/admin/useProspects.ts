@@ -11,9 +11,13 @@ export const useProspects = () => {
   
   const fetchProspects = async () => {
     try {
+      // Fetch all non-default client records
       const { data, error } = await supabase
         .from('client_pricing')
         .select('*')
+        .neq('client_name', 'default')
+        .neq('company_name', 'default')
+        .neq('email', 'default@example.com')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
