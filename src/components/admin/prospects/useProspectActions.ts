@@ -11,7 +11,7 @@ export const useProspectActions = (onSuccess: () => void) => {
 
   const updateProspectPrice = async (prospectId: string, newPrice: number) => {
     try {
-      console.log("Updating individual prospect price only. ID:", prospectId, "New Price:", newPrice);
+      console.log("Updating individual prospect price. ID:", prospectId, "New Price:", newPrice);
       
       // Only update the specific client's record
       const { error } = await supabase
@@ -20,7 +20,10 @@ export const useProspectActions = (onSuccess: () => void) => {
           cost_per_minute: newPrice,
           updated_at: new Date().toISOString()
         })
-        .eq('id', prospectId);
+        .eq('id', prospectId)
+        .neq('client_name', 'default')
+        .neq('company_name', 'default')
+        .neq('email', 'default@example.com');
 
       if (error) {
         console.error("Error updating prospect price:", error);
