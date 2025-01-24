@@ -20,13 +20,15 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 export const useProspectEmail = () => {
   const sendReport = async (prospect: Prospect, newCostPerMinute: number) => {
     try {
-      console.log("Sending report with individual price:", newCostPerMinute);
+      console.log("Starting report generation with individual price:", newCostPerMinute);
       
-      // Use the individual price for this prospect's report
+      // Calculate costs using the individual price for this prospect
       const calculations = useReportCalculations({
         minutes: prospect.minutes,
         costPerMinute: newCostPerMinute,
       });
+
+      console.log("Calculations completed with individual pricing:", calculations);
 
       const reportData = {
         formData: {
@@ -40,22 +42,29 @@ export const useProspectEmail = () => {
         date: new Date().toLocaleDateString(),
       };
 
-      // Create PDF document
+      // Generate PDF
+      console.log("Generating PDF with report data:", reportData);
       const pdfDoc = pdf(ReportPDF({ data: reportData }));
       const asPdf = await pdfDoc.toBlob();
       const pdfBase64 = await blobToBase64(asPdf);
+      console.log("PDF generated successfully");
 
-      // Sanitize email address
+      // Sanitize and validate email
       const sanitizedEmail = prospect.email.trim();
+      if (!sanitizedEmail) {
+        throw new Error("Invalid email address");
+      }
       console.log("Sending report to email:", sanitizedEmail);
 
+      // Send email with PDF attachment
       const { data, error } = await supabase.functions.invoke('send-report', {
         body: {
           to: [sanitizedEmail],
-          subject: 'Your Voice AI Cost Analysis',
+          subject: 'Your Custom Voice AI Cost Analysis',
           html: `
             <p>Hello ${prospect.client_name},</p>
-            <p>Please find attached your Voice AI cost analysis report with your individual pricing.</p>
+            <p>Thank you for your interest in our Voice AI solution. Please find attached your personalized cost analysis report with your individual pricing.</p>
+            <p>If you have any questions about the pricing or would like to discuss further, please don't hesitate to reach out.</p>
             <p>Best regards,<br/>Your Voice AI Team</p>
           `,
           attachments: [{
@@ -74,7 +83,11 @@ export const useProspectEmail = () => {
       toast.success("Report sent successfully");
       return true;
     } catch (error: any) {
-      console.error("Detailed error in sendReport:", error);
+      console.error("Error in sendReport:", error);
+      console.error("Detailed error information:", {
+        message: error.message,
+        stack: error.stack,
+      });
       toast.error("Failed to send report");
       return false;
     }

@@ -11,7 +11,7 @@ export const useProspectActions = (onSuccess: () => void) => {
 
   const updateProspectPrice = async (prospectId: string, newPrice: number) => {
     try {
-      console.log("Updating individual prospect price to:", newPrice);
+      console.log("Updating individual prospect price. ID:", prospectId, "New Price:", newPrice);
       
       const { error } = await supabase
         .from('client_pricing')
@@ -21,9 +21,13 @@ export const useProspectActions = (onSuccess: () => void) => {
         })
         .eq('id', prospectId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error updating prospect price:", error);
+        throw error;
+      }
       
-      toast.success("Price updated successfully");
+      console.log("Price updated successfully");
+      toast.success("Individual price updated successfully");
       onSuccess(); // Refresh the list after update
       return true;
     } catch (error: any) {
