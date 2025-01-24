@@ -30,13 +30,15 @@ export const AdminPricing = () => {
     if (data) {
       console.log("Global price found:", data.cost_per_minute);
       setCostPerMinute(Number(data.cost_per_minute));
+    } else {
+      console.log("No global price found, using default value:", costPerMinute);
     }
   };
 
   const handleSave = async () => {
     try {
       setLoading(true);
-      console.log("Saving new global price:", costPerMinute);
+      console.log("Starting save operation for new global price:", costPerMinute);
       
       const { data, error } = await supabase
         .from('client_pricing')
@@ -46,16 +48,21 @@ export const AdminPricing = () => {
           email: 'default@example.com',
           cost_per_minute: costPerMinute,
           minutes: 0
+        }, {
+          onConflict: 'client_name,company_name,email'
         })
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error saving global price:', error);
+        throw error;
+      }
       
-      console.log("Global price updated successfully:", data);
+      console.log("Global price saved successfully:", data);
       await fetchLatestPrice();
     } catch (error) {
-      console.error('Error updating global price:', error);
+      console.error('Error in save operation:', error);
     } finally {
       setLoading(false);
     }
@@ -79,7 +86,10 @@ export const AdminPricing = () => {
             step="0.01"
             min="0"
             value={costPerMinute}
-            onChange={(e) => setCostPerMinute(Number(e.target.value))}
+            onChange={(e) => {
+              console.log("Price input changed to:", e.target.value);
+              setCostPerMinute(Number(e.target.value));
+            }}
             className="mt-1"
           />
         </div>
