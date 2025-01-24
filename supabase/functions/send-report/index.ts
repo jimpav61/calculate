@@ -33,19 +33,29 @@ const handler = async (req: Request): Promise<Response> => {
     const emailRequest: EmailRequest = await req.json();
     console.log("Processing email request to:", emailRequest.to);
 
+    // Prepare the request body with attachments if present
+    const requestBody: any = {
+      from: "Voice AI <onboarding@resend.dev>",
+      to: emailRequest.to,
+      subject: emailRequest.subject,
+      html: emailRequest.html,
+    };
+
+    // Add attachments if present
+    if (emailRequest.attachments && emailRequest.attachments.length > 0) {
+      requestBody.attachments = emailRequest.attachments.map(attachment => ({
+        filename: attachment.filename,
+        content: attachment.content,
+      }));
+    }
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
-      body: JSON.stringify({
-        from: "Voice AI <onboarding@resend.dev>",
-        to: emailRequest.to,
-        subject: emailRequest.subject,
-        html: emailRequest.html,
-        attachments: emailRequest.attachments,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const responseData = await res.json();
