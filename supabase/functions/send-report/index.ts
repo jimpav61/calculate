@@ -8,7 +8,7 @@ const corsHeaders = {
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("Received request to send-report function");
+  console.log("Connection test - Received request");
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -16,14 +16,26 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    const body = await req.json();
+    console.log("Received request body:", body);
+
+    // If it's a test request, just return success
+    if (body.test) {
+      console.log("Test request received - Connection working");
+      return new Response(JSON.stringify({ status: "connected", timestamp: new Date().toISOString() }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Regular email sending logic
     if (!RESEND_API_KEY) {
       console.error("RESEND_API_KEY is not configured");
       throw new Error("Email service configuration is missing");
     }
 
-    const { to, subject, html, attachments } = await req.json();
+    const { to, subject, html, attachments } = body;
     console.log("Processing email request for:", to);
-    console.log("Email subject:", subject);
 
     const requestBody = {
       from: "Voice AI <onboarding@resend.dev>",
@@ -47,7 +59,6 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Resend API response:", data);
 
     if (!res.ok) {
-      console.error("Error from Resend API:", data);
       throw new Error(data.message || "Failed to send email");
     }
 

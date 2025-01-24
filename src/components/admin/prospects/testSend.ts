@@ -1,45 +1,27 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const testProspect = {
-  id: "test-id",
-  client_name: "Test Client",
-  company_name: "Test Company",
-  email: "jimmy.pavlatos@gmail.com",
-  phone: "123-456-7890",
-  minutes: 1000,
-  cost_per_minute: 0.5,
-  created_at: new Date().toISOString(),
-};
-
-const sendTestEmail = async () => {
+const testConnection = async () => {
   const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] Starting test email send...`);
+  console.log(`[${timestamp}] Testing Supabase Functions connection...`);
   
   try {
-    console.log(`[${timestamp}] Invoking send-report function...`);
+    console.log(`[${timestamp}] Attempting to invoke send-report function...`);
     const { data, error } = await supabase.functions.invoke('send-report', {
-      body: {
-        to: [testProspect.email],
-        subject: 'Test Email - Voice AI Cost Analysis',
-        html: `
-          <p>Hello ${testProspect.client_name},</p>
-          <p>This is a test email sent at ${timestamp}</p>
-          <p>If you receive this email, please let us know!</p>
-          <p>Best regards,<br/>Voice AI Team</p>
-        `
-      },
+      body: { test: true },
     });
 
     if (error) {
-      console.error(`[${timestamp}] Error from send-report function:`, error);
+      console.error(`[${timestamp}] Connection Error:`, error);
       throw error;
     }
 
-    console.log(`[${timestamp}] Response from send-report function:`, data);
+    console.log(`[${timestamp}] Connection successful! Response:`, data);
     return true;
   } catch (error: any) {
-    console.error(`[${timestamp}] Error in sendTestEmail:`, {
+    console.error(`[${timestamp}] Connection failed:`, {
       message: error.message,
+      status: error.status,
+      statusText: error.statusText,
       stack: error.stack
     });
     return false;
@@ -47,4 +29,4 @@ const sendTestEmail = async () => {
 };
 
 // Execute test immediately
-sendTestEmail();
+testConnection();
