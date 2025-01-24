@@ -1,7 +1,7 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Table, TableBody } from "@/components/ui/table";
 import { Prospect } from "./types";
+import { ProspectTableHeader } from "./prospects/ProspectTableHeader";
+import { ProspectRow } from "./prospects/ProspectRow";
 
 interface ProspectTableProps {
   prospects: Prospect[];
@@ -29,74 +29,20 @@ export const ProspectTable = ({
   return (
     <div className="border rounded-lg">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead className="text-right">Minutes</TableHead>
-            <TableHead className="text-right">Individual Cost/Min</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
+        <ProspectTableHeader />
         <TableBody>
           {prospects.map((prospect) => (
-            <TableRow key={prospect.id}>
-              <TableCell>{prospect.client_name}</TableCell>
-              <TableCell>{prospect.company_name}</TableCell>
-              <TableCell className="font-mono">{prospect.email}</TableCell>
-              <TableCell>{prospect.phone || '-'}</TableCell>
-              <TableCell className="text-right">{prospect.minutes.toLocaleString()}</TableCell>
-              <TableCell className="text-right">${prospect.cost_per_minute.toFixed(2)}</TableCell>
-              <TableCell>
-                {selectedProspect?.id === prospect.id ? (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      placeholder="New cost/min"
-                      value={newCostPerMinute}
-                      onChange={(e) => onCostPerMinuteChange(Number(e.target.value))}
-                      className="w-24"
-                    />
-                    <Button 
-                      onClick={() => onShowPreview(true)}
-                      disabled={!newCostPerMinute}
-                      size="sm"
-                    >
-                      Preview
-                    </Button>
-                    <Button 
-                      onClick={() => onSendReport(prospect)}
-                      disabled={sending || !newCostPerMinute}
-                      size="sm"
-                    >
-                      {sending ? "Sending..." : "Send"}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        onSelectProspect(null);
-                        onShowPreview(false);
-                      }}
-                      size="sm"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="outline"
-                    onClick={() => onSelectProspect(prospect)}
-                    size="sm"
-                  >
-                    Update & Send
-                  </Button>
-                )}
-              </TableCell>
-            </TableRow>
+            <ProspectRow
+              key={prospect.id}
+              prospect={prospect}
+              selectedProspect={selectedProspect}
+              newCostPerMinute={newCostPerMinute}
+              sending={sending}
+              onCostPerMinuteChange={onCostPerMinuteChange}
+              onShowPreview={onShowPreview}
+              onSendReport={onSendReport}
+              onSelectProspect={onSelectProspect}
+            />
           ))}
         </TableBody>
       </Table>
