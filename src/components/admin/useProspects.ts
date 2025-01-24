@@ -43,6 +43,24 @@ export const useProspects = () => {
     });
   };
 
+  const updateProspectPrice = async (prospectId: string, newPrice: number) => {
+    try {
+      const { error } = await supabase
+        .from('client_pricing')
+        .update({ cost_per_minute: newPrice })
+        .eq('id', prospectId);
+
+      if (error) throw error;
+      
+      await fetchProspects(); // Refresh the list after update
+      return true;
+    } catch (error: any) {
+      console.error("Error updating prospect price:", error);
+      toast.error("Failed to update price");
+      return false;
+    }
+  };
+
   const handleSendReport = async (prospect: Prospect) => {
     if (!newCostPerMinute) {
       toast.error("Please enter a new cost per minute");
@@ -51,6 +69,12 @@ export const useProspects = () => {
 
     try {
       setSending(true);
+
+      // First update the price
+      const updateSuccess = await updateProspectPrice(prospect.id, newCostPerMinute);
+      if (!updateSuccess) {
+        throw new Error("Failed to update price");
+      }
 
       const calculations = useReportCalculations({
         minutes: prospect.minutes,
@@ -94,17 +118,7 @@ export const useProspects = () => {
         },
       });
 
-      if (error) {
-        console.error("Error sending report:", error);
-        throw error;
-      }
-
-      const { error: updateError } = await supabase
-        .from('client_pricing')
-        .update({ cost_per_minute: newCostPerMinute })
-        .eq('id', prospect.id);
-
-      if (updateError) throw updateError;
+      if (error) throw error;
 
       toast.success("Report sent successfully");
       fetchProspects();

@@ -12,6 +12,10 @@ interface EmailRequest {
   to: string[];
   subject: string;
   html: string;
+  attachments?: Array<{
+    content: string;
+    filename: string;
+  }>;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const emailRequest: EmailRequest = await req.json();
-    console.log("Sending email:", emailRequest);
+    console.log("Sending email to:", emailRequest.to);
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -35,6 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
         to: emailRequest.to,
         subject: emailRequest.subject,
         html: emailRequest.html,
+        attachments: emailRequest.attachments,
       }),
     });
 

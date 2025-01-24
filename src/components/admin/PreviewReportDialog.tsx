@@ -8,6 +8,7 @@ import { CompanyInformation } from "../calculator/report/CompanyInformation";
 import { CostAnalysis } from "../calculator/report/CostAnalysis";
 import { AdditionalBenefits } from "../calculator/report/AdditionalBenefits";
 import { useReportCalculations } from "../calculator/report/ReportCalculations";
+import { PDFDownloadButton } from "../calculator/report/PDFDownloadButton";
 
 interface PreviewReportDialogProps {
   open: boolean;
@@ -41,6 +42,12 @@ export const PreviewReportDialog = ({
     minutes: prospect.minutes,
   };
 
+  const reportData = {
+    formData,
+    calculations,
+    date: new Date().toLocaleDateString(),
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95%] sm:w-[90%] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-4 sm:p-6">
@@ -72,6 +79,10 @@ export const PreviewReportDialog = ({
               aiCallsPerMonth={calculations.callMetrics.aiCallsPerMonth}
               aiSimultaneousCalls={calculations.callMetrics.aiSimultaneousCalls}
             />
+          </div>
+
+          <div className="flex justify-end pt-4">
+            <PDFDownloadButton reportData={reportData} />
           </div>
         </div>
       </DialogContent>
