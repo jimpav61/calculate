@@ -25,15 +25,16 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Starting email send process...");
+    
     if (!RESEND_API_KEY) {
-      console.error("RESEND_API_KEY is not set");
-      throw new Error("RESEND_API_KEY is not configured");
+      console.error("RESEND_API_KEY environment variable is not set");
+      throw new Error("Email service configuration is missing");
     }
 
     const emailRequest: EmailRequest = await req.json();
-    console.log("Processing email request to:", emailRequest.to);
+    console.log("Received email request for recipients:", emailRequest.to);
 
-    // Prepare the request body with attachments if present
     const requestBody: any = {
       from: "Voice AI <onboarding@resend.dev>",
       to: emailRequest.to,
@@ -41,14 +42,12 @@ const handler = async (req: Request): Promise<Response> => {
       html: emailRequest.html,
     };
 
-    // Add attachments if present
     if (emailRequest.attachments && emailRequest.attachments.length > 0) {
-      requestBody.attachments = emailRequest.attachments.map(attachment => ({
-        filename: attachment.filename,
-        content: attachment.content,
-      }));
+      requestBody.attachments = emailRequest.attachments;
+      console.log("Request includes attachments");
     }
 
+    console.log("Sending request to Resend API...");
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -59,7 +58,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const responseData = await res.json();
-    console.log("Resend API response:", responseData);
+    console.log("Resend API response status:", res.status);
 
     if (!res.ok) {
       console.error("Resend API error response:", responseData);
@@ -69,12 +68,18 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+    console.log("Email sent successfully");
     return new Response(JSON.stringify(responseData), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error: any) {
     console.error("Error in send-report function:", error);
+    console.error("Full error details:", {
+      message: error.message,
+      stack: error.stack,
+    });
+    
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
