@@ -1,6 +1,5 @@
-import { useProspectEmail } from "./useProspectEmail";
+import { supabase } from "@/integrations/supabase/client";
 
-// Test sending a report
 const testProspect = {
   id: "test-id",
   client_name: "Test Client",
@@ -12,5 +11,33 @@ const testProspect = {
   created_at: new Date().toISOString(),
 };
 
-const { sendReport } = useProspectEmail();
-sendReport(testProspect, 0.75);
+const sendTestEmail = async () => {
+  console.log("Starting test email send...");
+  try {
+    const { data, error } = await supabase.functions.invoke('send-report', {
+      body: {
+        to: [testProspect.email],
+        subject: 'Test Email - Voice AI Cost Analysis',
+        html: `
+          <p>Hello ${testProspect.client_name},</p>
+          <p>This is a test email for the Voice AI cost analysis report.</p>
+          <p>Best regards,<br/>Voice AI Team</p>
+        `
+      },
+    });
+
+    if (error) {
+      console.error("Error sending test email:", error);
+      throw error;
+    }
+
+    console.log("Test email sent successfully:", data);
+    return true;
+  } catch (error) {
+    console.error("Error in sendTestEmail:", error);
+    return false;
+  }
+};
+
+// Execute the test
+sendTestEmail();
