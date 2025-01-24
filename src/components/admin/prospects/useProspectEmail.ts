@@ -23,7 +23,7 @@ export const useProspectEmail = () => {
       console.log("Starting report generation for prospect:", {
         email: prospect.email,
         individualPrice: newCostPerMinute,
-        currentPrice: prospect.cost_per_minute
+        minutes: prospect.minutes
       });
       
       // Calculate costs using ONLY the individual price for this prospect
@@ -32,7 +32,7 @@ export const useProspectEmail = () => {
         costPerMinute: newCostPerMinute,
       });
 
-      console.log("Calculations completed with individual pricing:", calculations);
+      console.log("Calculations completed:", calculations);
 
       const reportData = {
         formData: {
@@ -47,7 +47,7 @@ export const useProspectEmail = () => {
       };
 
       // Generate PDF
-      console.log("Generating PDF with report data:", reportData);
+      console.log("Generating PDF with report data");
       const pdfDoc = pdf(ReportPDF({ data: reportData }));
       const asPdf = await pdfDoc.toBlob();
       const pdfBase64 = await blobToBase64(asPdf);
