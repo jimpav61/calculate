@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const AdminPricing = () => {
@@ -25,7 +24,6 @@ export const AdminPricing = () => {
 
     if (error) {
       console.error('Error fetching global price:', error);
-      toast.error("Failed to fetch current global pricing");
       return;
     }
 
@@ -40,20 +38,24 @@ export const AdminPricing = () => {
       setLoading(true);
       console.log("Saving new global price:", costPerMinute);
       
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('client_pricing')
-        .update({ cost_per_minute: costPerMinute })
-        .eq('client_name', 'default')
-        .eq('company_name', 'default')
-        .eq('email', 'default@example.com');
+        .upsert({
+          client_name: 'default',
+          company_name: 'default',
+          email: 'default@example.com',
+          cost_per_minute: costPerMinute,
+          minutes: 0
+        })
+        .select()
+        .single();
 
       if (error) throw error;
       
-      toast.success("Global pricing updated successfully");
+      console.log("Global price updated successfully:", data);
       await fetchLatestPrice();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error updating global price:', error);
-      toast.error("Failed to update global pricing");
     } finally {
       setLoading(false);
     }
