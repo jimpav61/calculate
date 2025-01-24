@@ -7,55 +7,25 @@ export const useGlobalPricing = () => {
 
   const fetchGlobalPrice = async () => {
     console.log("🌍 Fetching global price...");
-    try {
-      const { data, error } = await supabase
-        .from('client_pricing')
-        .select('cost_per_minute')
-        .eq('client_name', 'default')
-        .eq('company_name', 'default')
-        .eq('email', 'default@example.com')
-        .maybeSingle();
+    const { data, error } = await supabase
+      .from('client_pricing')
+      .select('cost_per_minute')
+      .eq('client_name', 'default')
+      .eq('company_name', 'default')
+      .eq('email', 'default@example.com')
+      .single();
 
-      if (error) {
-        console.error('❌ Error fetching global price:', error);
-        toast.error("Failed to fetch current global pricing");
-        return null;
-      }
-
-      if (!data) {
-        console.log("⚠️ No global price record found, creating default...");
-        // Create default record if it doesn't exist
-        const { data: newData, error: createError } = await supabase
-          .from('client_pricing')
-          .insert([
-            {
-              client_name: 'default',
-              company_name: 'default',
-              email: 'default@example.com',
-              cost_per_minute: 0.05,
-              minutes: 0
-            }
-          ])
-          .select('cost_per_minute')
-          .single();
-
-        if (createError) {
-          console.error('❌ Error creating default price:', createError);
-          toast.error("Failed to initialize global pricing");
-          return null;
-        }
-
-        console.log("✅ Created default global price:", newData.cost_per_minute);
-        return Number(newData.cost_per_minute);
-      }
-
-      console.log("✅ Global price found:", data.cost_per_minute);
-      return Number(data.cost_per_minute);
-    } catch (error) {
-      console.error('❌ Unexpected error in fetchGlobalPrice:', error);
+    if (error) {
+      console.error('❌ Error fetching global price:', error);
       toast.error("Failed to fetch current global pricing");
       return null;
     }
+
+    if (data) {
+      console.log("✅ Global price found:", data.cost_per_minute);
+      return Number(data.cost_per_minute);
+    }
+    return null;
   };
 
   const updateGlobalPrice = async (newPrice: number) => {
@@ -70,37 +40,12 @@ export const useGlobalPricing = () => {
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com')
-        .maybeSingle();
+        .single();
 
-      if (checkError) {
+      if (checkError || !existingRecord) {
         console.error('❌ Error checking global price record:', checkError);
         toast.error("Failed to verify global pricing record");
         return false;
-      }
-
-      if (!existingRecord) {
-        console.log("⚠️ No global price record found, creating...");
-        const { error: createError } = await supabase
-          .from('client_pricing')
-          .insert([
-            {
-              client_name: 'default',
-              company_name: 'default',
-              email: 'default@example.com',
-              cost_per_minute: newPrice,
-              minutes: 0
-            }
-          ]);
-
-        if (createError) {
-          console.error('❌ Error creating global price:', createError);
-          toast.error("Failed to initialize global pricing");
-          return false;
-        }
-
-        console.log("✅ Created global price record with price:", newPrice);
-        toast.success("Global pricing initialized successfully");
-        return true;
       }
 
       console.log("✅ Found global price record:", existingRecord);
