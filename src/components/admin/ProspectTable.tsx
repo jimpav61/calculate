@@ -36,7 +36,7 @@ export const ProspectTable = ({
             <TableHead>Email</TableHead>
             <TableHead>Phone</TableHead>
             <TableHead className="text-right">Minutes</TableHead>
-            <TableHead className="text-right">Current Cost/Min</TableHead>
+            <TableHead className="text-right">Individual Cost/Min</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>

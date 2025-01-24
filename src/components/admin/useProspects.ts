@@ -47,7 +47,10 @@ export const useProspects = () => {
     try {
       const { error } = await supabase
         .from('client_pricing')
-        .update({ cost_per_minute: newPrice })
+        .update({ 
+          cost_per_minute: newPrice,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', prospectId);
 
       if (error) throw error;
@@ -76,6 +79,7 @@ export const useProspects = () => {
         throw new Error("Failed to update price");
       }
 
+      // Use the new individual price for this prospect's report
       const calculations = useReportCalculations({
         minutes: prospect.minutes,
         costPerMinute: newCostPerMinute,
