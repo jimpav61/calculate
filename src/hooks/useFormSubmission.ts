@@ -11,7 +11,7 @@ interface FormData {
 
 export const useFormSubmission = (costPerMinute: number) => {
   const submitForm = async (formData: FormData) => {
-    console.log("Starting form submission with cost per minute:", costPerMinute);
+    console.log("🧪 Test: Submitting client form with global price:", costPerMinute);
     
     if (!formData.name || !formData.companyName || !formData.email || !formData.phone || !formData.minutes) {
       console.error('Form validation failed - missing required fields');
@@ -38,7 +38,7 @@ export const useFormSubmission = (costPerMinute: number) => {
       return false;
     }
 
-    console.log("Form data saved successfully");
+    console.log("✅ Test: Form data saved successfully with price:", costPerMinute);
     toast.success("Information saved successfully!");
     return true;
   };
