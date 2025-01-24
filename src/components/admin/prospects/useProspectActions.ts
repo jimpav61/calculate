@@ -16,7 +16,7 @@ export const useProspectActions = (onSuccess: () => void) => {
       // First verify this is not the default record
       const { data: prospect, error: fetchError } = await supabase
         .from('client_pricing')
-        .select('client_name, company_name, email')
+        .select('*')
         .eq('id', prospectId)
         .single();
 
@@ -26,8 +26,9 @@ export const useProspectActions = (onSuccess: () => void) => {
       }
 
       // Extra safety check to prevent modifying global price
-      if (prospect.client_name === 'default' && 
-          prospect.company_name === 'default' && 
+      if (!prospect || 
+          prospect.client_name === 'default' || 
+          prospect.company_name === 'default' || 
           prospect.email === 'default@example.com') {
         console.error("Attempted to update global price through prospect actions");
         toast.error("Cannot update global price through this interface");
@@ -36,7 +37,7 @@ export const useProspectActions = (onSuccess: () => void) => {
 
       console.log("Updating individual prospect price. ID:", prospectId, "New Price:", newPrice);
       
-      // Multiple safety checks to ensure we never update the global price
+      // Update using the ID only, and verify it's not the default record
       const { error: updateError } = await supabase
         .from('client_pricing')
         .update({ 
@@ -44,14 +45,25 @@ export const useProspectActions = (onSuccess: () => void) => {
           updated_at: new Date().toISOString()
         })
         .eq('id', prospectId)
-        .neq('client_name', 'default')
-        .neq('company_name', 'default')
-        .neq('email', 'default@example.com');
+        .not('client_name', 'eq', 'default')
+        .not('company_name', 'eq', 'default')
+        .not('email', 'eq', 'default@example.com');
 
       if (updateError) {
         console.error("Error updating prospect price:", updateError);
         throw updateError;
       }
+      
+      // Verify the update was successful and didn't affect the global price
+      const { data: globalPrice } = await supabase
+        .from('client_pricing')
+        .select('cost_per_minute')
+        .eq('client_name', 'default')
+        .eq('company_name', 'default')
+        .eq('email', 'default@example.com')
+        .single();
+
+      console.log("Global price after individual update:", globalPrice);
       
       console.log("Individual price updated successfully");
       toast.success("Individual price updated successfully");

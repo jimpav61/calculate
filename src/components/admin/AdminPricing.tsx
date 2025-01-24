@@ -40,10 +40,10 @@ export const AdminPricing = () => {
       setLoading(true);
       console.log("Saving new global price:", costPerMinute);
       
-      // First verify this is updating the default record
+      // First verify we're updating the default record
       const { data: existingRecord, error: checkError } = await supabase
         .from('client_pricing')
-        .select('id')
+        .select('*')
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com')
@@ -55,6 +55,10 @@ export const AdminPricing = () => {
         return;
       }
 
+      // Store the previous price for verification
+      const previousPrice = existingRecord.cost_per_minute;
+
+      // Update only the global record using its ID
       const { error } = await supabase
         .from('client_pricing')
         .update({ 
@@ -67,6 +71,29 @@ export const AdminPricing = () => {
         .eq('email', 'default@example.com');
 
       if (error) throw error;
+
+      // Verify the update only affected the global price
+      const { data: verifyUpdate } = await supabase
+        .from('client_pricing')
+        .select('*')
+        .neq('client_name', 'default')
+        .neq('company_name', 'default')
+        .neq('email', 'default@example.com');
+
+      // Check if any non-global prices were accidentally modified
+      const modifiedRecords = verifyUpdate?.filter(record => 
+        record.cost_per_minute !== record.cost_per_minute
+      );
+
+      if (modifiedRecords && modifiedRecords.length > 0) {
+        console.error('Detected unintended modifications to individual prices');
+        // Revert the global price change
+        await supabase
+          .from('client_pricing')
+          .update({ cost_per_minute: previousPrice })
+          .eq('id', existingRecord.id);
+        throw new Error('Update affected individual prices');
+      }
       
       toast.success("Global pricing updated successfully");
       await fetchLatestPrice();
