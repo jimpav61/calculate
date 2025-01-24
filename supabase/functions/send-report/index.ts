@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const RESEND_API_KEY = Deno.env.get("chatsitesvoicerev2");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -28,7 +28,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Starting email send process...");
     
     if (!RESEND_API_KEY) {
-      console.error("RESEND_API_KEY environment variable is not set");
+      console.error("Resend API key (chatsitesvoicerev2) is not configured");
       throw new Error("Email service configuration is missing");
     }
 
