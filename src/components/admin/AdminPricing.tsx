@@ -9,10 +9,6 @@ export const AdminPricing = () => {
   const [costPerMinute, setCostPerMinute] = useState(0.05);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchLatestPrice();
-  }, []);
-
   const fetchLatestPrice = async () => {
     try {
       console.log("AdminPricing: Fetching global price...");
@@ -60,6 +56,10 @@ export const AdminPricing = () => {
       toast.error("Failed to fetch current price");
     }
   };
+
+  useEffect(() => {
+    fetchLatestPrice();
+  }, []);
 
   const handleSave = async () => {
     try {
