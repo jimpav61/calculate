@@ -14,6 +14,7 @@ const testProspect = {
 const sendTestEmail = async () => {
   console.log("Starting test email send...");
   try {
+    console.log("Invoking send-report function with test data...");
     const { data, error } = await supabase.functions.invoke('send-report', {
       body: {
         to: [testProspect.email],
@@ -28,17 +29,21 @@ const sendTestEmail = async () => {
     });
 
     if (error) {
-      console.error("Error sending test email:", error);
+      console.error("Error details from send-report function:", error);
       throw error;
     }
 
-    console.log("Test email sent successfully:", data);
+    console.log("Response from send-report function:", data);
     return true;
-  } catch (error) {
-    console.error("Error in sendTestEmail:", error);
+  } catch (error: any) {
+    console.error("Detailed error in sendTestEmail:", {
+      message: error.message,
+      response: error.response,
+      stack: error.stack
+    });
     return false;
   }
 };
 
-// Execute the test immediately
+// Execute test immediately
 sendTestEmail();

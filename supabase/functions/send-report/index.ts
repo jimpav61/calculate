@@ -26,6 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     console.log("Starting email send process...");
+    console.log("RESEND_API_KEY present:", !!RESEND_API_KEY);
     
     if (!RESEND_API_KEY) {
       console.error("RESEND_API_KEY is not configured");
@@ -43,7 +44,12 @@ const handler = async (req: Request): Promise<Response> => {
       attachments: emailRequest.attachments || []
     };
 
-    console.log("Sending request to Resend API...");
+    console.log("Preparing to send email with Resend...");
+    console.log("Request body (excluding attachments):", {
+      ...requestBody,
+      attachments: requestBody.attachments ? `${requestBody.attachments.length} attachments` : 'no attachments'
+    });
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -54,11 +60,11 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const responseData = await res.json();
-    console.log("Resend API response:", responseData);
     console.log("Resend API response status:", res.status);
+    console.log("Resend API response:", responseData);
 
     if (!res.ok) {
-      console.error("Resend API error response:", responseData);
+      console.error("Error response from Resend API:", responseData);
       return new Response(JSON.stringify({ error: responseData }), {
         status: res.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -71,10 +77,10 @@ const handler = async (req: Request): Promise<Response> => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error: any) {
-    console.error("Error in send-report function:", error);
-    console.error("Full error details:", {
+    console.error("Detailed error in send-report function:", {
       message: error.message,
       stack: error.stack,
+      name: error.name
     });
     
     return new Response(JSON.stringify({ error: error.message }), {
