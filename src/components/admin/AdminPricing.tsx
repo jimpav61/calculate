@@ -21,8 +21,7 @@ export const AdminPricing = () => {
       .eq('client_name', 'default')
       .eq('company_name', 'default')
       .eq('email', 'default@example.com')
-      .order('created_at', { ascending: false })
-      .limit(1);
+      .single();
 
     if (error) {
       console.error('Error fetching global price:', error);
@@ -30,37 +29,28 @@ export const AdminPricing = () => {
       return;
     }
 
-    if (data && data.length > 0) {
-      console.log("Global price found:", data[0].cost_per_minute);
-      setCostPerMinute(Number(data[0].cost_per_minute));
-    } else {
-      // If no default record exists, create one with 0.05 as default
-      console.log("No global price found, creating default...");
-      await handleSave(0.05);
+    if (data) {
+      console.log("Global price found:", data.cost_per_minute);
+      setCostPerMinute(Number(data.cost_per_minute));
     }
   };
 
-  const handleSave = async (priceToSave = costPerMinute) => {
+  const handleSave = async () => {
     try {
       setLoading(true);
-      console.log("Saving new global price:", priceToSave);
+      console.log("Saving new global price:", costPerMinute);
       
       const { error } = await supabase
         .from('client_pricing')
-        .insert([
-          { 
-            cost_per_minute: priceToSave,
-            client_name: 'default',
-            company_name: 'default',
-            email: 'default@example.com',
-            minutes: 0
-          }
-        ]);
+        .update({ cost_per_minute: costPerMinute })
+        .eq('client_name', 'default')
+        .eq('company_name', 'default')
+        .eq('email', 'default@example.com');
 
       if (error) throw error;
       
-      await fetchLatestPrice();
       toast.success("Global pricing updated successfully");
+      await fetchLatestPrice();
     } catch (error: any) {
       console.error('Error updating global price:', error);
       toast.error("Failed to update global pricing");
@@ -72,7 +62,7 @@ export const AdminPricing = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold mb-4">Voice AI Pricing</h2>
+        <h2 className="text-2xl font-semibold mb-4">Global Voice AI Pricing</h2>
         <p className="text-gray-600 mb-4">
           Adjust the global cost per minute for Voice AI services. This will affect all future client submissions.
         </p>
@@ -80,7 +70,7 @@ export const AdminPricing = () => {
 
       <div className="space-y-4 max-w-md">
         <div>
-          <Label htmlFor="costPerMinute">Cost per Minute ($)</Label>
+          <Label htmlFor="costPerMinute">Global Cost per Minute ($)</Label>
           <Input
             id="costPerMinute"
             type="number"
@@ -93,10 +83,10 @@ export const AdminPricing = () => {
         </div>
 
         <Button 
-          onClick={() => handleSave()} 
+          onClick={handleSave} 
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save Changes"}
+          {loading ? "Saving..." : "Save Global Price"}
         </Button>
       </div>
     </div>
