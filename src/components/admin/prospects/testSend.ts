@@ -26,7 +26,8 @@ const sendTestEmail = async () => {
           <p>This is a test email sent at ${timestamp}</p>
           <p>If you receive this email, please let us know!</p>
           <p>Best regards,<br/>Voice AI Team</p>
-        `
+        `,
+        from: "Voice AI <onboarding@resend.dev>"
       },
     });
 
