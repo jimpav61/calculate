@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { ReportPDF } from "./ReportPDF";
+import { ReactElement } from "react";
 
 interface PDFDownloadButtonProps {
   reportData: {
@@ -37,7 +38,7 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       fileName="chatsites-cost-analysis.pdf"
       className="w-full"
     >
-      {({ loading }) => (
+      {({ loading }): ReactElement => (
         loading ? (
           <Button disabled className="w-full gap-2 bg-brand hover:bg-brand-dark">
             <Download className="w-4 h-4" />
