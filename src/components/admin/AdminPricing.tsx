@@ -17,12 +17,14 @@ export const AdminPricing = () => {
     const { data, error } = await supabase
       .from('client_pricing')
       .select('cost_per_minute')
+      .eq('client_name', 'default')
+      .eq('company_name', 'default')
       .order('created_at', { ascending: false })
       .limit(1);
 
     if (error) {
-      console.error('Error fetching price:', error);
-      toast.error("Failed to fetch current pricing");
+      console.error('Error fetching global price:', error);
+      toast.error("Failed to fetch current global pricing");
       return;
     }
 
@@ -35,7 +37,7 @@ export const AdminPricing = () => {
     try {
       setLoading(true);
       
-      // Insert a new pricing record
+      // Insert a new global pricing record
       const { error } = await supabase
         .from('client_pricing')
         .insert([
@@ -53,10 +55,10 @@ export const AdminPricing = () => {
       // Verify the change was saved by fetching the latest price
       await fetchLatestPrice();
       
-      toast.success("Pricing updated successfully");
+      toast.success("Global pricing updated successfully");
     } catch (error: any) {
-      console.error('Error updating price:', error);
-      toast.error("Failed to update pricing");
+      console.error('Error updating global price:', error);
+      toast.error("Failed to update global pricing");
     } finally {
       setLoading(false);
     }
@@ -67,7 +69,7 @@ export const AdminPricing = () => {
       <div>
         <h2 className="text-2xl font-semibold mb-4">Voice AI Pricing</h2>
         <p className="text-gray-600 mb-4">
-          Adjust the cost per minute for Voice AI services. This will affect all future client submissions.
+          Adjust the global cost per minute for Voice AI services. This will affect all future client submissions.
         </p>
       </div>
 
