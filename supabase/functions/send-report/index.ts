@@ -26,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const emailRequest: EmailRequest = await req.json();
-    console.log("Sending email to:", emailRequest.to);
+    console.log("Processing email request to:", emailRequest.to);
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -43,18 +43,18 @@ const handler = async (req: Request): Promise<Response> => {
       }),
     });
 
+    const responseData = await res.json();
+    console.log("Resend API response:", responseData);
+
     if (res.ok) {
-      const data = await res.json();
-      console.log("Email sent successfully:", data);
-      return new Response(JSON.stringify(data), {
+      return new Response(JSON.stringify(responseData), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
-      const error = await res.text();
-      console.error("Error sending email:", error);
-      return new Response(JSON.stringify({ error }), {
-        status: 400,
+      console.error("Resend API error:", responseData);
+      return new Response(JSON.stringify({ error: responseData }), {
+        status: res.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
