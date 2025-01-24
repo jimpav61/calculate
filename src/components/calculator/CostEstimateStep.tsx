@@ -11,22 +11,23 @@ interface CostEstimateStepProps {
 }
 
 export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEstimateStepProps) => {
+  // Essential cost is the base costPerMinute (0.05)
   const calculateMonthlyUsageCost = () => {
-    return (formData.minutes * costPerMinute).toFixed(2);
+    return (formData.minutes * 0.05).toFixed(2);
   };
 
+  // Premium cost is fixed at 0.10 per minute
   const calculatePremiumCost = () => {
-    // Premium is 2x the base cost
-    return (formData.minutes * (costPerMinute * 2)).toFixed(2);
+    return (formData.minutes * 0.10).toFixed(2);
   };
 
   const calculatePotentialSavings = () => {
-    const traditionalCost = formData.minutes * (costPerMinute * 1.2);
-    return (traditionalCost - formData.minutes * costPerMinute).toFixed(2);
+    const traditionalCost = formData.minutes * (0.05 * 1.2);
+    return (traditionalCost - formData.minutes * 0.05).toFixed(2);
   };
 
   const calculateRecommendedCharge = () => {
-    return (formData.minutes * costPerMinute * 1.15).toFixed(2);
+    return (formData.minutes * 0.05 * 1.15).toFixed(2);
   };
 
   return (
@@ -56,7 +57,7 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
         <div className="space-y-4">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Cost Breakdown</h3>
-            <p className="text-sm text-gray-500">Based on ${costPerMinute.toFixed(2)} per minute (Essential) / ${(costPerMinute * 2).toFixed(2)} per minute (Premium)</p>
+            <p className="text-sm text-gray-500">Based on $0.05 per minute (Essential) / $0.10 per minute (Premium)</p>
           </div>
 
           <div className="space-y-4">
