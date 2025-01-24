@@ -38,7 +38,7 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       fileName="chatsites-cost-analysis.pdf"
       className="w-full"
     >
-      {({ loading }): ReactElement => (
+      {({ loading }) => (
         loading ? (
           <Button disabled className="w-full gap-2 bg-brand hover:bg-brand-dark">
             <Download className="w-4 h-4" />
