@@ -37,12 +37,14 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       fileName="chatsites-cost-analysis.pdf"
     >
       {({ loading }) => (
-        <Button
-          disabled={loading}
-          className="w-full gap-2 bg-brand hover:bg-brand-dark"
-        >
+        loading ? 
+        <Button disabled className="w-full gap-2 bg-brand hover:bg-brand-dark">
           <Download className="w-4 h-4" />
-          {loading ? "Generating PDF..." : "Download PDF Report"}
+          Generating PDF...
+        </Button> :
+        <Button className="w-full gap-2 bg-brand hover:bg-brand-dark">
+          <Download className="w-4 h-4" />
+          Download PDF Report
         </Button>
       )}
     </PDFDownloadLink>

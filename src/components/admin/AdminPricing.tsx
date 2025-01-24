@@ -22,8 +22,6 @@ export const AdminPricing = () => {
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com')
-        .order('updated_at', { ascending: false })
-        .limit(1)
         .single();
 
       if (error) {
@@ -47,17 +45,12 @@ export const AdminPricing = () => {
       setLoading(true);
       console.log("Starting save operation for new global price:", costPerMinute);
       
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('client_pricing')
-        .upsert({
-          client_name: 'default',
-          company_name: 'default',
-          email: 'default@example.com',
-          cost_per_minute: costPerMinute,
-          minutes: 0
-        }, {
-          onConflict: 'client_name,company_name,email'
-        });
+        .update({ cost_per_minute: costPerMinute })
+        .eq('client_name', 'default')
+        .eq('company_name', 'default')
+        .eq('email', 'default@example.com');
 
       if (error) {
         console.error('Error saving global price:', error);
@@ -81,13 +74,13 @@ export const AdminPricing = () => {
       <div>
         <h2 className="text-2xl font-semibold mb-4">Global Voice AI Pricing</h2>
         <p className="text-gray-600 mb-4">
-          Adjust the global cost per minute for Voice AI services. This will affect all future client submissions.
+          Set the base cost per minute for Essential Voice AI services. Premium services will be charged at 2x this rate.
         </p>
       </div>
 
       <div className="space-y-4 max-w-md">
         <div>
-          <Label htmlFor="costPerMinute">Global Cost per Minute ($)</Label>
+          <Label htmlFor="costPerMinute">Essential Cost per Minute ($)</Label>
           <Input
             id="costPerMinute"
             type="number"
@@ -100,6 +93,9 @@ export const AdminPricing = () => {
             }}
             className="mt-1"
           />
+          <p className="text-sm text-gray-500 mt-2">
+            Premium Cost per Minute: ${(costPerMinute * 2).toFixed(2)}
+          </p>
         </div>
 
         <Button 
