@@ -40,5 +40,5 @@ const sendTestEmail = async () => {
   }
 };
 
-// Execute the test
+// Execute the test immediately
 sendTestEmail();

@@ -28,24 +28,20 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Starting email send process...");
     
     if (!RESEND_API_KEY) {
-      console.error("Resend API key is not configured");
+      console.error("RESEND_API_KEY is not configured");
       throw new Error("Email service configuration is missing");
     }
 
     const emailRequest: EmailRequest = await req.json();
     console.log("Received email request for recipients:", emailRequest.to);
 
-    const requestBody: any = {
+    const requestBody = {
       from: "Voice AI <onboarding@resend.dev>",
       to: emailRequest.to,
       subject: emailRequest.subject,
       html: emailRequest.html,
+      attachments: emailRequest.attachments || []
     };
-
-    if (emailRequest.attachments && emailRequest.attachments.length > 0) {
-      requestBody.attachments = emailRequest.attachments;
-      console.log("Request includes attachments");
-    }
 
     console.log("Sending request to Resend API...");
     const res = await fetch("https://api.resend.com/emails", {
