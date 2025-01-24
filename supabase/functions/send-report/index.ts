@@ -4,52 +4,36 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface EmailRequest {
-  to: string[];
-  subject: string;
-  html: string;
-  attachments?: Array<{
-    content: string;
-    filename: string;
-  }>;
-}
-
 const handler = async (req: Request): Promise<Response> => {
+  console.log("Received request to send-report function");
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log("Starting email send process...");
-    console.log("RESEND_API_KEY present:", !!RESEND_API_KEY);
-    
     if (!RESEND_API_KEY) {
       console.error("RESEND_API_KEY is not configured");
       throw new Error("Email service configuration is missing");
     }
 
-    const emailRequest: EmailRequest = await req.json();
-    console.log("Received email request for recipients:", emailRequest.to);
+    const { to, subject, html, attachments } = await req.json();
+    console.log("Processing email request for:", to);
+    console.log("Email subject:", subject);
 
     const requestBody = {
       from: "Voice AI <onboarding@resend.dev>",
-      to: emailRequest.to,
-      subject: emailRequest.subject,
-      html: emailRequest.html,
-      attachments: emailRequest.attachments || []
+      to,
+      subject,
+      html,
+      attachments: attachments || []
     };
 
-    console.log("Preparing to send email with Resend...");
-    console.log("Request body (excluding attachments):", {
-      ...requestBody,
-      attachments: requestBody.attachments ? `${requestBody.attachments.length} attachments` : 'no attachments'
-    });
-
+    console.log("Sending email via Resend API...");
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -59,30 +43,20 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify(requestBody),
     });
 
-    const responseData = await res.json();
-    console.log("Resend API response status:", res.status);
-    console.log("Resend API response:", responseData);
+    const data = await res.json();
+    console.log("Resend API response:", data);
 
     if (!res.ok) {
-      console.error("Error response from Resend API:", responseData);
-      return new Response(JSON.stringify({ error: responseData }), {
-        status: res.status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      console.error("Error from Resend API:", data);
+      throw new Error(data.message || "Failed to send email");
     }
 
-    console.log("Email sent successfully");
-    return new Response(JSON.stringify(responseData), {
+    return new Response(JSON.stringify(data), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error: any) {
-    console.error("Detailed error in send-report function:", {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
-    
+    console.error("Error in send-report function:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
