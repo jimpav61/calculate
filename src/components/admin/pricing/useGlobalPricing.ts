@@ -32,7 +32,6 @@ export const useGlobalPricing = () => {
       setLoading(true);
       console.log("🌍 Starting global price update. New price:", newPrice);
       
-      // First verify we're updating the default record
       const { data: existingRecord, error: checkError } = await supabase
         .from('client_pricing')
         .select('*')
@@ -48,7 +47,6 @@ export const useGlobalPricing = () => {
 
       console.log("✅ Found global price record:", existingRecord);
 
-      // Update only the global record
       const { error: updateError } = await supabase
         .from('client_pricing')
         .update({ 
