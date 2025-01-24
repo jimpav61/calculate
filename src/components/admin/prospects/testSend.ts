@@ -8,6 +8,9 @@ const testConnection = async () => {
     console.log(`[${timestamp}] Attempting to invoke send-report function...`);
     const { data, error } = await supabase.functions.invoke('send-report', {
       body: { test: true },
+      headers: {
+        Authorization: `Bearer ${supabase.supabaseKey}`
+      }
     });
 
     if (error) {
