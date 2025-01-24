@@ -18,7 +18,7 @@ export const AdminPricing = () => {
       console.log("Fetching global price...");
       const { data, error } = await supabase
         .from('client_pricing')
-        .select('cost_per_minute')
+        .select('*')
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com')
@@ -31,8 +31,26 @@ export const AdminPricing = () => {
       }
 
       if (data) {
-        console.log("Global price found:", data.cost_per_minute);
+        console.log("Global price found:", data);
         setCostPerMinute(Number(data.cost_per_minute));
+      } else {
+        console.log("No global price found, creating default record");
+        const { error: insertError } = await supabase
+          .from('client_pricing')
+          .insert({
+            client_name: 'default',
+            company_name: 'default',
+            email: 'default@example.com',
+            cost_per_minute: 0.05,
+            minutes: 0
+          });
+
+        if (insertError) {
+          console.error('Error creating default price:', insertError);
+          toast.error("Failed to create default price");
+        } else {
+          setCostPerMinute(0.05);
+        }
       }
     } catch (error) {
       console.error('Error in fetchLatestPrice:', error);
@@ -47,7 +65,10 @@ export const AdminPricing = () => {
       
       const { error } = await supabase
         .from('client_pricing')
-        .update({ cost_per_minute: costPerMinute })
+        .update({ 
+          cost_per_minute: costPerMinute,
+          updated_at: new Date().toISOString()
+        })
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com');
@@ -60,7 +81,6 @@ export const AdminPricing = () => {
       
       console.log("Global price saved successfully");
       toast.success("Price updated successfully");
-      await fetchLatestPrice(); // Refresh the price after saving
     } catch (error) {
       console.error('Error in save operation:', error);
       toast.error("Failed to save new price");
