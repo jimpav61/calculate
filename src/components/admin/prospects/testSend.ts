@@ -5,11 +5,17 @@ const testConnection = async () => {
   console.log(`[${timestamp}] Testing Supabase Functions connection...`);
   
   try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      console.error(`[${timestamp}] No active session found`);
+      return false;
+    }
+
     console.log(`[${timestamp}] Attempting to invoke send-report function...`);
     const { data, error } = await supabase.functions.invoke('send-report', {
       body: { test: true },
       headers: {
-        Authorization: `Bearer ${supabase.supabaseKey}`
+        Authorization: `Bearer ${session.access_token}`
       }
     });
 
