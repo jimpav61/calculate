@@ -5,11 +5,23 @@ const testConnection = async () => {
   console.log(`[${timestamp}] Testing Supabase Functions connection...`);
   
   try {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      console.error(`[${timestamp}] No active session found`);
+    console.log(`[${timestamp}] Checking authentication session...`);
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError) {
+      console.error(`[${timestamp}] Session error:`, sessionError);
       return false;
     }
+    
+    if (!session) {
+      console.error(`[${timestamp}] No active session found - user needs to be logged in`);
+      return false;
+    }
+
+    console.log(`[${timestamp}] Session found:`, {
+      user: session.user?.email,
+      expires_at: session.expires_at
+    });
 
     console.log(`[${timestamp}] Attempting to invoke send-report function...`);
     const { data, error } = await supabase.functions.invoke('send-report', {
@@ -20,7 +32,12 @@ const testConnection = async () => {
     });
 
     if (error) {
-      console.error(`[${timestamp}] Connection Error:`, error);
+      console.error(`[${timestamp}] Connection Error:`, {
+        message: error.message,
+        name: error.name,
+        cause: error.cause,
+        details: error
+      });
       throw error;
     }
 
@@ -39,3 +56,5 @@ const testConnection = async () => {
 
 // Execute test immediately
 testConnection();
+
+export default testConnection;
