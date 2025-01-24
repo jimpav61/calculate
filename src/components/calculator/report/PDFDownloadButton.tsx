@@ -6,27 +6,20 @@ import { useReportCalculations } from './ReportCalculations';
 import { Download } from 'lucide-react';
 
 interface PDFDownloadButtonProps {
-  formData: {
-    name: string;
-    companyName: string;
-    email: string;
-    phone: string;
-    minutes: number;
+  reportData: {
+    formData: {
+      name: string;
+      companyName: string;
+      email: string;
+      phone: string;
+      minutes: number;
+    };
+    calculations: ReturnType<typeof useReportCalculations>;
+    date: string;
   };
 }
 
-export const PDFDownloadButton = ({ formData }: PDFDownloadButtonProps) => {
-  const calculations = useReportCalculations({
-    minutes: formData.minutes,
-    costPerMinute: 0.05,
-  });
-
-  const reportData = {
-    formData,
-    calculations,
-    date: new Date().toLocaleDateString(),
-  };
-
+export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
   return (
     <PDFDownloadLink
       document={<ReportPDF data={reportData} />}
