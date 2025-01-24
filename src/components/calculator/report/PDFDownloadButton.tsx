@@ -38,12 +38,14 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       document={<ReportPDF data={reportData} />}
       fileName="voice-ai-analysis.pdf"
     >
-      {({ loading }) => (
-        <Button disabled={loading}>
-          <Download className="w-4 h-4 mr-2" />
-          {loading ? "Generating PDF..." : "Download PDF"}
-        </Button>
-      )}
+      {({ loading }) => {
+        return (
+          <Button disabled={loading}>
+            <Download className="w-4 h-4 mr-2" />
+            {loading ? "Generating PDF..." : "Download PDF"}
+          </Button>
+        );
+      }}
     </PDFDownloadLink>
   );
 };

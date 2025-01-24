@@ -21,6 +21,7 @@ const sendTestEmail = async () => {
         html: `
           <p>Hello ${testProspect.client_name},</p>
           <p>This is a test email for the Voice AI cost analysis report.</p>
+          <p>If you receive this email, please let us know!</p>
           <p>Best regards,<br/>Voice AI Team</p>
         `
       },
