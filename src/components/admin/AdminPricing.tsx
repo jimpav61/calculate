@@ -40,9 +40,28 @@ export const AdminPricing = () => {
       setLoading(true);
       console.log("Saving new global price:", costPerMinute);
       
+      // First verify this is updating the default record
+      const { data: existingRecord, error: checkError } = await supabase
+        .from('client_pricing')
+        .select('id')
+        .eq('client_name', 'default')
+        .eq('company_name', 'default')
+        .eq('email', 'default@example.com')
+        .single();
+
+      if (checkError || !existingRecord) {
+        console.error('Error checking global price record:', checkError);
+        toast.error("Failed to verify global pricing record");
+        return;
+      }
+
       const { error } = await supabase
         .from('client_pricing')
-        .update({ cost_per_minute: costPerMinute })
+        .update({ 
+          cost_per_minute: costPerMinute,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingRecord.id)
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com');

@@ -11,6 +11,8 @@ export const useProspectActions = (onSuccess: () => void) => {
 
   const updateProspectPrice = async (prospectId: string, newPrice: number) => {
     try {
+      console.log("Starting individual price update for prospect ID:", prospectId);
+      
       // First verify this is not the default record
       const { data: prospect, error: fetchError } = await supabase
         .from('client_pricing')
@@ -28,12 +30,13 @@ export const useProspectActions = (onSuccess: () => void) => {
           prospect.company_name === 'default' && 
           prospect.email === 'default@example.com') {
         console.error("Attempted to update global price through prospect actions");
-        toast.error("Cannot update global price through this interface. Please use the Global Pricing section.");
+        toast.error("Cannot update global price through this interface");
         return false;
       }
 
       console.log("Updating individual prospect price. ID:", prospectId, "New Price:", newPrice);
       
+      // Multiple safety checks to ensure we never update the global price
       const { error: updateError } = await supabase
         .from('client_pricing')
         .update({ 
@@ -41,7 +44,7 @@ export const useProspectActions = (onSuccess: () => void) => {
           updated_at: new Date().toISOString()
         })
         .eq('id', prospectId)
-        .neq('client_name', 'default')  // Extra safety to never update global price
+        .neq('client_name', 'default')
         .neq('company_name', 'default')
         .neq('email', 'default@example.com');
 
