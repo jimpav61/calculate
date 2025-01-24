@@ -20,7 +20,9 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 export const useProspectEmail = () => {
   const sendReport = async (prospect: Prospect, newCostPerMinute: number) => {
     try {
-      // Use the new individual price for this prospect's report
+      console.log("Sending report with individual price:", newCostPerMinute);
+      
+      // Use the individual price for this prospect's report
       const calculations = useReportCalculations({
         minutes: prospect.minutes,
         costPerMinute: newCostPerMinute,
@@ -43,17 +45,17 @@ export const useProspectEmail = () => {
       const asPdf = await pdfDoc.toBlob();
       const pdfBase64 = await blobToBase64(asPdf);
 
-      // Sanitize email address by trimming whitespace
+      // Sanitize email address
       const sanitizedEmail = prospect.email.trim();
       console.log("Sending report to email:", sanitizedEmail);
 
       const { data, error } = await supabase.functions.invoke('send-report', {
         body: {
           to: [sanitizedEmail],
-          subject: 'Updated Voice AI Cost Analysis',
+          subject: 'Your Voice AI Cost Analysis',
           html: `
             <p>Hello ${prospect.client_name},</p>
-            <p>Please find attached your updated Voice AI cost analysis report.</p>
+            <p>Please find attached your Voice AI cost analysis report with your individual pricing.</p>
             <p>Best regards,<br/>Your Voice AI Team</p>
           `,
           attachments: [{
@@ -72,7 +74,7 @@ export const useProspectEmail = () => {
       toast.success("Report sent successfully");
       return true;
     } catch (error: any) {
-      console.error("Detailed error:", error);
+      console.error("Detailed error in sendReport:", error);
       toast.error("Failed to send report");
       return false;
     }
