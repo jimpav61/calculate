@@ -4,7 +4,7 @@ interface ReportCalculationsProps {
 }
 
 export const useReportCalculations = ({ minutes, costPerMinute }: ReportCalculationsProps) => {
-  console.log("🧮 Calculating report with:", { minutes, costPerMinute });
+  console.log("🧮 Starting calculations with:", { minutes, costPerMinute });
   
   if (!costPerMinute) {
     console.warn("⚠️ No cost per minute provided, calculations will be $0");
@@ -36,21 +36,21 @@ export const useReportCalculations = ({ minutes, costPerMinute }: ReportCalculat
   const aiCallsPerMonth = aiCallsPerDay * 30; // Full month operation
   
   // Standard tier calculations with dynamic pricing
-  const standardAICost = minutes * costPerMinute;
-  console.log("💰 Standard AI Cost:", standardAICost);
+  const standardAICost = Number((minutes * costPerMinute).toFixed(2));
+  console.log("💰 Standard AI Cost:", standardAICost, `(${minutes} mins × $${costPerMinute}/min)`);
   
   // Premium tier calculations (2x the base cost)
   const premiumCostPerMinute = costPerMinute * 2;
-  const premiumAICost = minutes * premiumCostPerMinute;
-  console.log("💎 Premium AI Cost:", premiumAICost);
+  const premiumAICost = Number((minutes * premiumCostPerMinute).toFixed(2));
+  console.log("💎 Premium AI Cost:", premiumAICost, `(${minutes} mins × $${premiumCostPerMinute}/min)`);
   
   // Calculate human operator cost based on $16/hour
-  const humanOperatorCost = (minutes / 60) * 16;
-  console.log("👤 Human Operator Cost:", humanOperatorCost);
+  const humanOperatorCost = Number(((minutes / 60) * 16).toFixed(2));
+  console.log("👤 Human Operator Cost:", humanOperatorCost, `(${minutes} mins at $16/hour)`);
   
   // Calculate savings for both tiers
-  const standardSavings = humanOperatorCost - standardAICost;
-  const premiumSavings = humanOperatorCost - premiumAICost;
+  const standardSavings = Number((humanOperatorCost - standardAICost).toFixed(2));
+  const premiumSavings = Number((humanOperatorCost - premiumAICost).toFixed(2));
   
   const standardSavingsPercentage = ((standardSavings / humanOperatorCost) * 100).toFixed(1);
   const premiumSavingsPercentage = ((premiumSavings / humanOperatorCost) * 100).toFixed(1);
@@ -61,8 +61,8 @@ export const useReportCalculations = ({ minutes, costPerMinute }: ReportCalculat
     humanOperatorCost,
     standardSavings,
     premiumSavings,
-    standardSavingsPercentage,
-    premiumSavingsPercentage
+    standardSavingsPercentage: `${standardSavingsPercentage}%`,
+    premiumSavingsPercentage: `${premiumSavingsPercentage}%`
   });
 
   return {
