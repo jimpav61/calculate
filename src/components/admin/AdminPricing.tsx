@@ -24,7 +24,7 @@ export const AdminPricing = () => {
         .eq('email', 'default@example.com')
         .order('updated_at', { ascending: false })
         .limit(1)
-        .maybeSingle();
+        .single();
 
       if (error) {
         console.error('Error fetching global price:', error);
@@ -35,10 +35,6 @@ export const AdminPricing = () => {
       if (data) {
         console.log("Global price found:", data.cost_per_minute);
         setCostPerMinute(Number(data.cost_per_minute));
-      } else {
-        console.log("No global price found, using default value:", costPerMinute);
-        // Create initial default price
-        await handleSave();
       }
     } catch (error) {
       console.error('Error in fetchLatestPrice:', error);
