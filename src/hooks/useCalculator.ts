@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface CalculatorFormData {
   name: string;
@@ -9,9 +10,10 @@ interface CalculatorFormData {
   minutes: number;
 }
 
-export const useCalculator = (initialCostPerMinute: number) => {
+export const useCalculator = () => {
   const [step, setStep] = useState(1);
   const [showReport, setShowReport] = useState(false);
+  const [globalPrice, setGlobalPrice] = useState<number | null>(null);
   const [formData, setFormData] = useState<CalculatorFormData>({
     name: "",
     companyName: "",
@@ -19,6 +21,32 @@ export const useCalculator = (initialCostPerMinute: number) => {
     email: "",
     minutes: 0,
   });
+
+  useEffect(() => {
+    fetchGlobalPrice();
+  }, []);
+
+  const fetchGlobalPrice = async () => {
+    console.log("🔍 Fetching global price for calculator...");
+    const { data, error } = await supabase
+      .from('client_pricing')
+      .select('cost_per_minute')
+      .eq('client_name', 'default')
+      .eq('company_name', 'default')
+      .eq('email', 'default@example.com')
+      .single();
+
+    if (error) {
+      console.error('❌ Error fetching global price:', error);
+      toast.error("Failed to fetch pricing information");
+      return;
+    }
+
+    if (data) {
+      console.log("✅ Global price fetched successfully:", data.cost_per_minute);
+      setGlobalPrice(Number(data.cost_per_minute));
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -70,6 +98,7 @@ export const useCalculator = (initialCostPerMinute: number) => {
     step,
     showReport,
     formData,
+    globalPrice,
     handleInputChange,
     handleNext,
     handleBack,
