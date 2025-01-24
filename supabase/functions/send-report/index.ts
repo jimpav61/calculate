@@ -58,6 +58,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const responseData = await res.json();
+    console.log("Resend API response:", responseData);
     console.log("Resend API response status:", res.status);
 
     if (!res.ok) {
