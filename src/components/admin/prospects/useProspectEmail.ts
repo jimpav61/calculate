@@ -20,13 +20,15 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 export const useProspectEmail = () => {
   const sendReport = async (prospect: Prospect, newCostPerMinute: number) => {
     try {
-      console.log("Starting report generation for prospect:", {
+      console.log("Starting report generation process...");
+      console.log("Prospect details:", {
+        name: prospect.client_name,
+        company: prospect.company_name,
         email: prospect.email,
-        individualPrice: newCostPerMinute,
-        minutes: prospect.minutes
+        minutes: prospect.minutes,
+        newPrice: newCostPerMinute
       });
       
-      // Calculate costs using ONLY the individual price for this prospect
       const calculations = useReportCalculations({
         minutes: prospect.minutes,
         costPerMinute: newCostPerMinute,
@@ -46,21 +48,18 @@ export const useProspectEmail = () => {
         date: new Date().toLocaleDateString(),
       };
 
-      // Generate PDF
-      console.log("Generating PDF with report data");
+      console.log("Generating PDF...");
       const pdfDoc = pdf(ReportPDF({ data: reportData }));
       const asPdf = await pdfDoc.toBlob();
       const pdfBase64 = await blobToBase64(asPdf);
       console.log("PDF generated successfully");
 
-      // Sanitize and validate email
       const sanitizedEmail = prospect.email.trim();
       if (!sanitizedEmail) {
         throw new Error("Invalid email address");
       }
-      console.log("Sending report to email:", sanitizedEmail);
+      console.log("Sending report to:", sanitizedEmail);
 
-      // Send email with PDF attachment
       const { data, error } = await supabase.functions.invoke('send-report', {
         body: {
           to: [sanitizedEmail],
@@ -88,11 +87,12 @@ export const useProspectEmail = () => {
       return true;
     } catch (error: any) {
       console.error("Error in sendReport:", error);
-      console.error("Detailed error information:", {
+      console.error("Detailed error:", {
         message: error.message,
         stack: error.stack,
+        response: error.response?.data
       });
-      toast.error("Failed to send report");
+      toast.error(`Failed to send report: ${error.message}`);
       return false;
     }
   };
