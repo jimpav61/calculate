@@ -1,12 +1,5 @@
 project_id = "wlogbwxjteyycddkjvki"
 
-[api]
-enabled = true
-url = "https://wlogbwxjteyycddkjvki.supabase.co"
-
-[db]
-port = 5432
-
 [functions]
 [functions.send-report]
 verify_jwt = true
