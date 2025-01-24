@@ -11,7 +11,7 @@ export const useProspects = () => {
   
   const fetchProspects = async () => {
     try {
-      // Fetch all non-default client records
+      console.log("Fetching all non-default client records...");
       const { data, error } = await supabase
         .from('client_pricing')
         .select('*')
@@ -21,10 +21,12 @@ export const useProspects = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
+      
+      console.log("Fetched prospects:", data);
       setProspects(data || []);
     } catch (error: any) {
-      toast.error("Failed to load prospects");
       console.error("Error fetching prospects:", error);
+      toast.error("Failed to load prospects");
     } finally {
       setLoading(false);
     }
@@ -52,8 +54,9 @@ export const useProspects = () => {
 
     try {
       setSending(true);
+      console.log("Handling send report for prospect:", prospect.email, "with new price:", newCostPerMinute);
 
-      // First update the price
+      // First update the individual price
       const updateSuccess = await updateProspectPrice(prospect.id, newCostPerMinute);
       if (!updateSuccess) {
         throw new Error("Failed to update price");
@@ -65,7 +68,7 @@ export const useProspects = () => {
         throw new Error("Failed to send email");
       }
 
-      fetchProspects();
+      await fetchProspects();
     } catch (error: any) {
       console.error("Error in handleSendReport:", error);
       toast.error("Failed to complete the operation");

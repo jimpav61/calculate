@@ -14,7 +14,7 @@ export const AdminPricing = () => {
   }, []);
 
   const fetchLatestPrice = async () => {
-    // Only fetch the default/global pricing record
+    console.log("Fetching global price...");
     const { data, error } = await supabase
       .from('client_pricing')
       .select('cost_per_minute')
@@ -31,6 +31,7 @@ export const AdminPricing = () => {
     }
 
     if (data && data.length > 0) {
+      console.log("Global price found:", data[0].cost_per_minute);
       setCostPerMinute(Number(data[0].cost_per_minute));
     }
   };
@@ -38,8 +39,8 @@ export const AdminPricing = () => {
   const handleSave = async () => {
     try {
       setLoading(true);
+      console.log("Saving new global price:", costPerMinute);
       
-      // Insert a new global pricing record
       const { error } = await supabase
         .from('client_pricing')
         .insert([
@@ -54,9 +55,7 @@ export const AdminPricing = () => {
 
       if (error) throw error;
       
-      // Verify the change was saved by fetching the latest price
       await fetchLatestPrice();
-      
       toast.success("Global pricing updated successfully");
     } catch (error: any) {
       console.error('Error updating global price:', error);

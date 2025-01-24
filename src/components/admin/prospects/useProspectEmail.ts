@@ -20,7 +20,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 export const useProspectEmail = () => {
   const sendReport = async (prospect: Prospect, newCostPerMinute: number) => {
     try {
-      console.log("Starting report generation with individual price:", newCostPerMinute);
+      console.log("Starting report generation with individual price for prospect:", prospect.email, "Price:", newCostPerMinute);
       
       // Calculate costs using the individual price for this prospect
       const calculations = useReportCalculations({
