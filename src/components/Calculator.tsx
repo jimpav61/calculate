@@ -24,8 +24,10 @@ const Calculator = () => {
       const { data, error } = await supabase
         .from('client_pricing')
         .select('cost_per_minute')
-        .order('created_at', { ascending: false })
-        .limit(1);
+        .eq('client_name', 'default')
+        .eq('company_name', 'default')
+        .eq('email', 'default@example.com')
+        .single();
 
       if (error) {
         console.error('Error fetching price:', error);
@@ -33,9 +35,9 @@ const Calculator = () => {
         return;
       }
 
-      if (data && data.length > 0) {
-        console.log("Latest price fetched:", data[0].cost_per_minute);
-        setCostPerMinute(Number(data[0].cost_per_minute));
+      if (data) {
+        console.log("Latest price fetched:", data.cost_per_minute);
+        setCostPerMinute(Number(data.cost_per_minute));
       }
     };
 
@@ -50,7 +52,7 @@ const Calculator = () => {
     handleNext,
     handleBack,
     setShowReport,
-  } = useCalculator(costPerMinute);
+  } = useCalculator();
 
   const { submitForm } = useFormSubmission(costPerMinute);
 
