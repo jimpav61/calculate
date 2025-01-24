@@ -36,7 +36,7 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       document={<ReportPDF data={reportData} />}
       fileName="chatsites-cost-analysis.pdf"
     >
-      {({ loading }) => (
+      {({ loading, error }) => (
         <Button
           disabled={loading}
           className="w-full gap-2 bg-brand hover:bg-brand-dark"
