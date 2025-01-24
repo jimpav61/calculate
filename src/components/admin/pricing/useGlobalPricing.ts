@@ -6,7 +6,7 @@ export const useGlobalPricing = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchGlobalPrice = async () => {
-    console.log("Fetching global price...");
+    console.log("🌍 Fetching global price...");
     const { data, error } = await supabase
       .from('client_pricing')
       .select('cost_per_minute')
@@ -16,13 +16,13 @@ export const useGlobalPricing = () => {
       .single();
 
     if (error) {
-      console.error('Error fetching global price:', error);
+      console.error('❌ Error fetching global price:', error);
       toast.error("Failed to fetch current global pricing");
       return null;
     }
 
     if (data) {
-      console.log("Global price found:", data.cost_per_minute);
+      console.log("✅ Global price found:", data.cost_per_minute);
       return Number(data.cost_per_minute);
     }
     return null;
@@ -31,7 +31,7 @@ export const useGlobalPricing = () => {
   const updateGlobalPrice = async (newPrice: number) => {
     try {
       setLoading(true);
-      console.log("Starting global price update:", newPrice);
+      console.log("🌍 Starting global price update. New price:", newPrice);
       
       // First verify we're updating the default record
       const { data: existingRecord, error: checkError } = await supabase
@@ -43,12 +43,12 @@ export const useGlobalPricing = () => {
         .single();
 
       if (checkError || !existingRecord) {
-        console.error('Error checking global price record:', checkError);
+        console.error('❌ Error checking global price record:', checkError);
         toast.error("Failed to verify global pricing record");
         return false;
       }
 
-      console.log("Found global price record:", existingRecord);
+      console.log("✅ Found global price record:", existingRecord);
 
       // Update only the global record
       const { error: updateError } = await supabase
@@ -63,16 +63,16 @@ export const useGlobalPricing = () => {
         .eq('email', 'default@example.com');
 
       if (updateError) {
-        console.error('Error updating global price:', updateError);
+        console.error('❌ Error updating global price:', updateError);
         toast.error("Failed to update global pricing");
         return false;
       }
 
-      console.log("Global price updated successfully to:", newPrice);
+      console.log("✅ Global price updated successfully to:", newPrice);
       toast.success("Global pricing updated successfully");
       return true;
     } catch (error: any) {
-      console.error('Error in updateGlobalPrice:', error);
+      console.error('❌ Error in updateGlobalPrice:', error);
       toast.error("Failed to update global pricing");
       return false;
     } finally {

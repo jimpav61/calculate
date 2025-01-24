@@ -8,7 +8,7 @@ export const useIndividualPricing = () => {
   const updateIndividualPrice = async (prospectId: string, newPrice: number) => {
     try {
       setLoading(true);
-      console.log("Starting individual price update. ID:", prospectId, "New Price:", newPrice);
+      console.log("👤 Starting individual price update. ID:", prospectId, "New Price:", newPrice);
       
       // First verify this is not the default record
       const { data: prospect, error: fetchError } = await supabase
@@ -18,19 +18,19 @@ export const useIndividualPricing = () => {
         .single();
 
       if (fetchError) {
-        console.error("Error fetching prospect:", fetchError);
+        console.error("❌ Error fetching prospect:", fetchError);
         toast.error("Failed to verify prospect record");
         return false;
       }
 
-      console.log("Found prospect record:", prospect);
+      console.log("✅ Found prospect record:", prospect);
 
       // Extra safety check to prevent modifying global price
       if (!prospect || 
           prospect.client_name === 'default' || 
           prospect.company_name === 'default' || 
           prospect.email === 'default@example.com') {
-        console.error("Attempted to update global price through individual pricing");
+        console.error("❌ Attempted to update global price through individual pricing");
         toast.error("Cannot update global price through this interface");
         return false;
       }
@@ -48,16 +48,16 @@ export const useIndividualPricing = () => {
         .not('email', 'eq', 'default@example.com');
 
       if (updateError) {
-        console.error("Error updating prospect price:", updateError);
+        console.error("❌ Error updating prospect price:", updateError);
         toast.error("Failed to update individual price");
         return false;
       }
 
-      console.log("Individual price updated successfully for prospect:", prospectId, "to:", newPrice);
+      console.log("✅ Individual price updated successfully for prospect:", prospectId, "to:", newPrice);
       toast.success("Individual price updated successfully");
       return true;
     } catch (error: any) {
-      console.error("Error in updateIndividualPrice:", error);
+      console.error("❌ Error in updateIndividualPrice:", error);
       toast.error("Failed to update individual price");
       return false;
     } finally {
