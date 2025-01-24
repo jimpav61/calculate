@@ -1,32 +1,19 @@
-import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { ReportPDF } from "./ReportPDF";
+import { Button } from "@/components/ui/button";
+import { ReactElement } from "react";
 
 interface PDFDownloadButtonProps {
   reportData: {
-    formData: {
-      name: string;
-      companyName: string;
-      email: string;
-      phone: string;
-      minutes: number;
-    };
-    calculations: {
-      standardAICost: number;
-      premiumAICost: number;
-      humanOperatorCost: number;
-      standardSavings: number;
-      premiumSavings: number;
-      standardSavingsPercentage: string;
-      premiumSavingsPercentage: string;
-      callMetrics: {
-        humanCallsPerMonth: number;
-        aiCallsPerMonth: number;
-        aiSimultaneousCalls: number;
-      };
-    };
-    date: string;
+    clientName: string;
+    companyName: string;
+    minutes: number;
+    costPerMinute: number;
+    totalCost: number;
+    monthlyCost: number;
+    yearlyCost: number;
+    savingsPerYear: number;
   };
 }
 
@@ -37,7 +24,7 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       fileName="chatsites-cost-analysis.pdf"
       className="w-full"
     >
-      {({ loading, error }) => 
+      {({ loading }: { loading: boolean }): ReactElement => (
         loading ? (
           <Button disabled className="w-full gap-2 bg-brand hover:bg-brand-dark">
             <Download className="w-4 h-4" />
@@ -49,7 +36,7 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
             Download PDF Report
           </Button>
         )
-      }
+      )}
     </PDFDownloadLink>
   );
 };
