@@ -20,6 +20,17 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 export const useProspectEmail = () => {
   const sendReport = async (prospect: Prospect, newCostPerMinute: number) => {
     try {
+      // Verify we're not sending to the default record
+      if (
+        prospect.client_name === 'default' ||
+        prospect.company_name === 'default' ||
+        prospect.email === 'default@example.com'
+      ) {
+        console.error("Attempted to send email to default record");
+        toast.error("Cannot send email to default record");
+        return false;
+      }
+
       console.log("Starting report generation for prospect:", {
         email: prospect.email,
         individualPrice: newCostPerMinute,
@@ -54,8 +65,9 @@ export const useProspectEmail = () => {
       console.log("PDF generated successfully");
 
       // Sanitize and validate email
-      const sanitizedEmail = prospect.email.trim();
-      if (!sanitizedEmail) {
+      const sanitizedEmail = prospect.email.trim().toLowerCase();
+      if (!sanitizedEmail || !sanitizedEmail.includes('@')) {
+        console.error("Invalid email address:", sanitizedEmail);
         throw new Error("Invalid email address");
       }
       console.log("Sending report to email:", sanitizedEmail);
@@ -92,7 +104,7 @@ export const useProspectEmail = () => {
         message: error.message,
         stack: error.stack,
       });
-      toast.error("Failed to send report");
+      toast.error(`Failed to send report: ${error.message}`);
       return false;
     }
   };
