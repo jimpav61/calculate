@@ -2,106 +2,29 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { useGlobalPricing } from "./pricing/useGlobalPricing";
 
 export const AdminPricing = () => {
   const [costPerMinute, setCostPerMinute] = useState(0.05);
-  const [loading, setLoading] = useState(false);
+  const { loading, fetchGlobalPrice, updateGlobalPrice } = useGlobalPricing();
 
   useEffect(() => {
-    fetchLatestPrice();
+    const initializePrice = async () => {
+      const price = await fetchGlobalPrice();
+      if (price !== null) {
+        setCostPerMinute(price);
+      }
+    };
+    initializePrice();
   }, []);
 
-  const fetchLatestPrice = async () => {
-    console.log("Fetching global price...");
-    const { data, error } = await supabase
-      .from('client_pricing')
-      .select('cost_per_minute')
-      .eq('client_name', 'default')
-      .eq('company_name', 'default')
-      .eq('email', 'default@example.com')
-      .single();
-
-    if (error) {
-      console.error('Error fetching global price:', error);
-      toast.error("Failed to fetch current global pricing");
-      return;
-    }
-
-    if (data) {
-      console.log("Global price found:", data.cost_per_minute);
-      setCostPerMinute(Number(data.cost_per_minute));
-    }
-  };
-
   const handleSave = async () => {
-    try {
-      setLoading(true);
-      console.log("Saving new global price:", costPerMinute);
-      
-      // First verify we're updating the default record
-      const { data: existingRecord, error: checkError } = await supabase
-        .from('client_pricing')
-        .select('*')
-        .eq('client_name', 'default')
-        .eq('company_name', 'default')
-        .eq('email', 'default@example.com')
-        .single();
-
-      if (checkError || !existingRecord) {
-        console.error('Error checking global price record:', checkError);
-        toast.error("Failed to verify global pricing record");
-        return;
+    const success = await updateGlobalPrice(costPerMinute);
+    if (success) {
+      const updatedPrice = await fetchGlobalPrice();
+      if (updatedPrice !== null) {
+        setCostPerMinute(updatedPrice);
       }
-
-      // Store the previous price for verification
-      const previousPrice = existingRecord.cost_per_minute;
-
-      // Update only the global record using its ID
-      const { error } = await supabase
-        .from('client_pricing')
-        .update({ 
-          cost_per_minute: costPerMinute,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', existingRecord.id)
-        .eq('client_name', 'default')
-        .eq('company_name', 'default')
-        .eq('email', 'default@example.com');
-
-      if (error) throw error;
-
-      // Verify the update only affected the global price
-      const { data: verifyUpdate } = await supabase
-        .from('client_pricing')
-        .select('*')
-        .neq('client_name', 'default')
-        .neq('company_name', 'default')
-        .neq('email', 'default@example.com');
-
-      // Check if any non-global prices were accidentally modified
-      const modifiedRecords = verifyUpdate?.filter(record => 
-        record.cost_per_minute !== record.cost_per_minute
-      );
-
-      if (modifiedRecords && modifiedRecords.length > 0) {
-        console.error('Detected unintended modifications to individual prices');
-        // Revert the global price change
-        await supabase
-          .from('client_pricing')
-          .update({ cost_per_minute: previousPrice })
-          .eq('id', existingRecord.id);
-        throw new Error('Update affected individual prices');
-      }
-      
-      toast.success("Global pricing updated successfully");
-      await fetchLatestPrice();
-    } catch (error: any) {
-      console.error('Error updating global price:', error);
-      toast.error("Failed to update global pricing");
-    } finally {
-      setLoading(false);
     }
   };
 
