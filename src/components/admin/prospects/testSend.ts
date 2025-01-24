@@ -12,16 +12,18 @@ const testProspect = {
 };
 
 const sendTestEmail = async () => {
-  console.log("Starting test email send...");
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] Starting test email send...`);
+  
   try {
-    console.log("Invoking send-report function with test data...");
+    console.log(`[${timestamp}] Invoking send-report function with test data...`);
     const { data, error } = await supabase.functions.invoke('send-report', {
       body: {
         to: [testProspect.email],
         subject: 'Test Email - Voice AI Cost Analysis',
         html: `
           <p>Hello ${testProspect.client_name},</p>
-          <p>This is a test email for the Voice AI cost analysis report.</p>
+          <p>This is a test email sent at ${timestamp}</p>
           <p>If you receive this email, please let us know!</p>
           <p>Best regards,<br/>Voice AI Team</p>
         `
@@ -29,14 +31,14 @@ const sendTestEmail = async () => {
     });
 
     if (error) {
-      console.error("Error details from send-report function:", error);
+      console.error(`[${timestamp}] Error details from send-report function:`, error);
       throw error;
     }
 
-    console.log("Response from send-report function:", data);
+    console.log(`[${timestamp}] Response from send-report function:`, data);
     return true;
   } catch (error: any) {
-    console.error("Detailed error in sendTestEmail:", {
+    console.error(`[${timestamp}] Detailed error in sendTestEmail:`, {
       message: error.message,
       response: error.response,
       stack: error.stack
