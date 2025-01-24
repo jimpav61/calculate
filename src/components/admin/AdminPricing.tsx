@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const AdminPricing = () => {
   const [costPerMinute, setCostPerMinute] = useState(0.05);
@@ -13,25 +14,31 @@ export const AdminPricing = () => {
   }, []);
 
   const fetchLatestPrice = async () => {
-    console.log("Fetching global price...");
-    const { data, error } = await supabase
-      .from('client_pricing')
-      .select('cost_per_minute')
-      .eq('client_name', 'default')
-      .eq('company_name', 'default')
-      .eq('email', 'default@example.com')
-      .single();
+    try {
+      console.log("Fetching global price...");
+      const { data, error } = await supabase
+        .from('client_pricing')
+        .select('cost_per_minute')
+        .eq('client_name', 'default')
+        .eq('company_name', 'default')
+        .eq('email', 'default@example.com')
+        .single();
 
-    if (error) {
-      console.error('Error fetching global price:', error);
-      return;
-    }
+      if (error) {
+        console.error('Error fetching global price:', error);
+        toast.error("Failed to fetch current price");
+        return;
+      }
 
-    if (data) {
-      console.log("Global price found:", data.cost_per_minute);
-      setCostPerMinute(Number(data.cost_per_minute));
-    } else {
-      console.log("No global price found, using default value:", costPerMinute);
+      if (data) {
+        console.log("Global price found:", data.cost_per_minute);
+        setCostPerMinute(Number(data.cost_per_minute));
+      } else {
+        console.log("No global price found, using default value:", costPerMinute);
+      }
+    } catch (error) {
+      console.error('Error in fetchLatestPrice:', error);
+      toast.error("Failed to fetch current price");
     }
   };
 
@@ -50,19 +57,20 @@ export const AdminPricing = () => {
           minutes: 0
         }, {
           onConflict: 'client_name,company_name,email'
-        })
-        .select()
-        .single();
+        });
 
       if (error) {
         console.error('Error saving global price:', error);
+        toast.error("Failed to save new price");
         throw error;
       }
       
-      console.log("Global price saved successfully:", data);
-      await fetchLatestPrice();
+      console.log("Global price saved successfully");
+      toast.success("Price updated successfully");
+      await fetchLatestPrice(); // Refresh the price after saving
     } catch (error) {
       console.error('Error in save operation:', error);
+      toast.error("Failed to save new price");
     } finally {
       setLoading(false);
     }
