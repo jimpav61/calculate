@@ -2,29 +2,60 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useGlobalPricing } from "./pricing/useGlobalPricing";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const AdminPricing = () => {
   const [costPerMinute, setCostPerMinute] = useState(0.05);
-  const { loading, fetchGlobalPrice, updateGlobalPrice } = useGlobalPricing();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const initializePrice = async () => {
-      const price = await fetchGlobalPrice();
-      if (price !== null) {
-        setCostPerMinute(price);
-      }
-    };
-    initializePrice();
+    fetchLatestPrice();
   }, []);
 
+  const fetchLatestPrice = async () => {
+    console.log("Fetching global price...");
+    const { data, error } = await supabase
+      .from('client_pricing')
+      .select('cost_per_minute')
+      .eq('client_name', 'default')
+      .eq('company_name', 'default')
+      .eq('email', 'default@example.com')
+      .single();
+
+    if (error) {
+      console.error('Error fetching global price:', error);
+      toast.error("Failed to fetch current global pricing");
+      return;
+    }
+
+    if (data) {
+      console.log("Global price found:", data.cost_per_minute);
+      setCostPerMinute(Number(data.cost_per_minute));
+    }
+  };
+
   const handleSave = async () => {
-    const success = await updateGlobalPrice(costPerMinute);
-    if (success) {
-      const updatedPrice = await fetchGlobalPrice();
-      if (updatedPrice !== null) {
-        setCostPerMinute(updatedPrice);
-      }
+    try {
+      setLoading(true);
+      console.log("Saving new global price:", costPerMinute);
+      
+      const { error } = await supabase
+        .from('client_pricing')
+        .update({ cost_per_minute: costPerMinute })
+        .eq('client_name', 'default')
+        .eq('company_name', 'default')
+        .eq('email', 'default@example.com');
+
+      if (error) throw error;
+      
+      toast.success("Global pricing updated successfully");
+      await fetchLatestPrice();
+    } catch (error: any) {
+      console.error('Error updating global price:', error);
+      toast.error("Failed to update global pricing");
+    } finally {
+      setLoading(false);
     }
   };
 

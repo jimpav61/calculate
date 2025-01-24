@@ -20,18 +20,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 export const useProspectEmail = () => {
   const sendReport = async (prospect: Prospect, newCostPerMinute: number) => {
     try {
-      // Verify we're not sending to the default record
-      if (
-        prospect.client_name === 'default' ||
-        prospect.company_name === 'default' ||
-        prospect.email === 'default@example.com'
-      ) {
-        console.error("❌ Test: Attempted to send email to default record");
-        toast.error("Cannot send email to default record");
-        return false;
-      }
-
-      console.log("🧪 Test: Starting report generation for prospect:", {
+      console.log("Starting report generation for prospect:", {
         email: prospect.email,
         individualPrice: newCostPerMinute,
         currentPrice: prospect.cost_per_minute
@@ -43,7 +32,7 @@ export const useProspectEmail = () => {
         costPerMinute: newCostPerMinute,
       });
 
-      console.log("✅ Test: Calculations completed with individual pricing:", calculations);
+      console.log("Calculations completed with individual pricing:", calculations);
 
       const reportData = {
         formData: {
@@ -58,19 +47,18 @@ export const useProspectEmail = () => {
       };
 
       // Generate PDF
-      console.log("📄 Test: Generating PDF with report data:", reportData);
+      console.log("Generating PDF with report data:", reportData);
       const pdfDoc = pdf(ReportPDF({ data: reportData }));
       const asPdf = await pdfDoc.toBlob();
       const pdfBase64 = await blobToBase64(asPdf);
-      console.log("✅ Test: PDF generated successfully");
+      console.log("PDF generated successfully");
 
       // Sanitize and validate email
-      const sanitizedEmail = prospect.email.trim().toLowerCase();
-      if (!sanitizedEmail || !sanitizedEmail.includes('@')) {
-        console.error("❌ Test: Invalid email address:", sanitizedEmail);
+      const sanitizedEmail = prospect.email.trim();
+      if (!sanitizedEmail) {
         throw new Error("Invalid email address");
       }
-      console.log("📧 Test: Sending report to email:", sanitizedEmail);
+      console.log("Sending report to email:", sanitizedEmail);
 
       // Send email with PDF attachment
       const { data, error } = await supabase.functions.invoke('send-report', {
@@ -91,20 +79,20 @@ export const useProspectEmail = () => {
       });
 
       if (error) {
-        console.error("❌ Test: Error from send-report function:", error);
+        console.error("Error from send-report function:", error);
         throw error;
       }
 
-      console.log("✅ Test: Report sent successfully:", data);
+      console.log("Report sent successfully:", data);
       toast.success("Report sent successfully");
       return true;
     } catch (error: any) {
-      console.error("❌ Test: Error in sendReport:", error);
+      console.error("Error in sendReport:", error);
       console.error("Detailed error information:", {
         message: error.message,
         stack: error.stack,
       });
-      toast.error(`Failed to send report: ${error.message}`);
+      toast.error("Failed to send report");
       return false;
     }
   };
