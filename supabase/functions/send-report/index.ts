@@ -25,6 +25,11 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    if (!RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set");
+      throw new Error("RESEND_API_KEY is not configured");
+    }
+
     const emailRequest: EmailRequest = await req.json();
     console.log("Processing email request to:", emailRequest.to);
 
@@ -46,18 +51,18 @@ const handler = async (req: Request): Promise<Response> => {
     const responseData = await res.json();
     console.log("Resend API response:", responseData);
 
-    if (res.ok) {
-      return new Response(JSON.stringify(responseData), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    } else {
-      console.error("Resend API error:", responseData);
+    if (!res.ok) {
+      console.error("Resend API error response:", responseData);
       return new Response(JSON.stringify({ error: responseData }), {
         status: res.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    return new Response(JSON.stringify(responseData), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error: any) {
     console.error("Error in send-report function:", error);
     return new Response(JSON.stringify({ error: error.message }), {
