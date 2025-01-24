@@ -17,7 +17,6 @@ export const useGlobalPricing = () => {
 
     if (error) {
       console.error('❌ Error fetching global price:', error);
-      toast.error("Failed to fetch current global pricing");
       return null;
     }
 
@@ -44,7 +43,6 @@ export const useGlobalPricing = () => {
 
       if (checkError || !existingRecord) {
         console.error('❌ Error checking global price record:', checkError);
-        toast.error("Failed to verify global pricing record");
         return false;
       }
 
@@ -64,7 +62,6 @@ export const useGlobalPricing = () => {
 
       if (updateError) {
         console.error('❌ Error updating global price:', updateError);
-        toast.error("Failed to update global pricing");
         return false;
       }
 
@@ -73,7 +70,6 @@ export const useGlobalPricing = () => {
       return true;
     } catch (error: any) {
       console.error('❌ Error in updateGlobalPrice:', error);
-      toast.error("Failed to update global pricing");
       return false;
     } finally {
       setLoading(false);
