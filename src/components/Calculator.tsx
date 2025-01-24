@@ -27,6 +27,8 @@ const Calculator = () => {
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com')
+        .order('updated_at', { ascending: false })
+        .limit(1)
         .single();
 
       if (error) {

@@ -35,7 +35,6 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
     <PDFDownloadLink
       document={<ReportPDF data={reportData} />}
       fileName="chatsites-cost-analysis.pdf"
-      className="w-full"
     >
       {({ loading }) => (
         <Button
