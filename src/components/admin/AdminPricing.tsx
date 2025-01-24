@@ -1,95 +1,17 @@
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { usePricing } from "@/hooks/usePricing";
+import { updateGlobalPrice } from "@/utils/pricing";
 
 export const AdminPricing = () => {
-  const [costPerMinute, setCostPerMinute] = useState(0.05);
-  const [loading, setLoading] = useState(false);
-
-  const fetchLatestPrice = async () => {
-    try {
-      console.log("AdminPricing: Fetching global price...");
-      const { data, error } = await supabase
-        .from('client_pricing')
-        .select('cost_per_minute')
-        .eq('client_name', 'default')
-        .eq('company_name', 'default')
-        .eq('email', 'default@example.com')
-        .order('updated_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error) {
-        console.error('AdminPricing: Error fetching global price:', error);
-        toast.error("Failed to fetch current price");
-        
-        // If no record exists, create the default one
-        console.log("AdminPricing: No global price found, creating default record");
-        const { error: insertError } = await supabase
-          .from('client_pricing')
-          .insert({
-            client_name: 'default',
-            company_name: 'default',
-            email: 'default@example.com',
-            cost_per_minute: 0.05,
-            minutes: 0
-          });
-
-        if (insertError) {
-          console.error('AdminPricing: Error creating default price:', insertError);
-          toast.error("Failed to create default price");
-        } else {
-          setCostPerMinute(0.05);
-        }
-        return;
-      }
-
-      if (data) {
-        console.log("AdminPricing: Global price found:", data.cost_per_minute);
-        setCostPerMinute(Number(data.cost_per_minute));
-      }
-    } catch (error) {
-      console.error('AdminPricing: Error in fetchLatestPrice:', error);
-      toast.error("Failed to fetch current price");
-    }
-  };
-
-  useEffect(() => {
-    fetchLatestPrice();
-  }, []);
+  const { costPerMinute, setCostPerMinute, loading, setLoading } = usePricing();
 
   const handleSave = async () => {
-    try {
-      setLoading(true);
-      console.log("AdminPricing: Starting save operation for new global price:", costPerMinute);
-      
-      const { error } = await supabase
-        .from('client_pricing')
-        .update({ 
-          cost_per_minute: costPerMinute,
-          updated_at: new Date().toISOString()
-        })
-        .eq('client_name', 'default')
-        .eq('company_name', 'default')
-        .eq('email', 'default@example.com');
-
-      if (error) {
-        console.error('AdminPricing: Error saving global price:', error);
-        toast.error("Failed to save new price");
-        throw error;
-      }
-      
-      console.log("AdminPricing: Global price saved successfully");
-      toast.success("Price updated successfully");
-    } catch (error) {
-      console.error('AdminPricing: Error in save operation:', error);
-      toast.error("Failed to save new price");
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    console.log("AdminPricing: Starting save operation for new global price:", costPerMinute);
+    const success = await updateGlobalPrice(costPerMinute);
+    setLoading(false);
   };
 
   return (

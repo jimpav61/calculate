@@ -11,41 +11,11 @@ import { NavigationButtons } from "./calculator/NavigationButtons";
 import { CalculatorHeader } from "./calculator/CalculatorHeader";
 import { useCalculator } from "@/hooks/useCalculator";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { usePricing } from "@/hooks/usePricing";
 
 const Calculator = () => {
-  const [costPerMinute, setCostPerMinute] = useState(0.05);
-
-  const fetchLatestPrice = async () => {
-    console.log("Calculator: Fetching latest price...");
-    const { data, error } = await supabase
-      .from('client_pricing')
-      .select('cost_per_minute')
-      .eq('client_name', 'default')
-      .eq('company_name', 'default')
-      .eq('email', 'default@example.com')
-      .order('updated_at', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (error) {
-      console.error('Calculator: Error fetching price:', error);
-      toast.error("Failed to fetch current pricing");
-      return;
-    }
-
-    if (data) {
-      console.log("Calculator: Latest price fetched:", data.cost_per_minute);
-      setCostPerMinute(Number(data.cost_per_minute));
-    }
-  };
-
-  useEffect(() => {
-    fetchLatestPrice();
-  }, []);
-
+  const { costPerMinute } = usePricing();
+  
   const {
     step,
     showReport,
