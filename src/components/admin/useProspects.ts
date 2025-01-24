@@ -102,7 +102,7 @@ export const useProspects = () => {
       const sanitizedEmail = prospect.email.trim();
       console.log("Sending report to email:", sanitizedEmail);
 
-      const { error } = await supabase.functions.invoke('send-report', {
+      const { data, error } = await supabase.functions.invoke('send-report', {
         body: {
           to: [sanitizedEmail],
           subject: 'Updated Voice AI Cost Analysis',
@@ -118,8 +118,12 @@ export const useProspects = () => {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error from send-report function:", error);
+        throw error;
+      }
 
+      console.log("Report sent successfully:", data);
       toast.success("Report sent successfully");
       fetchProspects();
     } catch (error: any) {
