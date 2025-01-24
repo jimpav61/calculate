@@ -1,9 +1,11 @@
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Button } from "@/components/ui/button";
-import { ReportPDF } from "./ReportPDF";
-import { Download } from "lucide-react";
+import React from 'react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { Button } from '@/components/ui/button';
+import { ReportPDF } from './ReportPDF';
+import { useReportCalculations } from './ReportCalculations';
+import { Download } from 'lucide-react';
 
-interface ReportData {
+interface PDFDownloadButtonProps {
   formData: {
     name: string;
     companyName: string;
@@ -11,38 +13,29 @@ interface ReportData {
     phone: string;
     minutes: number;
   };
-  calculations: {
-    standardAICost: number;
-    premiumAICost: number;
-    humanOperatorCost: number;
-    standardSavings: number;
-    premiumSavings: number;
-    standardSavingsPercentage: string;
-    premiumSavingsPercentage: string;
-    callMetrics: {
-      humanCallsPerMonth: number;
-      aiCallsPerMonth: number;
-      aiSimultaneousCalls: number;
-    };
+}
+
+export const PDFDownloadButton = ({ formData }: PDFDownloadButtonProps) => {
+  const calculations = useReportCalculations({
+    minutes: formData.minutes,
+    costPerMinute: 0.05,
+  });
+
+  const reportData = {
+    formData,
+    calculations,
+    date: new Date().toLocaleDateString(),
   };
-  date: string;
-}
 
-interface PDFDownloadButtonProps {
-  reportData: ReportData;
-}
-
-export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
   return (
     <PDFDownloadLink
       document={<ReportPDF data={reportData} />}
       fileName="voice-ai-analysis.pdf"
-      className="inline-block"
     >
       {({ loading }) => (
-        <Button disabled={loading} type="button">
-          <Download className="w-4 h-4 mr-2" />
-          {loading ? "Generating PDF..." : "Download PDF"}
+        <Button disabled={loading}>
+          <Download className="mr-2 h-4 w-4" />
+          {loading ? 'Generating PDF...' : 'Download PDF'}
         </Button>
       )}
     </PDFDownloadLink>
