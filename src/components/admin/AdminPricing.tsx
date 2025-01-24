@@ -15,26 +15,23 @@ export const AdminPricing = () => {
 
   const fetchLatestPrice = async () => {
     try {
-      console.log("Fetching global price...");
+      console.log("AdminPricing: Fetching global price...");
       const { data, error } = await supabase
         .from('client_pricing')
-        .select('*')
+        .select('cost_per_minute')
         .eq('client_name', 'default')
         .eq('company_name', 'default')
         .eq('email', 'default@example.com')
+        .order('updated_at', { ascending: false })
+        .limit(1)
         .single();
 
       if (error) {
-        console.error('Error fetching global price:', error);
+        console.error('AdminPricing: Error fetching global price:', error);
         toast.error("Failed to fetch current price");
-        return;
-      }
-
-      if (data) {
-        console.log("Global price found:", data);
-        setCostPerMinute(Number(data.cost_per_minute));
-      } else {
-        console.log("No global price found, creating default record");
+        
+        // If no record exists, create the default one
+        console.log("AdminPricing: No global price found, creating default record");
         const { error: insertError } = await supabase
           .from('client_pricing')
           .insert({
@@ -46,14 +43,20 @@ export const AdminPricing = () => {
           });
 
         if (insertError) {
-          console.error('Error creating default price:', insertError);
+          console.error('AdminPricing: Error creating default price:', insertError);
           toast.error("Failed to create default price");
         } else {
           setCostPerMinute(0.05);
         }
+        return;
+      }
+
+      if (data) {
+        console.log("AdminPricing: Global price found:", data.cost_per_minute);
+        setCostPerMinute(Number(data.cost_per_minute));
       }
     } catch (error) {
-      console.error('Error in fetchLatestPrice:', error);
+      console.error('AdminPricing: Error in fetchLatestPrice:', error);
       toast.error("Failed to fetch current price");
     }
   };
@@ -61,7 +64,7 @@ export const AdminPricing = () => {
   const handleSave = async () => {
     try {
       setLoading(true);
-      console.log("Starting save operation for new global price:", costPerMinute);
+      console.log("AdminPricing: Starting save operation for new global price:", costPerMinute);
       
       const { error } = await supabase
         .from('client_pricing')
@@ -74,15 +77,15 @@ export const AdminPricing = () => {
         .eq('email', 'default@example.com');
 
       if (error) {
-        console.error('Error saving global price:', error);
+        console.error('AdminPricing: Error saving global price:', error);
         toast.error("Failed to save new price");
         throw error;
       }
       
-      console.log("Global price saved successfully");
+      console.log("AdminPricing: Global price saved successfully");
       toast.success("Price updated successfully");
     } catch (error) {
-      console.error('Error in save operation:', error);
+      console.error('AdminPricing: Error in save operation:', error);
       toast.error("Failed to save new price");
     } finally {
       setLoading(false);
@@ -108,7 +111,7 @@ export const AdminPricing = () => {
             min="0"
             value={costPerMinute}
             onChange={(e) => {
-              console.log("Price input changed to:", e.target.value);
+              console.log("AdminPricing: Price input changed to:", e.target.value);
               setCostPerMinute(Number(e.target.value));
             }}
             className="mt-1"
