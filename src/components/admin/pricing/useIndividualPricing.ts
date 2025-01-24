@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Prospect } from "../types";
 
 export const useIndividualPricing = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +22,8 @@ export const useIndividualPricing = () => {
         toast.error("Failed to verify prospect record");
         return false;
       }
+
+      console.log("Found prospect record:", prospect);
 
       // Extra safety check to prevent modifying global price
       if (!prospect || 
@@ -52,7 +53,7 @@ export const useIndividualPricing = () => {
         return false;
       }
 
-      console.log("Individual price updated successfully");
+      console.log("Individual price updated successfully for prospect:", prospectId, "to:", newPrice);
       toast.success("Individual price updated successfully");
       return true;
     } catch (error: any) {

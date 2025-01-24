@@ -48,6 +48,8 @@ export const useGlobalPricing = () => {
         return false;
       }
 
+      console.log("Found global price record:", existingRecord);
+
       // Update only the global record
       const { error: updateError } = await supabase
         .from('client_pricing')
@@ -66,7 +68,7 @@ export const useGlobalPricing = () => {
         return false;
       }
 
-      console.log("Global price updated successfully");
+      console.log("Global price updated successfully to:", newPrice);
       toast.success("Global pricing updated successfully");
       return true;
     } catch (error: any) {
