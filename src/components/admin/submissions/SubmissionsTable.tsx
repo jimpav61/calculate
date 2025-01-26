@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/table";
 import { ClientPricing } from "../types";
 import { ExternalLink } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SubmissionsTableProps {
   submissions: ClientPricing[];
@@ -17,6 +16,7 @@ interface SubmissionsTableProps {
 export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
   const formatWebsiteUrl = (url: string | null) => {
     if (!url) return '-';
+    // Add https:// if not present
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
     return (
       <a 
@@ -31,11 +31,6 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
     );
   };
 
-  const calculateSuggestedRetail = (minutes: number, costPerMinute: number) => {
-    const basePrice = minutes * costPerMinute;
-    return basePrice * 1.15; // 15% markup
-  };
-
   return (
     <div className="border rounded-lg">
       <Table>
@@ -48,16 +43,6 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
             <TableHead>Website</TableHead>
             <TableHead className="text-right">Minutes</TableHead>
             <TableHead className="text-right">Cost/Min ($)</TableHead>
-            <TableHead className="text-right">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>Suggested Retail ($)</TooltipTrigger>
-                  <TooltipContent>
-                    <p>Includes 15% margin for operational costs</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </TableHead>
             <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
@@ -71,9 +56,6 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
               <TableCell>{formatWebsiteUrl(row.website)}</TableCell>
               <TableCell className="text-right">{row.minutes.toLocaleString()}</TableCell>
               <TableCell className="text-right">${row.cost_per_minute.toFixed(2)}</TableCell>
-              <TableCell className="text-right">
-                ${calculateSuggestedRetail(row.minutes, row.cost_per_minute).toFixed(2)}
-              </TableCell>
               <TableCell>{new Date(row.created_at).toLocaleDateString()}</TableCell>
             </TableRow>
           ))}

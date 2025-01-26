@@ -18,7 +18,6 @@ interface DetailedReportDialogProps {
     companyName: string;
     phone: string;
     email: string;
-    website: string;
     minutes: number;
   };
   costPerMinute: number;

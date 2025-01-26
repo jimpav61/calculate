@@ -18,7 +18,6 @@ interface PreviewReportDialogProps {
     company_name: string;
     email: string;
     phone: string | null;
-    website: string | null;
     minutes: number;
   };
   newCostPerMinute: number;
@@ -40,7 +39,6 @@ export const PreviewReportDialog = ({
     companyName: prospect.company_name,
     email: prospect.email,
     phone: prospect.phone || '',
-    website: prospect.website || '',
     minutes: prospect.minutes,
   };
 

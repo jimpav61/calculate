@@ -13,7 +13,6 @@ interface ReportPDFProps {
       companyName: string;
       email: string;
       phone: string;
-      website: string;
       minutes: number;
     };
     calculations: {
@@ -44,7 +43,6 @@ export const ReportPDF = ({ data }: ReportPDFProps) => (
         companyName={data.formData.companyName}
         email={data.formData.email}
         phone={data.formData.phone}
-        website={data.formData.website}
       />
 
       <CostAnalysisSection
