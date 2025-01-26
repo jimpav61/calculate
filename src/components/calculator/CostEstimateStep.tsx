@@ -19,15 +19,6 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
     return (formData.minutes * (costPerMinute * 2)).toFixed(2);
   };
 
-  const calculatePotentialSavings = () => {
-    const traditionalCost = formData.minutes * (costPerMinute * 1.2);
-    return (traditionalCost - formData.minutes * costPerMinute).toFixed(2);
-  };
-
-  const calculateRecommendedCharge = () => {
-    return (formData.minutes * costPerMinute * 1.15).toFixed(2);
-  };
-
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="space-y-2">
@@ -67,20 +58,6 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Premium Voice AI Cost:</span>
                 <span className="font-semibold text-brand">${calculatePremiumCost()}</span>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Potential Savings:</span>
-              <span className="font-semibold text-green-600">${calculatePotentialSavings()}</span>
-            </div>
-
-            <div className="border-t pt-4 mt-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Recommended Monthly Charge:</span>
-                <span className="font-semibold text-xl text-brand">
-                  ${calculateRecommendedCharge()}
-                </span>
               </div>
             </div>
           </div>

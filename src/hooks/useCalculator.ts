@@ -45,6 +45,13 @@ export const useCalculator = (initialCostPerMinute: number) => {
       }
       return true;
     }
+    if (step === 4) {
+      if (!formData.minutes || formData.minutes <= 0) {
+        toast.error("Please enter a valid number of minutes before proceeding.");
+        return false;
+      }
+      return true;
+    }
     return true;
   };
 
@@ -63,11 +70,6 @@ export const useCalculator = (initialCostPerMinute: number) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowReport(true);
-  };
-
   return {
     step,
     showReport,
@@ -75,7 +77,6 @@ export const useCalculator = (initialCostPerMinute: number) => {
     handleInputChange,
     handleNext,
     handleBack,
-    handleSubmit,
     setShowReport,
   };
 };
