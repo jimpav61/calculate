@@ -1,46 +1,37 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface CalculatorFormData {
-  name: string;
-  companyName: string;
-  phone: string;
-  email: string;
-  website: string;
-  minutes: number;
-}
-
-export const useCalculator = (initialCostPerMinute: number) => {
+export const useCalculator = (costPerMinute: number) => {
   const [step, setStep] = useState(1);
   const [showReport, setShowReport] = useState(false);
-  const [formData, setFormData] = useState<CalculatorFormData>({
+  const [formData, setFormData] = useState({
     name: "",
     companyName: "",
-    phone: "",
     email: "",
-    website: "",
+    phone: "",
     minutes: 0,
+    website: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'minutes' ? Number(value) : value,
+      [name]: value,
     }));
   };
 
-  const validateContactInfo = () => {
+  const validateStep = () => {
     if (step === 2) {
-      if (!formData.name.trim() || !formData.companyName.trim()) {
-        toast.error("Please fill in both your name and company name before proceeding.");
+      if (!formData.name || !formData.companyName) {
+        toast.error("Please fill in all required fields");
         return false;
       }
       return true;
     }
     if (step === 3) {
-      if (!formData.phone.trim() || !formData.email.trim()) {
-        toast.error("Please provide both your phone number and email address before proceeding.");
+      if (!formData.email) {
+        toast.error("Please provide an email address");
         return false;
       }
       return true;
@@ -56,11 +47,10 @@ export const useCalculator = (initialCostPerMinute: number) => {
   };
 
   const handleNext = () => {
-    if (!validateContactInfo()) {
-      return;
-    }
-    if (step < 5) {
-      setStep((prev) => prev + 1);
+    if (validateStep()) {
+      if (step < 5) {
+        setStep((prev) => prev + 1);
+      }
     }
   };
 

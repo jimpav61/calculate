@@ -2,16 +2,39 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ReportPDF } from "./ReportPDF";
-import { CalculatorData } from "../types";
 
 interface PDFDownloadButtonProps {
-  data: CalculatorData;
+  reportData: {
+    formData: {
+      name: string;
+      companyName: string;
+      email: string;
+      phone: string;
+      minutes: number;
+      website?: string;
+    };
+    calculations: {
+      standardAICost: number;
+      premiumAICost: number;
+      humanOperatorCost: number;
+      standardSavings: number;
+      premiumSavings: number;
+      standardSavingsPercentage: string;
+      premiumSavingsPercentage: string;
+      callMetrics: {
+        humanCallsPerMonth: number;
+        aiCallsPerMonth: number;
+        aiSimultaneousCalls: number;
+      };
+    };
+    date: string;
+  };
 }
 
-export const PDFDownloadButton = ({ data }: PDFDownloadButtonProps) => {
+export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
   return (
     <PDFDownloadLink
-      document={<ReportPDF data={data} />}
+      document={<ReportPDF data={reportData} />}
       fileName={`pricing-report-${new Date().toISOString().split('T')[0]}.pdf`}
     >
       {({ loading }) => (
