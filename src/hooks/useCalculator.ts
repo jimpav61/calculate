@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+interface CalculatorFormData {
+  name: string;
+  companyName: string;
+  phone: string;
+  email: string;
+  website: string;
+  minutes: number;
+}
+
 export const useCalculator = (costPerMinute: number) => {
   const [step, setStep] = useState(1);
   const [showReport, setShowReport] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CalculatorFormData>({
     name: "",
     companyName: "",
     email: "",
@@ -17,7 +26,7 @@ export const useCalculator = (costPerMinute: number) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === 'minutes' ? Number(value) : value,
     }));
   };
 
@@ -30,15 +39,15 @@ export const useCalculator = (costPerMinute: number) => {
       return true;
     }
     if (step === 3) {
-      if (!formData.email) {
-        toast.error("Please provide an email address");
+      if (!formData.email || !formData.phone) {
+        toast.error("Please provide contact information");
         return false;
       }
       return true;
     }
     if (step === 4) {
       if (!formData.minutes || formData.minutes <= 0) {
-        toast.error("Please enter a valid number of minutes before proceeding.");
+        toast.error("Please enter a valid number of minutes");
         return false;
       }
       return true;

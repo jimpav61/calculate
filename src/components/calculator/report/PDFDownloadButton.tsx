@@ -11,7 +11,7 @@ interface PDFDownloadButtonProps {
       email: string;
       phone: string;
       minutes: number;
-      website?: string;
+      website: string;
     };
     calculations: {
       standardAICost: number;

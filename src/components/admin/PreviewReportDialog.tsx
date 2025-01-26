@@ -39,6 +39,7 @@ export const PreviewReportDialog = ({
     companyName: prospect.company_name,
     email: prospect.email,
     phone: prospect.phone || '',
+    website: '',
     minutes: prospect.minutes,
   };
 
