@@ -1,14 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface CostEstimateStepProps {
-  minutes: number;
+  formData: {
+    minutes: number;
+  };
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   costPerMinute: number;
 }
 
 export const CostEstimateStep = ({
-  minutes,
+  formData,
   onChange,
   costPerMinute,
 }: CostEstimateStepProps) => {
@@ -24,7 +25,7 @@ export const CostEstimateStep = ({
         <Input
           type="number"
           name="minutes"
-          value={minutes}
+          value={formData.minutes}
           onChange={onChange}
           min="0"
           placeholder="Enter minutes"
