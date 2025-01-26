@@ -7,7 +7,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ClientPricing } from "../types";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface SubmissionsTableProps {
   submissions: ClientPricing[];
@@ -16,7 +18,6 @@ interface SubmissionsTableProps {
 export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
   const formatWebsiteUrl = (url: string | null) => {
     if (!url) return '-';
-    // Add https:// if not present
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
     return (
       <a 
@@ -28,6 +29,37 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
         {url}
         <ExternalLink className="h-4 w-4" />
       </a>
+    );
+  };
+
+  const handlePhoneClick = (phone: string | null, type: 'call' | 'ai') => {
+    if (!phone) return;
+    
+    // Remove any non-numeric characters for the tel: link
+    const cleanPhone = phone.replace(/\D/g, '');
+    
+    if (type === 'call') {
+      window.location.href = `tel:${cleanPhone}`;
+    } else {
+      // For now, we'll just show a toast since AI calling requires additional setup
+      toast.info("AI calling feature coming soon!");
+    }
+  };
+
+  const formatPhoneCell = (phone: string | null) => {
+    if (!phone) return '-';
+    return (
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-blue-600 hover:text-blue-800 p-0"
+          onClick={() => handlePhoneClick(phone, 'call')}
+        >
+          <Phone className="h-4 w-4 mr-1" />
+          {phone}
+        </Button>
+      </div>
     );
   };
 
@@ -52,7 +84,7 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
               <TableCell>{row.client_name}</TableCell>
               <TableCell>{row.company_name}</TableCell>
               <TableCell className="font-mono">{row.email}</TableCell>
-              <TableCell>{row.phone || '-'}</TableCell>
+              <TableCell>{formatPhoneCell(row.phone)}</TableCell>
               <TableCell>{formatWebsiteUrl(row.website)}</TableCell>
               <TableCell className="text-right">{row.minutes.toLocaleString()}</TableCell>
               <TableCell className="text-right">${row.cost_per_minute.toFixed(2)}</TableCell>
