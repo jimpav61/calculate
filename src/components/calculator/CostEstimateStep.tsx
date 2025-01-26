@@ -76,11 +76,16 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
             </div>
 
             <div className="border-t pt-4 mt-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Recommended Monthly Charge:</span>
-                <span className="font-semibold text-xl text-brand">
-                  ${calculateRecommendedCharge()}
-                </span>
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Suggested Retail Price:</span>
+                  <span className="font-semibold text-xl text-brand">
+                    ${calculateRecommendedCharge()}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500 italic">
+                  This is our suggested retail price which includes a 15% margin to help cover your operational costs while maintaining competitive pricing.
+                </p>
               </div>
             </div>
           </div>
