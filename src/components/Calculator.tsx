@@ -31,11 +31,9 @@ const Calculator = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Calculator: Form submitted with data:", formData);
+    setShowReport(true); // Show report immediately without waiting for submission
     const success = await submitForm(formData);
     console.log("Calculator: Form submission result:", success);
-    if (success) {
-      setShowReport(true);
-    }
   };
 
   return (
@@ -86,6 +84,8 @@ const Calculator = () => {
         formData={formData}
         costPerMinute={costPerMinute}
       />
+
+      <Toaster />
     </div>
   );
 };
