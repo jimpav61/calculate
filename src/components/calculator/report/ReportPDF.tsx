@@ -5,30 +5,19 @@ import { CostAnalysisSection } from './pdf/CostAnalysisSection';
 import { CallHandlingSection } from './pdf/CallHandlingSection';
 import { AdditionalBenefitsSection } from './pdf/AdditionalBenefitsSection';
 import { styles } from './pdf/pdfStyles';
+import { useReportCalculations } from './ReportCalculations';
 
-interface ReportPDFProps {
+export interface ReportPDFProps {
   data: {
     formData: {
       name: string;
       companyName: string;
       email: string;
       phone: string;
+      website: string;
       minutes: number;
     };
-    calculations: {
-      standardAICost: number;
-      premiumAICost: number;
-      humanOperatorCost: number;
-      standardSavings: number;
-      premiumSavings: number;
-      standardSavingsPercentage: string;
-      premiumSavingsPercentage: string;
-      callMetrics: {
-        humanCallsPerMonth: number;
-        aiCallsPerMonth: number;
-        aiSimultaneousCalls: number;
-      };
-    };
+    calculations: ReturnType<typeof useReportCalculations>;
     date: string;
   };
 }
