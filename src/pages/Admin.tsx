@@ -65,12 +65,12 @@ const Admin = () => {
 
   const handleSignOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      navigate("/"); // Changed from "/login" to "/" to redirect to main app
+      await supabase.auth.signOut();
+      console.log('Successfully signed out');
+      navigate("/login");
     } catch (error: any) {
       console.error('Sign out error:', error);
-      toast.error(error.message || "Error signing out");
+      toast.error("Error signing out. Please try again.");
     }
   };
 
