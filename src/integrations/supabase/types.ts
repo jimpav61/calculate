@@ -38,6 +38,7 @@ export type Database = {
           minutes: number
           phone: string | null
           updated_at: string | null
+          website: string | null
         }
         Insert: {
           client_name: string
@@ -49,6 +50,7 @@ export type Database = {
           minutes?: number
           phone?: string | null
           updated_at?: string | null
+          website?: string | null
         }
         Update: {
           client_name?: string
@@ -60,6 +62,7 @@ export type Database = {
           minutes?: number
           phone?: string | null
           updated_at?: string | null
+          website?: string | null
         }
         Relationships: []
       }

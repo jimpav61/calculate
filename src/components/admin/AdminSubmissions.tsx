@@ -18,6 +18,7 @@ interface ClientPricing {
   company_name: string;
   email: string;
   phone: string | null;
+  website: string | null;
   minutes: number;
   cost_per_minute: number;
   created_at: string;
@@ -54,7 +55,7 @@ export const AdminSubmissions = () => {
   const handleExport = () => {
     try {
       // Convert submissions to CSV format
-      const headers = ['Name', 'Company', 'Email', 'Phone', 'Minutes', 'Cost/Min', 'Date'];
+      const headers = ['Name', 'Company', 'Email', 'Phone', 'Website', 'Minutes', 'Cost/Min', 'Date'];
       const csvContent = [
         headers.join(','),
         ...submissions.map(row => [
@@ -62,6 +63,7 @@ export const AdminSubmissions = () => {
           row.company_name,
           row.email,
           row.phone || '',
+          row.website || '',
           row.minutes,
           row.cost_per_minute,
           new Date(row.created_at).toLocaleDateString()
@@ -116,6 +118,7 @@ export const AdminSubmissions = () => {
                 <TableHead>Company</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Phone</TableHead>
+                <TableHead>Website</TableHead>
                 <TableHead className="text-right">Minutes</TableHead>
                 <TableHead className="text-right">Cost/Min ($)</TableHead>
                 <TableHead>Date</TableHead>
@@ -128,6 +131,7 @@ export const AdminSubmissions = () => {
                   <TableCell>{row.company_name}</TableCell>
                   <TableCell className="font-mono">{row.email}</TableCell>
                   <TableCell>{row.phone || '-'}</TableCell>
+                  <TableCell>{row.website || '-'}</TableCell>
                   <TableCell className="text-right">{row.minutes.toLocaleString()}</TableCell>
                   <TableCell className="text-right">${row.cost_per_minute.toFixed(2)}</TableCell>
                   <TableCell>{new Date(row.created_at).toLocaleDateString()}</TableCell>
