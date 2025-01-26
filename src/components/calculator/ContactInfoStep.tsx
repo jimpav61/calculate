@@ -13,19 +13,29 @@ interface ContactInfoStepProps {
 
 export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) => {
   const formatPhoneNumber = (value: string) => {
-    // Remove all non-numeric characters
-    const cleaned = value.replace(/\D/g, '');
+    // Remove all non-numeric characters except plus sign
+    const cleaned = value.replace(/[^\d+]/g, '');
     
-    // Format as (XXX) XXX-XXXX
-    const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
-    if (match) {
-      const parts = [match[1], match[2], match[3]].filter(Boolean);
-      if (parts.length === 0) return '';
-      if (parts.length === 1) return parts[0];
-      if (parts.length === 2) return `(${parts[0]}) ${parts[1]}`;
-      return `(${parts[0]}) ${parts[1]}-${parts[2]}`;
+    // If no country code is present, add +1
+    let withCountryCode = cleaned;
+    if (!cleaned.startsWith('+')) {
+      withCountryCode = '+1' + cleaned;
     }
-    return cleaned;
+    
+    // Format as +X (XXX) XXX-XXXX
+    const match = withCountryCode.match(/^\+(\d{1,3})?(\d{0,3})(\d{0,3})(\d{0,4})$/);
+    if (match) {
+      const [, countryCode, areaCode, middle, last] = match;
+      const parts = [
+        countryCode ? `+${countryCode}` : '+1',
+        areaCode ? `(${areaCode})` : '',
+        middle ? ` ${middle}` : '',
+        last ? `-${last}` : ''
+      ].filter(Boolean);
+      
+      return parts.join('');
+    }
+    return withCountryCode;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,11 +64,11 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
           value={formData.phone}
           onChange={handlePhoneChange}
           className="mt-1"
-          placeholder="(555) 123-4567"
+          placeholder="+1 (555) 123-4567"
           required
         />
         <p className="text-sm text-muted-foreground mt-1">
-          Format: (XXX) XXX-XXXX
+          Format: +X (XXX) XXX-XXXX (e.g., +1 for USA)
         </p>
       </div>
       <div>

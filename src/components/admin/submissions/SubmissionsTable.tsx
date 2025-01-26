@@ -35,13 +35,12 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
   const handlePhoneClick = (phone: string | null, type: 'call' | 'ai') => {
     if (!phone) return;
     
-    // Remove any non-numeric characters for the tel: link
-    const cleanPhone = phone.replace(/\D/g, '');
+    // Remove all non-numeric characters except plus sign for the tel: link
+    const cleanPhone = phone.replace(/[^\d+]/g, '');
     
     if (type === 'call') {
       window.location.href = `tel:${cleanPhone}`;
     } else {
-      // For now, we'll just show a toast since AI calling requires additional setup
       toast.info("AI calling feature coming soon!");
     }
   };
