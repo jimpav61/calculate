@@ -5,6 +5,7 @@ interface ContactInfoStepProps {
   formData: {
     phone: string;
     email: string;
+    website: string;
   };
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -34,6 +35,18 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
           onChange={onChange}
           className="mt-1"
           required
+        />
+      </div>
+      <div>
+        <Label htmlFor="website">Website URL</Label>
+        <Input
+          id="website"
+          name="website"
+          type="url"
+          value={formData.website}
+          onChange={onChange}
+          className="mt-1"
+          placeholder="https://example.com"
         />
       </div>
     </div>

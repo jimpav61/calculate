@@ -4,6 +4,7 @@ interface CompanyInformationProps {
     companyName: string;
     email: string;
     phone: string;
+    website: string;
   };
 }
 
@@ -27,6 +28,21 @@ export const CompanyInformation = ({ formData }: CompanyInformationProps) => {
         <div>
           <p className="text-xs md:text-sm text-brand">Phone</p>
           <p className="text-sm md:text-base font-medium">{formData.phone}</p>
+        </div>
+        <div>
+          <p className="text-xs md:text-sm text-brand">Website</p>
+          <p className="text-sm md:text-base font-medium break-all">
+            {formData.website ? (
+              <a 
+                href={formData.website.startsWith('http') ? formData.website : `https://${formData.website}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800"
+              >
+                {formData.website}
+              </a>
+            ) : '-'}
+          </p>
         </div>
       </div>
     </div>

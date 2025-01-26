@@ -6,6 +6,7 @@ interface CalculatorFormData {
   companyName: string;
   phone: string;
   email: string;
+  website: string;
   minutes: number;
 }
 
@@ -17,6 +18,7 @@ export const useCalculator = (initialCostPerMinute: number) => {
     companyName: "",
     phone: "",
     email: "",
+    website: "",
     minutes: 0,
   });
 
