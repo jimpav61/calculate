@@ -6,6 +6,7 @@ interface FormData {
   companyName: string;
   email: string;
   phone: string;
+  website: string;
   minutes: number;
 }
 
@@ -27,6 +28,7 @@ export const useFormSubmission = (costPerMinute: number) => {
           company_name: formData.companyName,
           email: formData.email,
           phone: formData.phone,
+          website: formData.website,
           minutes: formData.minutes,
           cost_per_minute: costPerMinute
         }
