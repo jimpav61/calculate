@@ -60,7 +60,7 @@ export const useAdminAuth = () => {
     try {
       await supabase.auth.signOut();
       console.log('Successfully signed out');
-      navigate("/login");
+      navigate("/"); // Changed from "/login" to "/" to redirect to the calculator page
     } catch (error: any) {
       console.error('Sign out error:', error);
       toast.error("Error signing out. Please try again.");
