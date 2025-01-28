@@ -7,7 +7,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white relative">
-      <div className="absolute top-4 right-4 z-50">
+      <div className="sticky top-0 right-0 z-50 w-full flex justify-end p-4 bg-white/50 backdrop-blur-sm">
         <Button 
           variant="outline"
           onClick={() => navigate('/login')}
