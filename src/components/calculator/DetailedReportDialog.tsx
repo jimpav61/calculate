@@ -7,8 +7,8 @@ import {
 import { CompanyInformation } from "./report/CompanyInformation";
 import { CostAnalysis } from "./report/CostAnalysis";
 import { AdditionalBenefits } from "./report/AdditionalBenefits";
-import { PDFDownloadButton } from "./report/PDFDownloadButton";
 import { useReportCalculations } from "./report/ReportCalculations";
+import { PDFDownloadButton } from "./report/PDFDownloadButton";
 
 interface DetailedReportDialogProps {
   open: boolean;
@@ -16,8 +16,8 @@ interface DetailedReportDialogProps {
   formData: {
     name: string;
     companyName: string;
-    phone: string;
     email: string;
+    phone: string;
     website: string;
     minutes: number;
   };
@@ -34,26 +34,24 @@ export const DetailedReportDialog = ({
     minutes: formData.minutes,
     costPerMinute,
   });
-  
-  const currentDate = new Date().toLocaleDateString();
-  
+
   const reportData = {
     formData,
     calculations,
-    date: currentDate,
+    date: new Date().toLocaleDateString(),
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] sm:w-[90vw] md:w-[80vw] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-3 sm:p-4 md:p-6">
+      <DialogContent className="w-[95vw] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-3 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold text-brand">
-            Detailed Cost Analysis Report
+          <DialogTitle className="text-lg sm:text-2xl font-bold text-brand">
+            Your Detailed Report
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 sm:space-y-6 py-4">
-          <p className="text-sm text-brand">{currentDate}</p>
+          <p className="text-sm text-brand">{new Date().toLocaleDateString()}</p>
           
           <div className="grid gap-4 sm:gap-6">
             <CompanyInformation formData={formData} />
@@ -76,7 +74,7 @@ export const DetailedReportDialog = ({
             />
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-end pt-4 w-full">
             <PDFDownloadButton reportData={reportData} />
           </div>
         </div>

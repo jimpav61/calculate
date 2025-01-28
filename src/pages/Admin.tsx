@@ -9,9 +9,9 @@ import { useAdminAuth } from "@/components/admin/useAdminAuth";
 
 const Admin = () => {
   const navigate = useNavigate();
-  const { isAdmin, isLoading } = useAdminAuth();
+  const { loading, handleSignOut } = useAdminAuth();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
@@ -19,19 +19,14 @@ const Admin = () => {
     );
   }
 
-  if (!isAdmin) {
-    navigate("/login");
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-gray-50/50 p-2 sm:p-4 md:p-6">
       <div className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
-        <AdminHeader />
+        <AdminHeader onSignOut={handleSignOut} />
         
         <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6 overflow-hidden">
           <Tabs defaultValue="submissions" className="w-full">
-            <TabsList className="w-full max-w-full overflow-x-auto flex-nowrap mb-4 sm:mb-6">
+            <TabsList className="w-full max-w-full overflow-x-auto flex-nowrap mb-4 sm:mb-6 gap-2 p-1">
               <TabsTrigger value="submissions" className="flex-shrink-0">Submissions</TabsTrigger>
               <TabsTrigger value="crm" className="flex-shrink-0">CRM</TabsTrigger>
               <TabsTrigger value="pricing" className="flex-shrink-0">Pricing</TabsTrigger>
