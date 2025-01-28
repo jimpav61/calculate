@@ -14,9 +14,9 @@ export const AdminSubmissions = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Client Submissions</h2>
+    <div className="space-y-6 px-4 sm:px-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl sm:text-2xl font-semibold">Client Submissions</h2>
         <ExportButton submissions={submissions} />
       </div>
 
@@ -25,7 +25,9 @@ export const AdminSubmissions = () => {
           <p className="text-gray-500">No submissions yet</p>
         </div>
       ) : (
-        <SubmissionsTable submissions={submissions} />
+        <div className="w-full overflow-x-auto">
+          <SubmissionsTable submissions={submissions} />
+        </div>
       )}
     </div>
   );

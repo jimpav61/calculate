@@ -6,7 +6,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white relative">
+    <div className="min-h-screen bg-white relative px-4 sm:px-6">
       <div className="absolute top-4 right-4">
         <Button 
           variant="outline"

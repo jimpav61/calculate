@@ -15,15 +15,15 @@ export const AdminPricing = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 sm:px-6">
       <div>
-        <h2 className="text-2xl font-semibold mb-4">Global Voice AI Pricing</h2>
-        <p className="text-gray-600 mb-4">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Global Voice AI Pricing</h2>
+        <p className="text-sm sm:text-base text-gray-600 mb-4">
           Set the base cost per minute for Essential Voice AI services. Premium services will be charged at 2x this rate.
         </p>
       </div>
 
-      <div className="space-y-4 max-w-md">
+      <div className="space-y-4 max-w-md w-full">
         <div>
           <Label htmlFor="costPerMinute">Essential Cost per Minute ($)</Label>
           <Input
@@ -46,6 +46,7 @@ export const AdminPricing = () => {
         <Button 
           onClick={handleSave} 
           disabled={loading}
+          className="w-full sm:w-auto"
         >
           {loading ? "Saving..." : "Save Global Price"}
         </Button>

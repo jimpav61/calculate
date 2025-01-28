@@ -27,25 +27,27 @@ export const ProspectTable = ({
   onSendReport,
 }: ProspectTableProps) => {
   return (
-    <div className="border rounded-lg">
-      <Table>
-        <ProspectTableHeader />
-        <TableBody>
-          {prospects.map((prospect) => (
-            <ProspectRow
-              key={prospect.id}
-              prospect={prospect}
-              selectedProspect={selectedProspect}
-              newCostPerMinute={newCostPerMinute}
-              sending={sending}
-              onCostPerMinuteChange={onCostPerMinuteChange}
-              onShowPreview={onShowPreview}
-              onSendReport={onSendReport}
-              onSelectProspect={onSelectProspect}
-            />
-          ))}
-        </TableBody>
-      </Table>
+    <div className="border rounded-lg overflow-x-auto w-full">
+      <div className="min-w-[800px]">
+        <Table>
+          <ProspectTableHeader />
+          <TableBody>
+            {prospects.map((prospect) => (
+              <ProspectRow
+                key={prospect.id}
+                prospect={prospect}
+                selectedProspect={selectedProspect}
+                newCostPerMinute={newCostPerMinute}
+                sending={sending}
+                onCostPerMinuteChange={onCostPerMinuteChange}
+                onShowPreview={onShowPreview}
+                onSendReport={onSendReport}
+                onSelectProspect={onSelectProspect}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
