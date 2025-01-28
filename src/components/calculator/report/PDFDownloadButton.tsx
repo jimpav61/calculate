@@ -1,41 +1,28 @@
 import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ReportPDF } from "./ReportPDF";
-import { Download } from "lucide-react";
-import { useReportCalculations } from "./ReportCalculations";
-import { ReactNode } from "react";
+import React from "react";
 
 interface PDFDownloadButtonProps {
-  reportData: {
-    formData: {
-      name: string;
-      companyName: string;
-      email: string;
-      phone: string;
-      website: string;
-      minutes: number;
-    };
-    calculations: ReturnType<typeof useReportCalculations>;
-    date: string;
-  };
+  reportData: any;
 }
 
 export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
   return (
     <PDFDownloadLink
       document={<ReportPDF data={reportData} />}
-      fileName={`${reportData.formData.companyName.toLowerCase().replace(/\s+/g, '-')}-pricing-report.pdf`}
+      fileName={`voice-ai-report-${new Date().toISOString().split('T')[0]}.pdf`}
     >
-      {({ loading }): ReactNode => (
-        <Button disabled={loading} type="button">
-          {loading ? (
-            "Generating PDF..."
-          ) : (
-            <>
-              <Download className="mr-2 h-4 w-4" />
-              Download PDF Report
-            </>
-          )}
+      {({ loading }) => (
+        <Button
+          className="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded flex items-center gap-2 w-full sm:w-auto"
+          disabled={loading}
+        >
+          <Download className="w-4 h-4" />
+          <span className="whitespace-nowrap">
+            {loading ? "Generating PDF..." : "Download Report"}
+          </span>
         </Button>
       )}
     </PDFDownloadLink>

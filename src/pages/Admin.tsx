@@ -1,47 +1,60 @@
-import { AdminStats } from "@/components/admin/AdminStats";
-import { AdminPricing } from "@/components/admin/AdminPricing";
-import { AdminSubmissions } from "@/components/admin/AdminSubmissions";
 import { AdminCRM } from "@/components/admin/AdminCRM";
 import { AdminHeader } from "@/components/admin/AdminHeader";
-import { useAdminAuth } from "@/components/admin/useAdminAuth";
+import { AdminPricing } from "@/components/admin/AdminPricing";
+import { AdminStats } from "@/components/admin/AdminStats";
+import { AdminSubmissions } from "@/components/admin/AdminSubmissions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
+import { useAdminAuth } from "@/components/admin/useAdminAuth";
 
 const Admin = () => {
-  const { loading, handleSignOut } = useAdminAuth();
+  const navigate = useNavigate();
+  const { isAdmin, isLoading } = useAdminAuth();
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    navigate("/login");
+    return null;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <AdminHeader onSignOut={handleSignOut} />
+    <div className="min-h-screen bg-gray-50/50 p-2 sm:p-4 md:p-6">
+      <div className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
+        <AdminHeader />
         
-        <div className="w-full overflow-x-auto">
-          <Tabs defaultValue="stats" className="space-y-6">
-            <TabsList className="w-full flex-wrap justify-start">
-              <TabsTrigger value="stats" className="flex-shrink-0">Statistics</TabsTrigger>
-              <TabsTrigger value="pricing" className="flex-shrink-0">Pricing</TabsTrigger>
+        <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6 overflow-hidden">
+          <Tabs defaultValue="submissions" className="w-full">
+            <TabsList className="w-full max-w-full overflow-x-auto flex-nowrap mb-4 sm:mb-6">
               <TabsTrigger value="submissions" className="flex-shrink-0">Submissions</TabsTrigger>
               <TabsTrigger value="crm" className="flex-shrink-0">CRM</TabsTrigger>
+              <TabsTrigger value="pricing" className="flex-shrink-0">Pricing</TabsTrigger>
+              <TabsTrigger value="stats" className="flex-shrink-0">Stats</TabsTrigger>
             </TabsList>
-
-            <TabsContent value="stats" className="space-y-6">
-              <AdminStats />
-            </TabsContent>
-
-            <TabsContent value="pricing" className="space-y-6">
-              <AdminPricing />
-            </TabsContent>
-
-            <TabsContent value="submissions" className="space-y-6">
-              <AdminSubmissions />
-            </TabsContent>
-
-            <TabsContent value="crm" className="space-y-6">
-              <AdminCRM />
-            </TabsContent>
+            
+            <div className="overflow-x-auto">
+              <TabsContent value="submissions" className="mt-0">
+                <AdminSubmissions />
+              </TabsContent>
+              
+              <TabsContent value="crm" className="mt-0">
+                <AdminCRM />
+              </TabsContent>
+              
+              <TabsContent value="pricing" className="mt-0">
+                <AdminPricing />
+              </TabsContent>
+              
+              <TabsContent value="stats" className="mt-0">
+                <AdminStats />
+              </TabsContent>
+            </div>
           </Tabs>
         </div>
       </div>
