@@ -4,34 +4,33 @@ import { ReportPDF } from "./ReportPDF";
 import { Download } from "lucide-react";
 
 interface PDFDownloadButtonProps {
-  reportData: {
-    formData: {
-      name: string;
-      companyName: string;
-      email: string;
-      phone: string;
-      website: string;
-      minutes: number;
-    };
-    calculations: any;
-    date: string;
+  formData: {
+    name: string;
+    companyName: string;
+    email: string;
+    phone: string;
+    minutes: number;
   };
+  costPerMinute: number;
 }
 
-export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
+export const PDFDownloadButton = ({
+  formData,
+  costPerMinute,
+}: PDFDownloadButtonProps) => {
   return (
     <PDFDownloadLink
-      document={<ReportPDF data={reportData} />}
-      fileName={`${reportData.formData.companyName.replace(/\s+/g, '_')}_voice_ai_report.pdf`}
-      className="w-full sm:w-auto"
+      document={<ReportPDF formData={formData} costPerMinute={costPerMinute} />}
+      fileName={`${formData.companyName || 'Company'}_Voice_AI_Report.pdf`}
+      className="w-full"
     >
       {({ loading }) => (
-        <Button
-          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark"
+        <Button 
+          className="w-full bg-brand hover:bg-brand-dark text-white" 
           disabled={loading}
         >
-          <Download className="h-4 w-4" />
-          <span>{loading ? "Generating PDF..." : "Download PDF Report"}</span>
+          <Download className="w-4 h-4 mr-2" />
+          {loading ? "Generating PDF..." : "Download PDF Report"}
         </Button>
       )}
     </PDFDownloadLink>

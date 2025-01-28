@@ -37,8 +37,8 @@ const Calculator = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-2 sm:p-4 md:p-6 bg-gradient-to-br from-white to-gray-50">
-      <Card className="w-full max-w-[500px] mx-auto p-3 sm:p-4 md:p-6 glass-card animate-fade-in">
+    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-white to-gray-50">
+      <Card className="w-full max-w-[500px] mx-auto p-4 glass-card animate-fade-in">
         <CalculatorHeader
           title="Chatsites Voice AI Calculator"
           subtitle="Calculate your estimated monthly costs"
@@ -46,7 +46,7 @@ const Calculator = () => {
 
         <StepIndicator currentStep={step} totalSteps={5} />
 
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {step === 1 && <IntroductionStep />}
 
           {step === 2 && (

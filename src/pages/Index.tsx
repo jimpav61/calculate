@@ -7,11 +7,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white relative">
-      <div className="fixed top-4 right-4 z-50">
+      <div className="absolute top-4 right-4 z-50">
         <Button 
           variant="outline"
           onClick={() => navigate('/login')}
-          className="bg-white shadow-sm border"
+          className="bg-white shadow-md border px-4 py-2 text-sm"
         >
           Admin Login
         </Button>
