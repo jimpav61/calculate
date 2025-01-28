@@ -27,11 +27,11 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
     >
       {({ loading }) => (
         <Button
-          className="w-full sm:w-auto flex items-center gap-2 bg-brand hover:bg-brand-dark"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark"
           disabled={loading}
         >
           <Download className="h-4 w-4" />
-          {loading ? "Generating PDF..." : "Download PDF Report"}
+          <span>{loading ? "Generating PDF..." : "Download PDF Report"}</span>
         </Button>
       )}
     </PDFDownloadLink>

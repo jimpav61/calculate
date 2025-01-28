@@ -24,7 +24,7 @@ const Admin = () => {
       <div className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
         <AdminHeader onSignOut={handleSignOut} />
         
-        <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm p-2 sm:p-4 md:p-6 overflow-hidden">
           <Tabs defaultValue="submissions" className="w-full">
             <TabsList className="w-full max-w-full overflow-x-auto flex-nowrap mb-4 sm:mb-6 gap-2 p-1">
               <TabsTrigger value="submissions" className="flex-shrink-0">Submissions</TabsTrigger>

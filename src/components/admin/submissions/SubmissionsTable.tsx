@@ -78,31 +78,31 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
   };
 
   return (
-    <div className="border rounded-lg">
+    <div className="border rounded-lg overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Website</TableHead>
-            <TableHead className="text-right">Minutes</TableHead>
-            <TableHead className="text-right">Cost/Min ($)</TableHead>
-            <TableHead>Date</TableHead>
+            <TableHead className="whitespace-nowrap">Name</TableHead>
+            <TableHead className="whitespace-nowrap">Company</TableHead>
+            <TableHead className="whitespace-nowrap">Email</TableHead>
+            <TableHead className="whitespace-nowrap">Phone</TableHead>
+            <TableHead className="whitespace-nowrap">Website</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Minutes</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Cost/Min ($)</TableHead>
+            <TableHead className="whitespace-nowrap">Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {submissions.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.client_name}</TableCell>
-              <TableCell>{row.company_name}</TableCell>
-              <TableCell className="font-mono">{row.email}</TableCell>
-              <TableCell>{formatPhoneCell(row.phone)}</TableCell>
-              <TableCell>{formatWebsiteUrl(row.website)}</TableCell>
-              <TableCell className="text-right">{row.minutes.toLocaleString()}</TableCell>
-              <TableCell className="text-right">${row.cost_per_minute.toFixed(2)}</TableCell>
-              <TableCell>{new Date(row.created_at).toLocaleDateString()}</TableCell>
+              <TableCell className="whitespace-nowrap">{row.client_name}</TableCell>
+              <TableCell className="whitespace-nowrap">{row.company_name}</TableCell>
+              <TableCell className="font-mono break-all">{row.email}</TableCell>
+              <TableCell className="whitespace-nowrap">{formatPhoneCell(row.phone)}</TableCell>
+              <TableCell className="break-all">{formatWebsiteUrl(row.website)}</TableCell>
+              <TableCell className="text-right whitespace-nowrap">{row.minutes.toLocaleString()}</TableCell>
+              <TableCell className="text-right whitespace-nowrap">${row.cost_per_minute.toFixed(2)}</TableCell>
+              <TableCell className="whitespace-nowrap">{new Date(row.created_at).toLocaleDateString()}</TableCell>
             </TableRow>
           ))}
         </TableBody>

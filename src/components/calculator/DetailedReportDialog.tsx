@@ -43,7 +43,7 @@ export const DetailedReportDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-3 sm:p-6">
+      <DialogContent className="w-[95vw] max-w-[600px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-3 sm:p-6">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-2xl font-bold text-brand">
             Your Detailed Report
