@@ -2,26 +2,28 @@ import { Button } from "@/components/ui/button";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ReportPDF } from "./ReportPDF";
 import { Download } from "lucide-react";
+import { useReportCalculations } from "./ReportCalculations";
 
 interface PDFDownloadButtonProps {
-  formData: {
-    name: string;
-    companyName: string;
-    email: string;
-    phone: string;
-    minutes: number;
+  reportData: {
+    formData: {
+      name: string;
+      companyName: string;
+      email: string;
+      phone: string;
+      website: string;
+      minutes: number;
+    };
+    calculations: ReturnType<typeof useReportCalculations>;
+    date: string;
   };
-  costPerMinute: number;
 }
 
-export const PDFDownloadButton = ({
-  formData,
-  costPerMinute,
-}: PDFDownloadButtonProps) => {
+export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
   return (
     <PDFDownloadLink
-      document={<ReportPDF formData={formData} costPerMinute={costPerMinute} />}
-      fileName={`${formData.companyName || 'Company'}_Voice_AI_Report.pdf`}
+      document={<ReportPDF data={reportData} />}
+      fileName={`${reportData.formData.companyName || 'Company'}_Voice_AI_Report.pdf`}
       className="w-full"
     >
       {({ loading }) => (
