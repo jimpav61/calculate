@@ -3,6 +3,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ReportPDF } from "./ReportPDF";
 import { Download } from "lucide-react";
 import { useReportCalculations } from "./ReportCalculations";
+import { ReactNode } from "react";
 
 interface PDFDownloadButtonProps {
   reportData: {
@@ -25,7 +26,7 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       document={<ReportPDF data={reportData} />}
       fileName={`${reportData.formData.companyName.toLowerCase().replace(/\s+/g, '-')}-pricing-report.pdf`}
     >
-      {({ loading }) => (
+      {({ loading }): ReactNode => (
         <Button disabled={loading} type="button">
           {loading ? (
             "Generating PDF..."
