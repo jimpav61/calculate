@@ -47,16 +47,28 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
 
   const formatPhoneCell = (phone: string | null) => {
     if (!phone) return '-';
+
+    // Ensure phone number is in the correct format
+    const formatPhoneDisplay = (phoneNumber: string) => {
+      const cleaned = phoneNumber.replace(/[^\d+]/g, '');
+      if (!cleaned.startsWith('+1')) {
+        return '+1' + cleaned;
+      }
+      return cleaned.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 $2 $3 $4');
+    };
+
+    const formattedPhone = formatPhoneDisplay(phone);
+
     return (
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
           size="sm"
           className="text-blue-600 hover:text-blue-800 p-0"
-          onClick={() => handlePhoneClick(phone, 'call')}
+          onClick={() => handlePhoneClick(formattedPhone, 'call')}
         >
           <Phone className="h-4 w-4 mr-1" />
-          {phone}
+          {formattedPhone}
         </Button>
       </div>
     );

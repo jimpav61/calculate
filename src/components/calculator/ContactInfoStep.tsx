@@ -16,18 +16,18 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
     // Remove all non-numeric characters except plus sign
     const cleaned = value.replace(/[^\d+]/g, '');
     
-    // If no country code is present, add +1 (US)
+    // If no country code is present, add +1 (US/Canada)
     let withCountryCode = cleaned;
     if (!cleaned.startsWith('+')) {
       withCountryCode = '+1' + cleaned;
     }
     
-    // Format as +XXX XXX XXX XX (international format)
-    const match = withCountryCode.match(/^\+(\d{2,3})?(\d{0,3})(\d{0,3})(\d{0,2})$/);
+    // Format as +1 XXX XXX XXXX (North American format)
+    const match = withCountryCode.match(/^\+1(\d{0,3})(\d{0,3})(\d{0,4})$/);
     if (match) {
-      const [, countryCode, areaCode, middle, last] = match;
+      const [, areaCode, middle, last] = match;
       const parts = [
-        countryCode ? `+${countryCode}` : '',
+        '+1',
         areaCode ? ` ${areaCode}` : '',
         middle ? ` ${middle}` : '',
         last ? ` ${last}` : ''
@@ -64,11 +64,11 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
           value={formData.phone}
           onChange={handlePhoneChange}
           className="mt-1"
-          placeholder="+151 499 471 78"
+          placeholder="+1 514 994 7178"
           required
         />
         <p className="text-sm text-muted-foreground mt-1">
-          Format: +[country code] [area code] [local number] (e.g., +151 499 471 78)
+          Format: +1 [area code] [local number] (e.g., +1 514 994 7178)
         </p>
       </div>
       <div>
