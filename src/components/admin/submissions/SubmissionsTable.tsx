@@ -35,11 +35,11 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
   const handlePhoneClick = (phone: string | null, type: 'call' | 'ai') => {
     if (!phone) return;
     
-    // Remove all non-numeric characters except plus sign for the tel: link
-    const cleanPhone = phone.replace(/[^\d+]/g, '');
+    // Remove all non-numeric characters for the tel: link
+    const cleanPhone = phone.replace(/\D/g, '');
     
     if (type === 'call') {
-      window.location.href = `tel:${cleanPhone}`;
+      window.location.href = `tel:+1${cleanPhone}`;
     } else {
       toast.info("AI calling feature coming soon!");
     }
@@ -50,11 +50,14 @@ export const SubmissionsTable = ({ submissions }: SubmissionsTableProps) => {
 
     // Ensure phone number is in the correct format
     const formatPhoneDisplay = (phoneNumber: string) => {
-      const cleaned = phoneNumber.replace(/[^\d+]/g, '');
-      if (!cleaned.startsWith('+1')) {
-        return '+1' + cleaned;
-      }
-      return cleaned.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '$1 $2 $3 $4');
+      // Remove all non-numeric characters
+      const cleaned = phoneNumber.replace(/\D/g, '');
+      
+      // Take only the last 10 digits if there are more
+      const last10Digits = cleaned.slice(-10);
+      
+      // Format the number
+      return `+1 ${last10Digits.slice(0,3)} ${last10Digits.slice(3,6)} ${last10Digits.slice(6)}`;
     };
 
     const formattedPhone = formatPhoneDisplay(phone);

@@ -13,19 +13,19 @@ interface ContactInfoStepProps {
 
 export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) => {
   const formatPhoneNumber = (value: string) => {
-    // Remove all non-numeric characters except plus sign
-    const cleaned = value.replace(/[^\d+]/g, '');
+    // Remove all non-numeric characters
+    const cleaned = value.replace(/\D/g, '');
     
-    // If no country code is present, add +1 (US/Canada)
-    let withCountryCode = cleaned;
-    if (!cleaned.startsWith('+')) {
-      withCountryCode = '+1' + cleaned;
-    }
+    // Take only the last 10 digits if there are more
+    const last10Digits = cleaned.slice(-10);
     
-    // Format as +1 XXX XXX XXXX (North American format)
-    const match = withCountryCode.match(/^\+1(\d{0,3})(\d{0,3})(\d{0,4})$/);
-    if (match) {
-      const [, areaCode, middle, last] = match;
+    // If we don't have enough digits, return the partial format
+    if (last10Digits.length < 10) {
+      // Format what we have into groups
+      const areaCode = last10Digits.slice(0, 3);
+      const middle = last10Digits.slice(3, 6);
+      const last = last10Digits.slice(6);
+      
       const parts = [
         '+1',
         areaCode ? ` ${areaCode}` : '',
@@ -35,7 +35,9 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
       
       return parts.join('');
     }
-    return withCountryCode;
+    
+    // Format complete number
+    return `+1 ${last10Digits.slice(0,3)} ${last10Digits.slice(3,6)} ${last10Digits.slice(6)}`;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +70,7 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
           required
         />
         <p className="text-sm text-muted-foreground mt-1">
-          Format: +1 [area code] [local number] (e.g., +1 514 994 7178)
+          Format: +1 XXX XXX XXXX (e.g., +1 514 994 7178)
         </p>
       </div>
       <div>
