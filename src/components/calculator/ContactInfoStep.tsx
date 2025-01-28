@@ -22,8 +22,8 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
       withCountryCode = '+1' + cleaned;
     }
     
-    // Format as +X XXX XXX XXXX (international format)
-    const match = withCountryCode.match(/^\+(\d{1,3})?(\d{0,3})(\d{0,3})(\d{0,4})$/);
+    // Format as +XXX XXX XXX XX (international format)
+    const match = withCountryCode.match(/^\+(\d{2,3})?(\d{0,3})(\d{0,3})(\d{0,2})$/);
     if (match) {
       const [, countryCode, areaCode, middle, last] = match;
       const parts = [
@@ -64,11 +64,11 @@ export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) =>
           value={formData.phone}
           onChange={handlePhoneChange}
           className="mt-1"
-          placeholder="+1 234 567 8900"
+          placeholder="+151 499 471 78"
           required
         />
         <p className="text-sm text-muted-foreground mt-1">
-          Format: +[country code] [area code] [local number] (e.g., +1 234 567 8900)
+          Format: +[country code] [area code] [local number] (e.g., +151 499 471 78)
         </p>
       </div>
       <div>
