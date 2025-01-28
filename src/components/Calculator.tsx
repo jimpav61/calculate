@@ -31,14 +31,14 @@ const Calculator = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Calculator: Form submitted with data:", formData);
-    setShowReport(true); // Show report immediately without waiting for submission
+    setShowReport(true);
     const success = await submitForm(formData);
     console.log("Calculator: Form submission result:", success);
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-white to-gray-50">
-      <Card className="w-full max-w-[500px] mx-auto p-4 sm:p-6 glass-card animate-fade-in">
+    <div className="min-h-screen w-full flex items-center justify-center p-2 sm:p-4 bg-gradient-to-br from-white to-gray-50">
+      <Card className="w-full max-w-[500px] mx-auto p-3 sm:p-6 glass-card animate-fade-in">
         <CalculatorHeader
           title="Chatsites Voice AI Calculator"
           subtitle="Calculate your estimated monthly costs"
@@ -46,7 +46,7 @@ const Calculator = () => {
 
         <StepIndicator currentStep={step} totalSteps={5} />
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {step === 1 && <IntroductionStep />}
 
           {step === 2 && (

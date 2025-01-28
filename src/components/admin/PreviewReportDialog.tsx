@@ -51,17 +51,17 @@ export const PreviewReportDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95%] sm:w-[90%] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-4 sm:p-6">
+      <DialogContent className="w-[95%] sm:w-[90%] max-w-[600px] h-[90vh] overflow-y-auto bg-gradient-to-br from-brand-light/10 to-white p-3 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="text-xl sm:text-2xl font-bold text-brand">
+          <DialogTitle className="text-lg sm:text-2xl font-bold text-brand">
             Preview Updated Report
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-4 sm:space-y-6 py-4">
           <p className="text-sm text-brand">{new Date().toLocaleDateString()}</p>
           
-          <div className="grid gap-6">
+          <div className="grid gap-4 sm:gap-6">
             <CompanyInformation formData={formData} />
 
             <CostAnalysis
