@@ -14,30 +14,27 @@ interface ContactInfoStepProps {
 export const ContactInfoStep = ({ formData, onChange }: ContactInfoStepProps) => {
   const formatPhoneNumber = (value: string) => {
     // Remove all non-numeric characters
-    const cleaned = value.replace(/\D/g, '');
+    let cleaned = value.replace(/\D/g, '');
     
-    // Take only the last 10 digits if there are more
-    const last10Digits = cleaned.slice(-10);
-    
-    // If we don't have enough digits, return the partial format
-    if (last10Digits.length < 10) {
-      // Format what we have into groups
-      const areaCode = last10Digits.slice(0, 3);
-      const middle = last10Digits.slice(3, 6);
-      const last = last10Digits.slice(6);
-      
-      const parts = [
-        '+1',
-        areaCode ? ` ${areaCode}` : '',
-        middle ? ` ${middle}` : '',
-        last ? ` ${last}` : ''
-      ].filter(Boolean);
-      
-      return parts.join('');
+    // Remove leading '1' if present, as we'll add the +1 prefix
+    if (cleaned.startsWith('1')) {
+      cleaned = cleaned.substring(1);
     }
     
-    // Format complete number
-    return `+1 ${last10Digits.slice(0,3)} ${last10Digits.slice(3,6)} ${last10Digits.slice(6)}`;
+    // Take only the last 10 digits if there are more
+    cleaned = cleaned.slice(-10);
+    
+    // If we don't have enough digits, return partial format
+    if (cleaned.length < 10) {
+      let formatted = '+1';
+      if (cleaned.length > 0) formatted += ' ' + cleaned.slice(0, 3);
+      if (cleaned.length > 3) formatted += ' ' + cleaned.slice(3, 6);
+      if (cleaned.length > 6) formatted += ' ' + cleaned.slice(6);
+      return formatted;
+    }
+    
+    // Format complete number as +1 XXX XXX XXXX
+    return `+1 ${cleaned.slice(0,3)} ${cleaned.slice(3,6)} ${cleaned.slice(6)}`;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
