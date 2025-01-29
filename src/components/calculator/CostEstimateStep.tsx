@@ -26,10 +26,20 @@ export const CostEstimateStep = ({
     });
   };
 
+  const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    onChange({
+      target: {
+        name: "minutes",
+        value: isNaN(value) ? "0" : value.toString(),
+      },
+    });
+  };
+
   const calculateHumanCost = (minutes: number, country: string, baseRate: number = 18) => {
     const rates = {
-      us: [0.10, 0.18, 0.08, 0.09], // US rates for various costs
-      canada: [0.14, 0.12, 0.10, 0.09], // Canadian rates
+      us: [0.10, 0.18, 0.08, 0.09],
+      canada: [0.14, 0.12, 0.10, 0.09],
     };
 
     const selectedRates = rates[country as keyof typeof rates];
@@ -54,10 +64,12 @@ export const CostEstimateStep = ({
           id="minutes"
           name="minutes"
           type="number"
+          inputMode="numeric"
+          pattern="[0-9]*"
           min="0"
           step="100"
           value={formData.minutes}
-          onChange={onChange}
+          onChange={handleMinutesChange}
           className="mt-1"
           required
         />
