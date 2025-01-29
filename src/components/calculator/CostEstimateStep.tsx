@@ -55,6 +55,7 @@ export const CostEstimateStep = ({
           name="minutes"
           type="number"
           min="0"
+          step="100"
           value={formData.minutes}
           onChange={onChange}
           className="mt-1"

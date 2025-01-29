@@ -20,6 +20,7 @@ interface DetailedReportDialogProps {
     phone: string;
     website: string;
     minutes: number;
+    country: string;
   };
   costPerMinute: number;
 }
@@ -33,6 +34,7 @@ export const DetailedReportDialog = ({
   const calculations = useReportCalculations({
     minutes: formData.minutes,
     costPerMinute,
+    country: formData.country,
   });
 
   const reportData = {

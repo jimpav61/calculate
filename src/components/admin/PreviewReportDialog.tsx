@@ -19,6 +19,7 @@ interface PreviewReportDialogProps {
     email: string;
     phone: string | null;
     minutes: number;
+    country?: string;
   };
   newCostPerMinute: number;
 }
@@ -32,6 +33,7 @@ export const PreviewReportDialog = ({
   const calculations = useReportCalculations({
     minutes: prospect.minutes,
     costPerMinute: newCostPerMinute,
+    country: prospect.country || 'us',
   });
 
   const formData = {
@@ -41,6 +43,7 @@ export const PreviewReportDialog = ({
     phone: prospect.phone || '',
     website: '',
     minutes: prospect.minutes,
+    country: prospect.country || 'us',
   };
 
   const reportData = {
