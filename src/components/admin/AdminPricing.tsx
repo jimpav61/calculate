@@ -5,12 +5,20 @@ import { usePricing } from "@/hooks/usePricing";
 import { updateGlobalPrice } from "@/utils/pricing";
 
 export const AdminPricing = () => {
-  const { costPerMinute, setCostPerMinute, loading, setLoading } = usePricing();
+  const { 
+    costPerMinute, 
+    setCostPerMinute, 
+    humanCostPerHour,
+    setHumanCostPerHour,
+    loading, 
+    setLoading 
+  } = usePricing();
 
   const handleSave = async () => {
     setLoading(true);
     console.log("AdminPricing: Starting save operation for new global price:", costPerMinute);
-    const success = await updateGlobalPrice(costPerMinute);
+    console.log("AdminPricing: Starting save operation for new human cost per hour:", humanCostPerHour);
+    const success = await updateGlobalPrice(costPerMinute, humanCostPerHour);
     setLoading(false);
   };
 
@@ -19,7 +27,7 @@ export const AdminPricing = () => {
       <div>
         <h2 className="text-xl sm:text-2xl font-semibold mb-4">Global Voice AI Pricing</h2>
         <p className="text-sm sm:text-base text-gray-600 mb-4">
-          Set the base cost per minute for Essential Voice AI services. Premium services will be charged at 2x this rate.
+          Set the base cost per minute for Essential Voice AI services and human operator cost per hour.
         </p>
       </div>
 
@@ -41,6 +49,22 @@ export const AdminPricing = () => {
           <p className="text-sm text-gray-500 mt-2">
             Premium Cost per Minute: ${(costPerMinute * 2).toFixed(2)}
           </p>
+        </div>
+
+        <div>
+          <Label htmlFor="humanCostPerHour">Human Operator Cost per Hour ($)</Label>
+          <Input
+            id="humanCostPerHour"
+            type="number"
+            step="0.01"
+            min="0"
+            value={humanCostPerHour}
+            onChange={(e) => {
+              console.log("AdminPricing: Human cost per hour changed to:", e.target.value);
+              setHumanCostPerHour(Number(e.target.value));
+            }}
+            className="mt-1"
+          />
         </div>
 
         <Button 

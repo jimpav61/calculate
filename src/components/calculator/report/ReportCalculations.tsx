@@ -1,9 +1,14 @@
 interface ReportCalculationsProps {
   minutes: number;
   costPerMinute: number;
+  humanCostPerHour?: number;
 }
 
-export const useReportCalculations = ({ minutes, costPerMinute }: ReportCalculationsProps) => {
+export const useReportCalculations = ({ 
+  minutes, 
+  costPerMinute,
+  humanCostPerHour = 16 // Default value if not provided
+}: ReportCalculationsProps) => {
   // Calculate calls per hour for human operators (12.5 average)
   const humanCallsPerHour = 12.5;
   const humanCallsPerDay = humanCallsPerHour * 8;
@@ -22,8 +27,8 @@ export const useReportCalculations = ({ minutes, costPerMinute }: ReportCalculat
   const premiumCostPerMinute = costPerMinute * 2;
   const premiumAICost = minutes * premiumCostPerMinute;
   
-  // Calculate human operator cost based on $16/hour
-  const humanOperatorCost = (minutes / 60) * 16;
+  // Calculate human operator cost based on provided hourly rate
+  const humanOperatorCost = (minutes / 60) * humanCostPerHour;
   
   // Calculate savings for both tiers
   const standardSavings = humanOperatorCost - standardAICost;

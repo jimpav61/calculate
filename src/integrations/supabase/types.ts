@@ -34,6 +34,7 @@ export type Database = {
           cost_per_minute: number
           created_at: string | null
           email: string
+          human_cost_per_hour: number
           id: string
           minutes: number
           phone: string | null
@@ -46,6 +47,7 @@ export type Database = {
           cost_per_minute: number
           created_at?: string | null
           email: string
+          human_cost_per_hour?: number
           id?: string
           minutes?: number
           phone?: string | null
@@ -58,6 +60,7 @@ export type Database = {
           cost_per_minute?: number
           created_at?: string | null
           email?: string
+          human_cost_per_hour?: number
           id?: string
           minutes?: number
           phone?: string | null
