@@ -8,6 +8,7 @@ interface CalculatorFormData {
   email: string;
   website: string;
   minutes: number;
+  country: string;
 }
 
 export const useCalculator = (costPerMinute: number) => {
@@ -20,9 +21,10 @@ export const useCalculator = (costPerMinute: number) => {
     phone: "",
     minutes: 0,
     website: "",
+    country: "us",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
