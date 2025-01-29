@@ -5,7 +5,7 @@ export const WaitTimeSection = () => (
   <View style={styles.section}>
     <Text style={styles.heading}>Response Time Analysis</Text>
     
-    <View style={styles.subsection}>
+    <View style={styles.section}>
       <Text style={styles.subheading}>Traditional Call Center Performance</Text>
       <Text style={styles.bullet}>• Average wait time: 5-7 minutes during peak hours</Text>
       <Text style={styles.bullet}>• 80/20 standard often not met (80% of calls answered within 20 seconds)</Text>
@@ -13,7 +13,7 @@ export const WaitTimeSection = () => (
       <Text style={styles.bullet}>• Limited by staff availability and call queues</Text>
     </View>
 
-    <View style={styles.subsection}>
+    <View style={styles.section}>
       <Text style={styles.subheading}>Voice AI Performance</Text>
       <Text style={styles.bullet}>• Instant response time (sub-second)</Text>
       <Text style={styles.bullet}>• No queuing or wait times</Text>
@@ -22,6 +22,6 @@ export const WaitTimeSection = () => (
       <Text style={styles.bullet}>• 24/7 availability without degradation</Text>
     </View>
 
-    <Text style={styles.footnote}>*Based on industry standard metrics and real-world performance data</Text>
+    <Text style={styles.text}>*Based on industry standard metrics and real-world performance data</Text>
   </View>
 );

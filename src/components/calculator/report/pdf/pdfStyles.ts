@@ -1,13 +1,4 @@
-import { StyleSheet, Font } from '@react-pdf/renderer';
-
-// Register fonts
-Font.register({
-  family: 'Helvetica',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4QIFqPfE.woff2', fontWeight: 'normal' },
-    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyCg4QYFqPfE.woff2', fontWeight: 'bold' }
-  ]
-});
+import { StyleSheet } from '@react-pdf/renderer';
 
 export const styles = StyleSheet.create({
   page: {
@@ -17,68 +8,82 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
-    color: '#ff4545',
-    fontFamily: 'Helvetica',
+    color: '#374151',
+    fontFamily: 'Helvetica-Bold',
     fontWeight: 'bold',
   },
   section: {
     marginBottom: 20,
   },
-  heading: {
-    fontSize: 20,
-    marginBottom: 10,
-    color: '#ff4545',
-    fontFamily: 'Helvetica',
-    fontWeight: 'bold',
-  },
-  subheading: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#ff4545',
-    fontFamily: 'Helvetica',
-    fontWeight: 'bold',
-  },
-  label: {
-    fontSize: 12,
-    color: '#ff4545',
-    marginBottom: 4,
-    fontFamily: 'Helvetica',
-  },
-  text: {
-    fontSize: 14,
-    marginBottom: 5,
-    fontFamily: 'Helvetica',
-  },
-  costSection: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#fff1f1',
-    borderRadius: 8,
-  },
-  comparisonSection: {
-    marginTop: 15,
+  subsection: {
     marginBottom: 15,
     padding: 10,
-    backgroundColor: '#fff1f1',
-    borderRadius: 8,
+    backgroundColor: '#f9fafb',
+  },
+  heading: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: '#1a56db',
+    fontFamily: 'Helvetica-Bold',
+  },
+  subheading: {
+    fontSize: 14,
+    marginBottom: 8,
+    color: '#374151',
+    fontFamily: 'Helvetica-Bold',
+  },
+  text: {
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#4b5563',
   },
   bullet: {
-    marginLeft: 10,
     fontSize: 12,
     marginBottom: 4,
-    fontFamily: 'Helvetica',
-  },
-  value: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: 'Helvetica',
+    color: '#4b5563',
   },
   grid: {
     flexDirection: 'row',
-    marginTop: 10,
+    gap: 20,
   },
   column: {
     flex: 1,
-    marginRight: 10,
-  }
+  },
+  footnote: {
+    fontSize: 10,
+    marginTop: 10,
+    color: '#6b7280',
+    fontStyle: 'italic',
+  },
+  costSection: {
+    marginBottom: 15,
+    padding: 10,
+    backgroundColor: '#fee2e2',
+    borderRadius: 4,
+  },
+  costRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  costLabel: {
+    fontSize: 12,
+    color: '#4b5563',
+  },
+  costValue: {
+    fontSize: 12,
+    color: '#4b5563',
+    fontFamily: 'Helvetica-Bold',
+  },
+  packageTitle: {
+    fontSize: 16,
+    color: '#ef4444',
+    fontFamily: 'Helvetica-Bold',
+    marginBottom: 5,
+  },
+  packageSubtitle: {
+    fontSize: 12,
+    color: '#ef4444',
+    marginBottom: 10,
+  },
 });
