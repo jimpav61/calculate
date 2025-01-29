@@ -46,7 +46,6 @@ export const CostEstimateStep = ({ formData, onChange, costPerMinute }: CostEsti
         <div className="space-y-4">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Cost Breakdown</h3>
-            <p className="text-sm text-gray-500">Based on ${costPerMinute.toFixed(2)} per minute (Essential) / ${(costPerMinute * 2).toFixed(2)} per minute (Premium)</p>
           </div>
 
           <div className="space-y-4">
