@@ -27,23 +27,32 @@ export const CostEstimateStep = ({
   };
 
   const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
+    // Get the raw input value
+    const rawValue = e.target.value;
     
-    // Remove any non-numeric characters
-    value = value.replace(/[^0-9]/g, '');
+    // Remove any non-numeric characters and leading zeros
+    const cleanValue = rawValue.replace(/^0+|[^\d]/g, '');
     
-    // Convert to number and ensure it's not NaN
-    const numericValue = parseInt(value);
-    const finalValue = isNaN(numericValue) ? 0 : numericValue;
+    // If empty, set to 0
+    if (!cleanValue) {
+      onChange({
+        target: {
+          name: "minutes",
+          value: "0"
+        }
+      });
+      return;
+    }
+
+    // Convert to number
+    const numValue = parseInt(cleanValue);
     
-    // Round to nearest 100
-    const roundedValue = Math.round(finalValue / 100) * 100;
-    
+    // Update with the cleaned numeric value
     onChange({
       target: {
         name: "minutes",
-        value: roundedValue.toString(),
-      },
+        value: numValue.toString()
+      }
     });
   };
 
@@ -74,17 +83,15 @@ export const CostEstimateStep = ({
         <Input
           id="minutes"
           name="minutes"
-          type="number"
+          type="text"
           inputMode="numeric"
           pattern="[0-9]*"
-          min="0"
-          step="100"
           value={formData.minutes || ''}
           onChange={handleMinutesChange}
           onBlur={(e) => {
-            // Ensure the value is rounded to nearest 100 on blur
             const value = parseInt(e.target.value);
             if (!isNaN(value)) {
+              // Round to nearest 100 on blur
               const roundedValue = Math.round(value / 100) * 100;
               onChange({
                 target: {
