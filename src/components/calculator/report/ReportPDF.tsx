@@ -3,6 +3,7 @@ import { ReportHeader } from './pdf/ReportHeader';
 import { CompanyInfoSection } from './pdf/CompanyInfoSection';
 import { CostAnalysisSection } from './pdf/CostAnalysisSection';
 import { CallHandlingSection } from './pdf/CallHandlingSection';
+import { WaitTimeSection } from './pdf/WaitTimeSection';
 import { AdditionalBenefitsSection } from './pdf/AdditionalBenefitsSection';
 import { styles } from './pdf/pdfStyles';
 import { useReportCalculations } from './ReportCalculations';
@@ -38,6 +39,8 @@ export const ReportPDF = ({ data }: ReportPDFProps) => (
         minutes={data.formData.minutes}
         calculations={data.calculations}
       />
+
+      <WaitTimeSection />
 
       <CallHandlingSection
         callMetrics={data.calculations.callMetrics}

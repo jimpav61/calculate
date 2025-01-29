@@ -7,6 +7,7 @@ import {
 import { CompanyInformation } from "../calculator/report/CompanyInformation";
 import { CostAnalysis } from "../calculator/report/CostAnalysis";
 import { AdditionalBenefits } from "../calculator/report/AdditionalBenefits";
+import { WaitTimeComparison } from "../calculator/report/WaitTimeComparison";
 import { useReportCalculations } from "../calculator/report/ReportCalculations";
 import { PDFDownloadButton } from "../calculator/report/PDFDownloadButton";
 
@@ -77,6 +78,8 @@ export const PreviewReportDialog = ({
               standardSavingsPercentage={calculations.standardSavingsPercentage}
               premiumSavingsPercentage={calculations.premiumSavingsPercentage}
             />
+
+            <WaitTimeComparison />
 
             <AdditionalBenefits
               humanCallsPerMonth={calculations.callMetrics.humanCallsPerMonth}
