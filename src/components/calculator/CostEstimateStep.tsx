@@ -27,11 +27,22 @@ export const CostEstimateStep = ({
   };
 
   const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    let value = e.target.value;
+    
+    // Remove any non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Convert to number and ensure it's not NaN
+    const numericValue = parseInt(value);
+    const finalValue = isNaN(numericValue) ? 0 : numericValue;
+    
+    // Round to nearest 100
+    const roundedValue = Math.round(finalValue / 100) * 100;
+    
     onChange({
       target: {
         name: "minutes",
-        value: isNaN(value) ? "0" : value.toString(),
+        value: roundedValue.toString(),
       },
     });
   };
@@ -68,8 +79,21 @@ export const CostEstimateStep = ({
           pattern="[0-9]*"
           min="0"
           step="100"
-          value={formData.minutes}
+          value={formData.minutes || ''}
           onChange={handleMinutesChange}
+          onBlur={(e) => {
+            // Ensure the value is rounded to nearest 100 on blur
+            const value = parseInt(e.target.value);
+            if (!isNaN(value)) {
+              const roundedValue = Math.round(value / 100) * 100;
+              onChange({
+                target: {
+                  name: "minutes",
+                  value: roundedValue.toString(),
+                },
+              });
+            }
+          }}
           className="mt-1"
           required
         />
