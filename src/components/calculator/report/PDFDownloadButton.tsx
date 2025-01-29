@@ -29,6 +29,7 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
         <Button 
           className="w-full bg-brand hover:bg-brand-dark text-white" 
           disabled={loading}
+          type="button"
         >
           <Download className="w-4 h-4 mr-2" />
           {loading ? "Generating PDF..." : "Download PDF Report"}
