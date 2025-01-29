@@ -7,12 +7,14 @@ interface ReviewStepProps {
     phone: string;
     email: string;
     minutes: number;
+    country: string;
   };
   costPerMinute: number;
 }
 
 export const ReviewStep = ({ formData, costPerMinute }: ReviewStepProps) => {
   const monthlyTotal = formData.minutes * costPerMinute;
+  const countryName = formData.country === 'us' ? 'United States' : 'Canada';
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -35,6 +37,10 @@ export const ReviewStep = ({ formData, costPerMinute }: ReviewStepProps) => {
             <div>
               <p className="text-sm text-gray-500">Email</p>
               <p className="font-medium break-words">{formData.email}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Country</p>
+              <p className="font-medium">{countryName}</p>
             </div>
           </div>
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">

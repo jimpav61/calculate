@@ -24,7 +24,6 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
     <PDFDownloadLink
       document={<ReportPDF data={reportData} />}
       fileName={`${reportData.formData.companyName || 'Company'}_Voice_AI_Report.pdf`}
-      className="w-full"
     >
       {({ loading }) => (
         <Button 
