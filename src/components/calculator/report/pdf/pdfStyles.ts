@@ -86,4 +86,10 @@ export const styles = StyleSheet.create({
     color: '#ef4444',
     marginBottom: 10,
   },
+  sectionTitle: {
+    fontSize: 14,
+    color: '#4b5563',
+    fontFamily: 'Helvetica-Bold',
+    marginBottom: 4,
+  },
 });
