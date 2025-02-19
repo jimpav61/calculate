@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,10 +7,9 @@
     <title>voicecost-companion</title>
     <meta name="description" content="ChatSites™ Voice Calculator" />
     <meta name="author" content="ChatSites™" />
-    <meta property="og:image" content="/og-image.png" />
-     <link rel="icon" type="image/x-icon" href="/lovable-uploads/7def398d-ead6-40ce-893d-93996cba4427.png" />
+    <meta property="og:image" content="./og-image.png" />
+    <link rel="icon" type="image/x-icon" href="./lovable-uploads/7def398d-ead6-40ce-893d-93996cba4427.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChatSites AI Voice Calculator</title>
     <meta name="description" content="ChatSites™ Voice Calculator" />
     <meta name="author" content="ChatSites™" />
     <meta name="algolia-site-verification"  content="50C74DDA7566CE2C" />
@@ -23,7 +23,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ChatSites AI Voice Calculator" />
     <meta name="twitter:description" content="See How Affordable Voice Can Be For Your Business" />
-    <meta name="twitter:image" content="assets/img/twitter-og-1200x630px.png" />
+    <meta name="twitter:image" content="./assets/img/twitter-og-1200x630px.png" />
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -31,19 +31,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <!-- Vendor CSS Files -->
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="./assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="./assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="./assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
 
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1805675480172344');
+    fbq('track', 'PageView');
+    </script>
   </head>
-
   <body>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1805675480172344&ev=PageView&noscript=1"
     /></noscript>
     <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="./src/main.tsx"></script>
   </body>
 </html>
