@@ -27,12 +27,13 @@ export const PDFDownloadButton = ({ reportData }: PDFDownloadButtonProps) => {
       fileName={`voice-ai-report-${reportData.formData.companyName.toLowerCase().replace(/\s+/g, '-')}.pdf`}
       className="w-full"
     >
-      {({ loading, url, error }) => (
+      {({ loading, url }) => (
         <Button 
           disabled={loading} 
           className="bg-brand hover:bg-brand-dark"
           onClick={(e) => {
             if (url) {
+              // For mobile devices, open in new tab
               window.open(url, '_blank');
               e.preventDefault();
             }
