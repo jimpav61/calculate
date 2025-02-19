@@ -1,4 +1,3 @@
-
 import Calculator from "@/components/Calculator";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -17,14 +16,7 @@ const Index = () => {
           Admin Login
         </Button>
       </div>
-      <div className="flex flex-col items-center justify-center">
-        <img 
-          src="./lovable-uploads/720c07f4-ff7d-421e-9f49-f444be11ebc9.png"
-          alt="ChatSites Logo"
-          className="w-[300px] mb-8 mt-4"
-        />
-        <Calculator />
-      </div>
+      <Calculator />
     </div>
   );
 };
