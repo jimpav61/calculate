@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/calculate/", // ✅ Change this to your actual GitHub repository name
+  base: "https://calculate.chatsites.ai/", // ✅ Updated to match your custom domain
   server: {
     host: "::",
     port: 8080,
