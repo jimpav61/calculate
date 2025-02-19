@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@react-pdf/renderer": "^4.2.2",
+    "@vitejs/plugin-react-swc": "^3.8.0"
+  },
+  "devDependencies": {
+    "lovable-tagger": "^1.1.3"
+  }
+}
